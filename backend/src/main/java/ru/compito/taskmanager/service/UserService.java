@@ -11,5 +11,6 @@ public interface UserService {
     void saveUser(User user);
     void deleteUserById(Integer Id);
     void updateUser(User user);
+    List<User> findByTaskId(Integer taskId);
 
 }

@@ -44,6 +44,13 @@ public class User {
             = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private List<Role> roles;*/
+
+    @ManyToMany(cascade = CascadeType.REMOVE)
+    @JoinTable(name = "users_tasks",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "task_id")})
+    private List<Task> tasks;
+
     public User(){
 
     }
@@ -94,4 +101,12 @@ public class User {
         this.roles = roles;
     }
 */
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
+    }
 }
