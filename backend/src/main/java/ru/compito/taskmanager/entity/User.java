@@ -1,5 +1,6 @@
 package ru.compito.taskmanager.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -30,6 +31,7 @@ public class User {
     @Pattern(regexp = "[a-zA-Z\\s']{3,250}$")
     private String username;
 
+    @JsonIgnore
     @Column(name = "password")
     //@Pattern(regexp = PASSWORD_REGEX)
     private String password;
@@ -44,6 +46,16 @@ public class User {
             = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private List<Role> roles;*/
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "users")
+    private List<Task> createdTasks;
+
+    @ManyToMany(cascade = CascadeType.REMOVE)
+    @JoinTable(name = "users_tasks",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "task_id")})
+    private List<Task> tasks;
+
     public User(){
 
     }
@@ -94,4 +106,20 @@ public class User {
         this.roles = roles;
     }
 */
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
+    }
+
+    public List<Task> getCreatedTasks() {
+        return createdTasks;
+    }
+
+    public void setCreatedTasks(List<Task> createdTasks) {
+        this.createdTasks = createdTasks;
+    }
 }

@@ -38,8 +38,17 @@ public class UserServiceImpl implements UserService,UserDetailsService {
     }
 
     @Override
+    public List<User> findByTaskId(Integer taskId) {
+        return userRepository.findByTaskId(taskId);
+    }
+    @Override
     public User getUserById(Integer Id) {
         return userRepository.findOne(Id);
+    }
+
+    @Override
+    public User findByUsername(String username){
+        return userRepository.findByUsername(username);
     }
 
     @Override

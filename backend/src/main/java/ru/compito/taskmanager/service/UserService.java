@@ -8,8 +8,10 @@ public interface UserService {
 
     List<User> getAllUsers();
     User getUserById(Integer Id);
+    User findByUsername(String username);
     void saveUser(User user);
     void deleteUserById(Integer Id);
     void updateUser(User user);
+    List<User> findByTaskId(Integer taskId);
 
 }
