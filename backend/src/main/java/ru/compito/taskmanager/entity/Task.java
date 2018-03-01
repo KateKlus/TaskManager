@@ -9,7 +9,7 @@ import java.util.List;
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name="task_name")
     private String taskName;
@@ -17,8 +17,9 @@ public class Task {
     @Column(name="description")
     private String description;
 
-    @Column(name="author")
-    private String author;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User author;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "users_tasks",
@@ -27,17 +28,17 @@ public class Task {
     private List<User> users = new ArrayList<>();
 
     public Task(){
-        
+
     }
     public Task(String taskName) {
         this.taskName = taskName;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -57,11 +58,11 @@ public class Task {
         this.description = description;
     }
 
-    public String getAuthor() {
+    public User getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(User author) {
         this.author = author;
     }
 

@@ -14,6 +14,9 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
     @Query("SELECT u.tasks FROM User u WHERE u.id=:userId")
     List<Task> findByUserId(@Param("userId") Integer userId);
 
+    @Query("SELECT u.createdTasks FROM User u WHERE u.username=:username")
+    List<Task> findByUsername(String username);
+
     @Query("SELECT (COUNT (t) > 0) AS boolean FROM User u " +
             "INNER JOIN u.tasks t WHERE t.id =:id AND u.id=:userId ")
     Boolean isTaskContainingInUser(@Param("id") Integer id, @Param("userId") Integer userId);

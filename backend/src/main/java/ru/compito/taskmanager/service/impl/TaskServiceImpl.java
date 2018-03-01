@@ -37,9 +37,14 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public List<Task> findByUsername(String username) {
+        return taskRepository.findByUsername(username);
+    }
+
+    @Override
     public Task save(Integer userId, Task task) {
         User user = userRepository.getOne(userId);
-        task.setAuthor(user.getUsername());
+        task.setAuthor(user);
         task.getUsers().add(user);
         Task savedTask = taskRepository.save(task);
         savedTask.setUsers(Collections.emptyList());

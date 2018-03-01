@@ -8,6 +8,7 @@ public interface TaskService {
     Task getOne(Integer Id);
     List<Task> findAll();
     List<Task> findByUserId(Integer userId);
+    List<Task> findByUsername(String username);
     Task save(Integer userId, Task task);
     void update(Task updatedTask);
     void delete(Integer taskId);
