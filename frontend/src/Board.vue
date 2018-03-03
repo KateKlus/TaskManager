@@ -4,6 +4,7 @@
             <leftMenu :leftMenu="leftMenu"></leftMenu>
             <div class="board__title">{{boardTitle}}</div>
             <div class="board__user">
+                <a href="" class="user__logout" @click.prevent="logOut">выйти</a>
                 <div class="user__name">{{userName}}</div>
                 <div class="user__avatar">
                     <img src="./assets/avatar.jpg" alt="User" class="user__avatar-img">
@@ -16,6 +17,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default{
     data(){
         return{
@@ -97,6 +99,31 @@ export default{
                 ]}
             ]
         }
+    },
+    beforeCreate(){
+        var self = this;
+        if(getCookie("access_token")){
+            axios.get("http://localhost:8080/api/getUsername?access_token=" + getCookie("access_token"))
+                .then(function(response){
+                    self.userName = response.data;
+                })
+                .catch(function(error){
+                    delete_cookie("access_token");
+                    return error;
+                });
+        }
+        else{
+            document.location.replace("/auth");
+        }
+    },
+    methods:{
+        logOut(){
+            axios.get("http://localhost:8080/api/logouts?access_token="+getCookie("access_token"))
+                .then(function(response){
+                    delete_cookie("access_token")
+                    document.location.replace("/auth");
+                })
+        }
     }
 }
 </script>
@@ -121,6 +148,19 @@ export default{
     .board__button,.user__avatar, .user__name{
         display: inline-block;
         vertical-align: middle;
+    }
+    .user__logout{
+        text-decoration: none;
+        color: black;
+        padding: 5px 10px;
+        margin-right: 10px;
+        border: 1px solid black;
+        border-radius: 10px;
+        background: #ebebeb;
+        &:hover{
+            background: #fff;
+        }
+
     }
 
 </style>
