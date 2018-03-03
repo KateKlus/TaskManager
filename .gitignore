@@ -30,3 +30,4 @@ frontend/dist/
 frontend/node/
 frontend/node_modules/
 frontend/target
+frontend/package-lock.json
