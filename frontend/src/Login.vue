@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper__form">
-        <form action="" class="form clearfix">
+        <form action="" class="form">
             <div class="form__avatar">
                 <img src="./assets/avatar.jpg" alt="" class="form__avatar-img">
             </div>
@@ -17,8 +17,11 @@
                 <a href="/registration" class="link__registration">Регистрация</a>
             </div>
             <button class="form__submit" type="submit" @click.prevent="login">Войти</button>
-
         </form>
+        <transition name="fade">
+            <div class="form__error" v-if="show">Ошибка! Вы ввели неверные данные.</div>
+        </transition>
+
     </div>
 </template>
 
@@ -30,23 +33,18 @@ export default{
             user:{
                 login:"",
                 password:""
-            }
+            },
+            show: false
         }
     },
     mounted(){
         if(getCookie("access_token")){
-            axios.get("http://localhost:8080/api/getUsername?access_token=" + getCookie("access_token"))
-                .then(function(response){
-                    document.location.replace("/board");
-                })
-                .catch(function(error){
-                    delete_cookie("access_token");
-                    return error;
-                });
+            document.location.replace("/board");
         }
     },
     methods: {
         login(){
+            var self = this;
             var params = new URLSearchParams();
             params.append('grant_type', 'password');
             params.append('username', this.user.login);
@@ -60,6 +58,11 @@ export default{
             }).then(function (response) {
                 set_cookie("access_token", response.data.access_token);
                 document.location.replace("/board");
+            }).catch(function (error) {
+                self.show = !self.show;
+                setTimeout(function(){
+                    self.show = !self.show;
+                },2000);
             });
         }
     }
@@ -137,5 +140,24 @@ export default{
         .form__submit{
         min-width: 250px;
             margin-bottom: 20px;
+    }
+    .form__error{
+        position: fixed;
+        top: 15px;
+        left: 50%;
+        width: 600px;
+        height: 100px;
+        padding: 40px;
+        margin-left: -300px;
+        background: rgba(#222, .2);
+        border-radius: 20px;
+    }
+    .fade-enter,.fade-leave-to{
+        opacity: 0;
+        transition: 1s;
+    }
+    .fade-enter-to,.fade-leave{
+        opacity: 1;
+        transition: 1s;
     }
 </style>
