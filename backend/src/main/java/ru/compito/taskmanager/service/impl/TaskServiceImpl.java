@@ -33,7 +33,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<Task> findByUserId(Integer userId) {
-        return taskRepository.findByUserId(userId);
+        return userRepository.getOne(userId).getTasks();
     }
 
     @Override
@@ -46,10 +46,9 @@ public class TaskServiceImpl implements TaskService {
         User user = userRepository.getOne(userId);
         task.setAuthor(user);
         task.getUsers().add(user);
-        Task savedTask = taskRepository.save(task);
-        savedTask.setUsers(Collections.emptyList());
-
-        return savedTask;
+        user.getTasks().add(task);
+        userRepository.save(user);
+        return taskRepository.save(task);
     }
 
     @Override
@@ -65,6 +64,12 @@ public class TaskServiceImpl implements TaskService {
         User user = userRepository.getOne(userId);
         user.setTasks(Collections.emptyList());
         userRepository.save(user);
+    }
+
+    @Override
+    public Task getTaskByUserId(Integer userId, Integer taskId) {
+        User user = userRepository.getOne(userId);
+        return taskRepository.findByUsersAndId(user, taskId);
     }
 
     @Override

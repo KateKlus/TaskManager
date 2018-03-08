@@ -5,8 +5,10 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.web.bind.annotation.*;
+import ru.compito.taskmanager.entity.Board;
 import ru.compito.taskmanager.entity.User;
 import ru.compito.taskmanager.pojos.UserRegistration;
+import ru.compito.taskmanager.service.BoardService;
 import ru.compito.taskmanager.service.UserService;
 
 import javax.validation.Valid;
@@ -21,6 +23,9 @@ public class UserController{
     private UserService userService;
 
     @Autowired
+    private BoardService boardService;
+
+    @Autowired
     private TokenStore tokenStore;
 
     @PostMapping(value = "/register")
@@ -31,7 +36,7 @@ public class UserController{
             return "Error this username already exists";
 
         //Проверка на наличии специальных символов в имени.
-        Pattern pattern = Pattern.compile("[^a-zA-Z0-9]");
+        Pattern pattern = Pattern.compile("[a-zA-Z0-9\\s']{3,250}$");
         if(pattern.matcher(userRegistration.getUsername()).find())
             return "No special characters are allowed in the username";
 
@@ -46,9 +51,11 @@ public class UserController{
         tokenStore.removeAccessToken(tokenStore.readAccessToken(accessToken));
     }
 
-    @GetMapping(value ="/getUsername")
-    public String getUsername(){
-        return SecurityContextHolder.getContext().getAuthentication().getName();
+    @GetMapping(value ="/getUserId")
+    public Integer getUserId(){
+        User user = userService.findByUsername(SecurityContextHolder
+                .getContext().getAuthentication().getName());
+        return user.getId();
     }
 
     @GetMapping(value = "/users/",produces = MediaType.APPLICATION_JSON_VALUE)
@@ -61,6 +68,22 @@ public class UserController{
         return userService.getUserById(Id);
     }
 
+
+    @GetMapping(value = "/users/{Id}/boards",produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Board> getBoardsByUserId(@PathVariable Integer Id) {
+        return userService.getBoardsByUserId(Id);
+    }
+
+    @GetMapping(value = "/users/{Id}/boards/{boardId}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public Board getBoardByUserId(@PathVariable Integer Id,@PathVariable Integer boardId ) {
+        return userService.getBoardByUserId(Id,boardId);
+    }
+
+    @PostMapping(value = "/users/{Id}/boards", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void createBoard(@RequestBody Board board, @PathVariable Integer Id) {
+        boardService.save(Id,board);
+    }
+
     @PostMapping(value = "/users/", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void create(@RequestBody User user) {
         userService.saveUser(user);
@@ -68,8 +91,8 @@ public class UserController{
 
     @PutMapping(value = "/users/{Id}",
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public void update(@PathVariable Integer Id, @Valid @RequestBody User user) {
-        userService.updateUser(user);
+    public void update(@PathVariable Integer Id, @RequestBody User user) {
+        userService.updateUserById(Id,user);
     }
 
     @DeleteMapping("/users/{Id}")

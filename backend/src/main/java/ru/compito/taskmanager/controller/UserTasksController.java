@@ -17,9 +17,14 @@ public class UserTasksController {
     @Autowired
     private TaskService taskService;
 
-    @GetMapping(value = "/{username}/tasks", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Task> getTasks(@PathVariable String username) {
-        return taskService.findByUsername(username);
+    @GetMapping(value = "/{userId}/tasks", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Task> getTasks(@PathVariable Integer userId) {
+        return taskService.findByUserId(userId);
+    }
+
+    @GetMapping(value = "/{userId}/tasks/{taskId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Task getTask(@PathVariable Integer userId, @PathVariable Integer taskId) {
+        return taskService.getTaskByUserId(userId,taskId);
     }
 
     @DeleteMapping("/{id}/tasks")
