@@ -13,4 +13,5 @@ public interface TaskService {
     void update(Task updatedTask);
     void delete(Integer taskId);
     void deleteAllForUser(Integer userId);
+    Task getTaskByUserId(Integer userId, Integer taskId);
 }

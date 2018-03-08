@@ -1,6 +1,7 @@
 package ru.compito.taskmanager.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 @EntityListeners(AuditingEntityListener.class)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User {
 
     /*
@@ -23,13 +25,17 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "userId")
+    @Column(name = "user_id")
     private Integer id;
 
     @Column(name = "username")
     @NotNull
-    @Pattern(regexp = "[a-zA-Z\\s']{3,250}$")
+    @Pattern(regexp = "[a-zA-Z0-9\\s']{3,250}$")
     private String username;
+
+    @Column(name = "fullname")
+    @Pattern(regexp = "[a-zA-Z\\s']{3,250}$")
+    private String fullname;
 
     @JsonIgnore
     @Column(name = "password")
@@ -50,10 +56,11 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "users")
     private List<Task> createdTasks;
 
-    @ManyToMany(cascade = CascadeType.REMOVE)
-    @JoinTable(name = "users_tasks",
+    @JsonIgnore
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "users")
+    /*@JoinTable(name = "users_tasks",
             joinColumns = {@JoinColumn(name = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "task_id")})
+            inverseJoinColumns = {@JoinColumn(name = "task_id")})*/
     private List<Task> tasks;
 
     public User(){
@@ -121,5 +128,13 @@ public class User {
 
     public void setCreatedTasks(List<Task> createdTasks) {
         this.createdTasks = createdTasks;
+    }
+
+    public String getFullname() {
+        return fullname;
+    }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
     }
 }
