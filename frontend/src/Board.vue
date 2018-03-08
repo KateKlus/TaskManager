@@ -12,6 +12,8 @@
             </div>
         </header>
         <statusList :statusItems="statusItems"></statusList>
+        <taskMenu v-if="showTaskMenu" :taskItem="clickedTask" :statusItems="statusItems" @wrapperClick="showTaskMenu = !showTaskMenu"></taskMenu>
+
     </div>
 
 </template>
@@ -21,6 +23,8 @@ import axios from 'axios'
 export default{
     data(){
         return{
+            showTaskMenu: false,
+            clickedTask:"",
             boardTitle: 'Название доски',
             userName: 'Имя пользователя',
             leftMenu:{
@@ -43,9 +47,9 @@ export default{
                       taskDate: "28.02.2018",
                       taskTime: "12h",
                       taskExecutor:"German",
-                      contentItems:[
-                          {contentId: 0, contentName: "Название поля", content: "Содержание поля"},
-                          {contentId: 1, contentName: "ipsum", content: "Lorem ipsum dolor sit amet"}
+                      customFields:[
+                          {fieldId: 0, fieldName: "Название поля", fieldContent: "Содержание поля"},
+                          {fieldId: 1, fieldName: "ipsum", fieldContent: "Lorem ipsum dolor sit amet"}
                       ]},
                      {taskId:1,
                       taskName: "impedit",
@@ -53,9 +57,9 @@ export default{
                       taskDate: "12.02.2018",
                       taskTime: "4h",
                       taskExecutor:"Exec",
-                      contentItems:[
-                          {contentId: 3, contentName: "dolor", content: "Контееент!"},
-                          {contentId: 4, contentName: "sit", content: "Абракадабра"}
+                      customFields:[
+                          {fieldId: 3, fieldName: "dolor", fieldContent: "Контееент!"},
+                          {fieldId: 4, fieldName: "sit", fieldContent: "Абракадабра"}
                       ]}
                  ]},
                 {statusId: 1,
@@ -67,11 +71,11 @@ export default{
                       taskDate: "01.01.2018",
                       taskTime: "36h",
                       taskExecutor:"Thomas Check",
-                      contentItems:[
-                          {contentId: 5, contentName: "amet", content: "Content 5"},
-                          {contentId: 6, contentName: "consectetur", content: "eius dolor impedit"},
-                          {contentId: 7, contentName: "adipisicing", content: "Content 7"},
-                          {contentId: 8, contentName: "elit", content: "dolor sit amet"}
+                      customFields:[
+                          {fieldId: 5, fieldName: "amet", fieldContent: "field 5"},
+                          {fieldId: 6, fieldName: "consectetur", fieldContent: "eius dolor impedit"},
+                          {fieldId: 7, fieldName: "adipisicing", fieldContent: "field 7"},
+                          {fieldId: 8, fieldName: "elit", fieldContent: "dolor sit amet"}
                       ]},
                      {taskId:3,
                       taskName: "voluptates",
@@ -79,9 +83,9 @@ export default{
                       taskDate: "28.01.2017",
                       taskTime: "1h",
                       taskExecutor:"Fill Kill",
-                      contentItems:[
-                          {contentId: 9, contentName: "Eaque", content: "deserunt explicabo voluptates"},
-                          {contentId: 10, contentName: "officia", content: "Eaque ad officia"}
+                      customFields:[
+                          {fieldId: 9, fieldName: "Eaque", fieldContent: "deserunt explicabo voluptates"},
+                          {fieldId: 10, fieldName: "officia", fieldContent: "Eaque ad officia"}
                       ]}
                  ]},
                 {statusId: 2,
@@ -93,8 +97,8 @@ export default{
                     taskDate: "21.08.2018",
                     taskTime: "5h",
                     taskExecutor:"Rus Lang",
-                    contentItems:[
-                        {contentId: 11, contentName: "magnam", content: "Content 11"}
+                    customFields:[
+                        {fieldId: 11, fieldName: "magnam", fieldContent: "field 11"}
                     ]}
                 ]}
             ]
@@ -115,6 +119,28 @@ export default{
         else{
             document.location.replace("/auth");
         }
+    },
+    mounted(){
+        var self = this;
+        this.$root.$on('clickOnTaskName', function(task){
+            self.clickedTask = task;
+            self.showTaskMenu = !self.showTaskMenu;
+        });
+        this.$root.$on('changeStatus', function(selectedTask, newStatus){
+            self.statusItems.forEach(function(statusItem){
+                statusItem.taskItems.forEach(function(taskItem){
+                    if (taskItem == selectedTask){
+                        statusItem.taskItems.splice(statusItem.taskItems.indexOf(taskItem),1);
+                    };
+                });
+            });
+            self.statusItems.forEach(function(statusItem){
+                if(statusItem.statusId == newStatus){
+                    selectedTask.statusId = newStatus;
+                    statusItem.taskItems.push(selectedTask);
+                };
+            });
+        });
     },
     methods:{
         logOut(){
@@ -148,6 +174,9 @@ export default{
     .board__button,.user__avatar, .user__name{
         display: inline-block;
         vertical-align: middle;
+    }
+    .user__name{
+        margin-right: 10px;
     }
     .user__logout{
         text-decoration: none;

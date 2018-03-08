@@ -14,7 +14,7 @@
                 <div class="task__priority">
                     <img src="./../assets/priority.png" alt="" class="task__priority-img">
                 </div>
-                <a href="" class="task__name" @click.prevent>{{taskItem.taskName}}</a>
+                <a href="" class="task__name" @click.prevent="showTaskMenu(taskItem)">{{taskItem.taskName}}</a>
             </div>
             <div class="task__footer">
                 <div class="task__date">{{taskItem.taskDate}}</div>
@@ -26,7 +26,12 @@
 
 <script>
 export default{
-    props:['taskItems']
+    props:['taskItems'],
+    methods:{
+        showTaskMenu(task){
+            this.$root.$emit('clickOnTaskName', task);
+        }
+    }
 }
 </script>
 
