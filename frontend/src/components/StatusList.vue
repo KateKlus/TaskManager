@@ -25,5 +25,6 @@ export default{
         vertical-align: top;
         background: rgba(#333,0.2);
         text-align: center;
+        min-width: 250px;
     }
 </style>

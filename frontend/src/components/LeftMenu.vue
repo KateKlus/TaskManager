@@ -1,16 +1,17 @@
 <template>
     <nav class="menu">
-        <a href="" class="board__button" id="leftMenuShow" @click.prevent="show = !show">
+        <a href="" class="board__button" @click.prevent="showMenu = !showMenu">
            <img src="../assets/menu.png" alt="MNU" class="board__button-img">
         </a>
-        <div class="menu__block" v-if="show" >
-            <div class="menu__title">{{leftMenu.menuTitle}}</div>
-            <a href="" class="board__button board__button-close"><img src="../assets/menu.png" alt="MNU" class="board__button-img" @click.prevent="show = !show"></a>
+        <div class="menu__block" v-if="showMenu" >
+            <div class="menu__title">Меню</div>
+            <a href="" class="board__button board__button-close"><img src="../assets/menu.png" alt="MNU" class="board__button-img" @click.prevent="showMenu = !showMenu"></a>
             <ul class="menu__list">
-                <li class="menu__item" v-for="menuItem in leftMenu.menuItems"><a :href="menuItem.menuItemLink" class="menu__link">{{menuItem.menuItemName}}</a></li>
+                <li class="menu__item"><a href="" class="menu__link" @click.prevent="showNewBoardMenu = !showNewBoardMenu">Создать доску</a></li>
+                <li class="menu__item"><a href="" class="menu__link">Мои доски</a></li>
             </ul>
         </div>
-
+        <newBoardMenu v-if="showNewBoardMenu" @wrapperClick="showNewBoardMenu = !showNewBoardMenu" :currentUser="currentUser"></newBoardMenu>
     </nav>
 
 </template>
@@ -20,10 +21,11 @@
 export default{
     data(){
         return{
-            show : false
+            showMenu : false,
+            showNewBoardMenu: false
         }
     },
-    props:['leftMenu']
+    props:['currentUser']
 }
 </script>
 
@@ -59,7 +61,7 @@ export default{
         }
     }
     .menu__item{
-        padding: 5px;
+
         margin: 5px;
         border: 1px solid black;
         border-radius: 10px;
@@ -69,6 +71,9 @@ export default{
         }
     }
     .menu__link{
+        display: inline-block;
+        width: 100%;
+        padding: 5px;
         text-decoration: none;
         color: black;
     }

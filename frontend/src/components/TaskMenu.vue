@@ -75,8 +75,8 @@ export default{
         top: 50px;
         left: 20%;
         right: 20%;
-        min-height: 300px;
         max-height: 560px;
+        width: 800px;
         overflow-y: auto;
         border: 2px solid black;
         background-color: #cccccc;

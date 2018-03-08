@@ -9,6 +9,7 @@ import statusList from './components/StatusList.vue'
 import taskList from './components/TaskList.vue'
 import contentList from './components/TaskContentList.vue'
 import taskMenu from './components/TaskMenu.vue'
+import newBoardMenu from './components/NewBoardMenu.vue'
 
 Vue.component('board', board);
 Vue.component('leftMenu', leftMenu);
@@ -16,6 +17,7 @@ Vue.component('statusList', statusList);
 Vue.component('taskList', taskList);
 Vue.component('contentList', contentList);
 Vue.component('taskMenu', taskMenu);
+Vue.component('newBoardMenu', newBoardMenu);
 Vue.use(VueRouter);
 const router = new VueRouter({
     routes,

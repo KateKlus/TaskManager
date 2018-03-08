@@ -1,11 +1,11 @@
 <template>
     <div class="wrapper">
         <header id="board__header" class="board__header">
-            <leftMenu :leftMenu="leftMenu"></leftMenu>
+            <leftMenu :currentUser="currentUser"></leftMenu>
             <div class="board__title">{{boardTitle}}</div>
             <div class="board__user">
                 <a href="" class="user__logout" @click.prevent="logOut">выйти</a>
-                <div class="user__name">{{userName}}</div>
+                <div class="user__name">{{currentUser.username}}</div>
                 <div class="user__avatar">
                     <img src="./assets/avatar.jpg" alt="User" class="user__avatar-img">
                 </div>
@@ -25,18 +25,8 @@ export default{
         return{
             showTaskMenu: false,
             clickedTask:"",
+            currentUser:"",
             boardTitle: 'Название доски',
-            userName: 'Имя пользователя',
-            leftMenu:{
-                menuTitle: "Меню",
-                menuItems:[
-                    {menuItemLink: "https://www.google.ru/", menuItemName: "Создать доску"},
-                    {menuItemLink: "https://www.yandex.ru/", menuItemName: "Мои доски"},
-                    {menuItemLink: "https://www.yandex.ru/", menuItemName: "Пригласить"},
-                    {menuItemLink: "https://www.yandex.ru/", menuItemName: "Настройка доски"},
-                    {menuItemLink: "https://www.yandex.ru/", menuItemName: "Отчеты"}
-                ]
-            },
             statusItems:[
                 {statusId: 0,
                  statusName: "Название статуса",
@@ -107,14 +97,18 @@ export default{
     beforeCreate(){
         var self = this;
         if(getCookie("access_token")){
-            axios.get("http://localhost:8080/api/getUsername?access_token=" + getCookie("access_token"))
+            axios.get("http://localhost:8080/api/getUserId?access_token=" + getCookie("access_token"))
                 .then(function(response){
-                    self.userName = response.data;
+                    axios.get("http://localhost:8080/api/users/"+response.data)
+                        .then(function(response){
+                        self.currentUser = response.data;
+                    })
                 })
                 .catch(function(error){
                     delete_cookie("access_token");
                     return error;
                 });
+            axios.get("http://localhost:8080/api/boards/").then(function(response){console.log(response);})
         }
         else{
             document.location.replace("/auth");
@@ -146,7 +140,7 @@ export default{
         logOut(){
             axios.get("http://localhost:8080/api/logouts?access_token="+getCookie("access_token"))
                 .then(function(response){
-                    delete_cookie("access_token")
+                    delete_cookie("access_token");
                     document.location.replace("/auth");
                 })
         }
