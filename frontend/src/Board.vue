@@ -108,7 +108,6 @@ export default{
                     delete_cookie("access_token");
                     return error;
                 });
-            axios.get("http://localhost:8080/api/boards/").then(function(response){console.log(response);})
         }
         else{
             document.location.replace("/auth");

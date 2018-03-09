@@ -34,11 +34,6 @@ export default{
         },
         createNewBoard(){
             var self = this;
-            console.log(this.newBoard)
-//            var params = new URLSearchParams();
-//            params.append('board_name', this.newBoard.boardName);
-//            params.append('description', this.newBoard.boardDescription);
-//            axios.post('http://localhost:8080/api/users/'+self.currentUser.id+'/boards',)
             axios({
                 method: 'post',
                 url: 'http://localhost:8080/api/users/'+self.currentUser.id+'/boards',
