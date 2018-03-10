@@ -38,4 +38,21 @@ public class TaskStatus {
     public void setStatusName(String statusName) {
         this.statusName = statusName;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        TaskStatus that = (TaskStatus) o;
+        return getId() == that.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.valueOf(getId()).hashCode();
+    }
 }

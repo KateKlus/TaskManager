@@ -1,5 +1,6 @@
 package ru.compito.taskmanager.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -8,13 +9,14 @@ import javax.persistence.*;
 @Table(name="board_status")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class BoardStatus {
-
+    @JsonIgnore
     @EmbeddedId
     private BoardStatusIdentity boardStatusIdentity;
 
     @Column(name="priority_level")
     private Integer priorityLevel;
 
+    @JsonIgnore
     @MapsId( "boardId" )
     @ManyToOne
     private Board board;

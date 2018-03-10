@@ -4,9 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.compito.taskmanager.entity.Board;
-import ru.compito.taskmanager.entity.Task;
-import ru.compito.taskmanager.entity.User;
+import ru.compito.taskmanager.entity.*;
 import ru.compito.taskmanager.service.BoardService;
 
 import java.util.List;
@@ -34,8 +32,8 @@ public class BoardController {
     }
 
     @GetMapping(value = "/{id}/users", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Task> getUsersFromBoard(@PathVariable Integer id){
-        return boardService.getUsers(id);
+    public List<User> getUsersFromBoard(@PathVariable Integer id){
+        return boardService.getUsersById(id);
     }
 
     @GetMapping(value = "/{id}/tasks", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -46,6 +44,11 @@ public class BoardController {
     @GetMapping(value = "/{id}/tasks/{taskId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Task> getTaskByIdFromBoard(@PathVariable Integer id, @PathVariable Integer taskId){
         return boardService.getTaskById(id,taskId);
+    }
+
+    @GetMapping(value = "/{id}/statuses", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<BoardStatus> getBoardStatusesFromBoard(@PathVariable Integer id){
+        return boardService.getBoardStatuses(id);
     }
 
     @PutMapping(value = "/{id}",

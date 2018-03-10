@@ -1,8 +1,6 @@
 package ru.compito.taskmanager.service;
 
-import ru.compito.taskmanager.entity.Board;
-import ru.compito.taskmanager.entity.Task;
-import ru.compito.taskmanager.entity.User;
+import ru.compito.taskmanager.entity.*;
 
 import java.util.List;
 
@@ -15,5 +13,6 @@ public interface BoardService {
     User getBoardOwner(Integer boardId);
     List<Task> getTasks(Integer boardId);
     List<Task> getTaskById(Integer boardId, Integer taskId);
-    List<Task> getUsers(Integer boardId);
+    List<User> getUsersById(Integer boardId);
+    List<BoardStatus> getBoardStatuses(Integer boardId);
 }

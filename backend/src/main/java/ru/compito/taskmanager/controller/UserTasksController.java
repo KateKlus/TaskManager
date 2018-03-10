@@ -26,6 +26,12 @@ public class UserTasksController {
     public Task getTask(@PathVariable Integer userId, @PathVariable Integer taskId) {
         return taskService.getTaskByUserId(userId,taskId);
     }
+    @PostMapping(value = "/{userId}/tasks", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public Task createTask(@PathVariable Integer userId, @RequestBody Task task) {
+        return taskService.save(userId, task);
+    }
 
     @DeleteMapping("/{id}/tasks")
     @ResponseStatus(HttpStatus.NO_CONTENT)
