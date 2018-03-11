@@ -69,4 +69,21 @@ public class Role {
     public void setBoard(Board board) {
         this.board = board;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Role that = (Role) o;
+        return getId() == that.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.valueOf(getId()).hashCode();
+    }
 }

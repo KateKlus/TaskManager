@@ -39,7 +39,7 @@ public class Task {
     @JoinTable(name = "users_tasks",
             joinColumns = {@JoinColumn(name = "task_id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id")})
-    private List<User> users;
+    private List<User> users = new ArrayList<>();
 
     public Task(){
 
@@ -102,5 +102,22 @@ public class Task {
 
     public void setCurrentStatus(TaskStatus currentStatus) {
         this.currentStatus = currentStatus;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Task that = (Task) o;
+        return getId() == that.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.valueOf(getId()).hashCode();
     }
 }

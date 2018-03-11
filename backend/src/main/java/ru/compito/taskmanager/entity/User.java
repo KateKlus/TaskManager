@@ -7,6 +7,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -54,14 +55,14 @@ public class User {
     private List<Role> roles;*/
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "users")
-    private List<Task> createdTasks;
+    private List<Task> createdTasks = new ArrayList<>();
 
     @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL, mappedBy = "users")
     /*@JoinTable(name = "users_tasks",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "task_id")})*/
-    private List<Task> tasks;
+    private List<Task> tasks = new ArrayList<>();
 
     public User(){
 
@@ -136,5 +137,22 @@ public class User {
 
     public void setFullname(String fullname) {
         this.fullname = fullname;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        User that = (User) o;
+        return getId() == that.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.valueOf(getId()).hashCode();
     }
 }
