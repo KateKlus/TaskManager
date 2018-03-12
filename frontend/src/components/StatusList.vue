@@ -1,21 +1,23 @@
 <template>
     <ul class="status__list">
-        <li class="status__item" v-for="(statusItem, index) in statusItems">
-            <div class="status__name">{{statusItem.statusName}}</div>
-            <taskList :taskItems="statusItems[index].taskItems"></taskList>
+        <li class="status__item" v-for="(statusItem, index) in statusList">
+            <div class="status__name">{{statusItem.taskStatus.statusName}}</div>
+            <taskList :statusItemID="statusList[index].taskStatus.id" :taskList="taskList"></taskList>
         </li>
     </ul>
 </template>
 
 <script>
 export default{
-    props:['statusItems']
+    props:['statusList','taskList']
 }
 </script>
 
 <style lang="scss" scoped>
     .status__list{
         white-space: nowrap;
+        overflow-x: auto;
+        min-height: 100%;
     }
     .status__item{
         display: inline-block;

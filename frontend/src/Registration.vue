@@ -5,11 +5,11 @@
            <div class="form__title">Регистрация</div>
             <label class="form__label">
                 <div class="form__name">Введите имя:</div>
-                <input type="text" class="form__input" v-model="user.username" required>
+                <input type="text" class="form__input" v-model="user.fullname" required>
             </label>
               <label class="form__label">
                 <div class="form__name">Введите логин:</div>
-                <input type="text" class="form__input" v-model="user.login" required>
+                <input type="text" class="form__input" v-model="user.username" required>
             </label>
             <label class="form__label">
                 <div class="form__name">Введите пароль:</div>
@@ -36,7 +36,7 @@ export default{
         return{
             user:{
                 username:'',
-                login:'',
+                fullname:'',
                 password:'',
                 passwordConfirm:'',
                 email:''
@@ -50,7 +50,8 @@ export default{
                     method:'post',
                     url:'http://localhost:8080/api/register',
                     data:{
-                        username: this.user.login,
+                        username: this.user.username,
+                        fullname: this.user.fullname,
                         password: this.user.password,
                         passwordConfirmation: this.user.passwordConfirm,
                         email: this.user.email

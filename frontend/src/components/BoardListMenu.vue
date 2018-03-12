@@ -4,7 +4,7 @@
         <div class="boardListMenu__body">
             <div class="boardListMenu__title">Список досок</div>
             <ul class="boardListMenu__list">
-                <li class="boardListMenu__item" v-for="board in boardList"><a href="" class="boardListMenu__link">{{board.boardName}}</a></li>
+                <li class="boardListMenu__item" v-for="board in boardList"><a href="" class="boardListMenu__link" @click.prevent="selectBoard(board)">{{board.boardName}}</a></li>
             </ul>
 
         </div>
@@ -19,17 +19,20 @@ export default{
             boardList: ""
         }
     },
-    props:['currentUser'],
     methods:{
         closeMenu(){
             this.$emit('wrapperClick');
+        },
+        selectBoard(board){
+            this.$root.$emit('onBoardSelect', board);
         }
     },
-    beforeCreate(){
-        self = this;
-        axios.get("http://localhost:8080/api/boards/")
-            .then(function(response){
-            self.boardList = response.data;
+    created(){
+        var self = this;
+        axios.get("http://localhost:8080/api/getUserId?access_token=" + getCookie("access_token")).then(function(response){
+            axios.get("http://localhost:8080/api/users/"+response.data+"/boards").then(function(response){
+                self.boardList = response.data;
+            })
         })
     }
 }

@@ -1,8 +1,8 @@
 <template>
     <div class="wrapper">
-        <header id="board__header" class="board__header">
-            <leftMenu :currentUser="currentUser"></leftMenu>
-            <div class="board__title">{{boardTitle}}</div>
+        <header v-if="selectedBoardID" id="board__header" class="board__header">
+            <leftMenu :currentUser="currentUser" :statusList="statusList"></leftMenu>
+            <div class="board__title">{{currentBoard.boardName}}</div>
             <div class="board__user">
                 <a href="" class="user__logout" @click.prevent="logOut">выйти</a>
                 <div class="user__name">{{currentUser.username}}</div>
@@ -11,9 +11,10 @@
                 </div>
             </div>
         </header>
-        <statusList :statusItems="statusItems"></statusList>
-        <taskMenu v-if="showTaskMenu" :taskItem="clickedTask" :statusItems="statusItems" @wrapperClick="showTaskMenu = !showTaskMenu"></taskMenu>
-
+        <statusList v-if="selectedBoardID" :statusList="statusList" :taskList="taskList"></statusList>
+        <taskMenu v-if="showTaskMenu" :taskItem="clickedTask" :statusList="statusList" @wrapperClick="showTaskMenu = !showTaskMenu"></taskMenu>
+        <boardListMenu v-if="!selectedBoardID&&!showNewBoardMenu"></boardListMenu>
+        <newBoardMenu v-if="!selectedBoardID&&showNewBoardMenu" :currentUser="currentUser"></newBoardMenu>
     </div>
 
 </template>
@@ -26,72 +27,12 @@ export default{
             showTaskMenu: false,
             clickedTask:"",
             currentUser:"",
-            boardTitle: 'Название доски',
-            statusItems:[
-                {statusId: 0,
-                 statusName: "Название статуса",
-                 taskItems:[
-                     {taskId:0,
-                      taskName: "Имя задачи",
-                      statusId: 0,
-                      taskDate: "28.02.2018",
-                      taskTime: "12h",
-                      taskExecutor:"German",
-                      customFields:[
-                          {fieldId: 0, fieldName: "Название поля", fieldContent: "Содержание поля"},
-                          {fieldId: 1, fieldName: "ipsum", fieldContent: "Lorem ipsum dolor sit amet"}
-                      ]},
-                     {taskId:1,
-                      taskName: "impedit",
-                      statusId: 0,
-                      taskDate: "12.02.2018",
-                      taskTime: "4h",
-                      taskExecutor:"Exec",
-                      customFields:[
-                          {fieldId: 3, fieldName: "dolor", fieldContent: "Контееент!"},
-                          {fieldId: 4, fieldName: "sit", fieldContent: "Абракадабра"}
-                      ]}
-                 ]},
-                {statusId: 1,
-                 statusName: "Deserunt",
-                 taskItems:[
-                     {taskId:2,
-                      taskName: "Task 3",
-                      statusId: 1,
-                      taskDate: "01.01.2018",
-                      taskTime: "36h",
-                      taskExecutor:"Thomas Check",
-                      customFields:[
-                          {fieldId: 5, fieldName: "amet", fieldContent: "field 5"},
-                          {fieldId: 6, fieldName: "consectetur", fieldContent: "eius dolor impedit"},
-                          {fieldId: 7, fieldName: "adipisicing", fieldContent: "field 7"},
-                          {fieldId: 8, fieldName: "elit", fieldContent: "dolor sit amet"}
-                      ]},
-                     {taskId:3,
-                      taskName: "voluptates",
-                      statusId: 1,
-                      taskDate: "28.01.2017",
-                      taskTime: "1h",
-                      taskExecutor:"Fill Kill",
-                      customFields:[
-                          {fieldId: 9, fieldName: "Eaque", fieldContent: "deserunt explicabo voluptates"},
-                          {fieldId: 10, fieldName: "officia", fieldContent: "Eaque ad officia"}
-                      ]}
-                 ]},
-                {statusId: 2,
-                 statusName: "Explicabo",
-                 taskItems:[
-                   {taskId:4,
-                    taskName: "beatae",
-                    statusId: 2,
-                    taskDate: "21.08.2018",
-                    taskTime: "5h",
-                    taskExecutor:"Rus Lang",
-                    customFields:[
-                        {fieldId: 11, fieldName: "magnam", fieldContent: "field 11"}
-                    ]}
-                ]}
-            ]
+            currentBoard:"",
+            boardList:"",
+            statusList:"",
+            taskList:"",
+            selectedBoardID:"",
+            showNewBoardMenu: false
         }
     },
     beforeCreate(){
@@ -99,15 +40,23 @@ export default{
         if(getCookie("access_token")){
             axios.get("http://localhost:8080/api/getUserId?access_token=" + getCookie("access_token"))
                 .then(function(response){
-                    axios.get("http://localhost:8080/api/users/"+response.data)
-                        .then(function(response){
+                    axios.get("http://localhost:8080/api/users/"+response.data).then(function(response){
                         self.currentUser = response.data;
+                        axios.get("http://localhost:8080/api/users/"+self.currentUser.id+"/boards")
+                            .then(function(response){
+                            if(response.data.length == 0){
+                                self.showNewBoardMenu = true;
+                            }else{
+                                self.boardList = response.data;
+                            }
+                        })
                     })
                 })
                 .catch(function(error){
                     delete_cookie("access_token");
-                    return error;
+                    alert(error);
                 });
+
         }
         else{
             document.location.replace("/auth");
@@ -119,35 +68,87 @@ export default{
             self.clickedTask = task;
             self.showTaskMenu = !self.showTaskMenu;
         });
-        this.$root.$on('changeStatus', function(selectedTask, newStatus){
-            self.statusItems.forEach(function(statusItem){
-                statusItem.taskItems.forEach(function(taskItem){
-                    if (taskItem == selectedTask){
-                        statusItem.taskItems.splice(statusItem.taskItems.indexOf(taskItem),1);
-                    };
-                });
-            });
-            self.statusItems.forEach(function(statusItem){
-                if(statusItem.statusId == newStatus){
-                    selectedTask.statusId = newStatus;
-                    statusItem.taskItems.push(selectedTask);
-                };
-            });
-        });
+        this.$root.$on('onBoardSelect', function(board){
+            self.selectedBoardID = board.id;
+            set_cookie("current_board", board.id);
+        })
+        this.$root.$on('updateBoard',function(){
+            self.updateBoard();
+        })
+        if(getCookie("current_board")){
+                this.selectedBoardID = getCookie("current_board");
+            }
+    },
+    watch:{
+        selectedBoardID : function(){
+            this.updateBoard();
+        },
+        showNewBoardMenu: function(value){
+            if(value == "false"){
+                document.location.replace("/board");
+            }
+        }
     },
     methods:{
         logOut(){
             axios.get("http://localhost:8080/api/logouts?access_token="+getCookie("access_token"))
                 .then(function(response){
                     delete_cookie("access_token");
+                    delete_cookie("current_board");
                     document.location.replace("/auth");
                 })
+        },
+        updateBoard(){
+            var self = this;
+            if (this.selectedBoardID){
+                axios.get("http://localhost:8080/api/boards/"+self.selectedBoardID).then(function(response){
+                    self.currentBoard = response.data;
+                }).catch(function(error){
+                    alert(error);
+                }).then(function(){
+                    axios.get("http://localhost:8080/api/boards/"+self.currentBoard.id+"/statuses").then(function(response){
+                        self.statusList = response.data;
+                        console.log(self.statusList);
+                    }).catch(function(error){
+                        alert(error);
+                    })
+                }).then(function(){
+                    axios.get("http://localhost:8080/api/boards/"+self.currentBoard.id+"/tasks").then(function(response){
+                        self.taskList = response.data;
+                    }).catch(function(error){
+                        alert(error);
+                    })
+                })
+            }
         }
     }
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+    .menu__wrapper{
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(#000,.5);
+        z-index: 0;
+    }
+    .menu__body{
+        text-align: center;
+        position: absolute;
+        z-index: 100;
+        padding: 10px 30px;
+        top: 50px;
+        left: 20%;
+        right: 20%;
+        max-height: 560px;
+        width: 800px;
+        overflow-y: auto;
+        border: 2px solid black;
+        background-color: #cccccc;
+    }
     .board__header{
         display: flex;
         justify-content: space-between;

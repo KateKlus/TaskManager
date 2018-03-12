@@ -8,11 +8,15 @@
             <a href="" class="board__button board__button-close"><img src="../assets/menu.png" alt="MNU" class="board__button-img" @click.prevent="showMenu = !showMenu"></a>
             <ul class="menu__list">
                 <li class="menu__item"><a href="" class="menu__link" @click.prevent="showNewBoardMenu = !showNewBoardMenu">Создать доску</a></li>
+                <li class="menu__item"><a href="" class="menu__link" @click.prevent="showNewStatusMenu = !showNewStatusMenu">Добавить статус</a></li>
+                <li class="menu__item"><a href="" class="menu__link" @click.prevent="showNewTaskMenu = !showNewTaskMenu">Добавить задачу</a></li>
                 <li class="menu__item"><a href="" class="menu__link" @click.prevent="showBoardListMenu = !showBoardListMenu">Мои доски</a></li>
             </ul>
         </div>
         <newBoardMenu v-if="showNewBoardMenu" @wrapperClick="showNewBoardMenu = !showNewBoardMenu" :currentUser="currentUser"></newBoardMenu>
-        <boardListMenu v-if="showBoardListMenu" @wrapperClick="showBoardListMenu = !showBoardListMenu" :currentUser="currentUser"></boardListMenu>
+        <newStatusMenu v-if="showNewStatusMenu" @wrapperClick="showNewStatusMenu = !showNewStatusMenu" :currentUser="currentUser"></newStatusMenu>
+        <newTaskMenu v-if="showNewTaskMenu" @wrapperClick="showNewTaskMenu = !showNewTaskMenu" :currentUser="currentUser" :statusList="statusList"></newTaskMenu>
+        <boardListMenu v-if="showBoardListMenu" @wrapperClick="showBoardListMenu = !showBoardListMenu"></boardListMenu>
     </nav>
 
 </template>
@@ -24,10 +28,12 @@ export default{
         return{
             showMenu : false,
             showNewBoardMenu: false,
+            showNewStatusMenu:false,
+            showNewTaskMenu:false,
             showBoardListMenu: false
         }
     },
-    props:['currentUser']
+    props:['currentUser','statusList']
 }
 </script>
 
