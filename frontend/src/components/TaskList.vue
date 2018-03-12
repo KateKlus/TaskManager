@@ -1,10 +1,10 @@
 <template>
     <ul class="task__list">
-        <li class="task__item" v-for="(taskItem, index) in taskItems">
+        <li class="task__item" v-for="(taskItem, index) in taskList" v-if="taskItem.currentStatus.id == statusItemID">
             <div class="task__header">
-                <div class="task__index">TskMgr-{{taskItem.taskId}}</div>
+                <div class="task__index">TskMgr-{{taskItem.id}}</div>
                 <div class="task__executor">
-                    <div class="task__executor-name">{{taskItem.taskExecutor}}</div>
+                    <div class="task__executor-name">{{taskItem.author.username}}</div>
                     <div class="task__executor-image">
                         <img src="../assets/avatar.jpg" alt="AVA" class="task__executor-img">
                     </div>
@@ -14,7 +14,7 @@
                 <div class="task__priority">
                     <img src="./../assets/priority.png" alt="" class="task__priority-img">
                 </div>
-                <a href="" class="task__name" @click.prevent>{{taskItem.taskName}}</a>
+                <a href="" class="task__name" @click.prevent="showTaskMenu(taskItem)">{{taskItem.taskName}}</a>
             </div>
             <div class="task__footer">
                 <div class="task__date">{{taskItem.taskDate}}</div>
@@ -26,7 +26,12 @@
 
 <script>
 export default{
-    props:['taskItems']
+    props:['statusItemID','taskList'],
+    methods:{
+        showTaskMenu(task){
+            this.$root.$emit('clickOnTaskName', task);
+        }
+    }
 }
 </script>
 
