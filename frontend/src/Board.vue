@@ -1,17 +1,20 @@
 <template>
     <div class="wrapper">
-        <header id="board__header" class="board__header">
-            <leftMenu :leftMenu="leftMenu"></leftMenu>
-            <div class="board__title">{{boardTitle}}</div>
+        <header v-if="selectedBoardID" id="board__header" class="board__header">
+            <leftMenu :currentUser="currentUser" :statusList="statusList"></leftMenu>
+            <div class="board__title">{{currentBoard.boardName}}</div>
             <div class="board__user">
                 <a href="" class="user__logout" @click.prevent="logOut">выйти</a>
-                <div class="user__name">{{userName}}</div>
+                <div class="user__name">{{currentUser.username}}</div>
                 <div class="user__avatar">
                     <img src="./assets/avatar.jpg" alt="User" class="user__avatar-img">
                 </div>
             </div>
         </header>
-        <statusList :statusItems="statusItems"></statusList>
+        <statusList v-if="selectedBoardID" :statusList="statusList" :taskList="taskList"></statusList>
+        <taskMenu v-if="showTaskMenu" :taskItem="clickedTask" :statusList="statusList" @wrapperClick="showTaskMenu = !showTaskMenu"></taskMenu>
+        <boardListMenu v-if="!selectedBoardID&&!showNewBoardMenu"></boardListMenu>
+        <newBoardMenu v-if="!selectedBoardID&&showNewBoardMenu" :currentUser="currentUser"></newBoardMenu>
     </div>
 
 </template>
@@ -21,114 +24,131 @@ import axios from 'axios'
 export default{
     data(){
         return{
-            boardTitle: 'Название доски',
-            userName: 'Имя пользователя',
-            leftMenu:{
-                menuTitle: "Меню",
-                menuItems:[
-                    {menuItemLink: "https://www.google.ru/", menuItemName: "Создать доску"},
-                    {menuItemLink: "https://www.yandex.ru/", menuItemName: "Мои доски"},
-                    {menuItemLink: "https://www.yandex.ru/", menuItemName: "Пригласить"},
-                    {menuItemLink: "https://www.yandex.ru/", menuItemName: "Настройка доски"},
-                    {menuItemLink: "https://www.yandex.ru/", menuItemName: "Отчеты"}
-                ]
-            },
-            statusItems:[
-                {statusId: 0,
-                 statusName: "Название статуса",
-                 taskItems:[
-                     {taskId:0,
-                      taskName: "Имя задачи",
-                      statusId: 0,
-                      taskDate: "28.02.2018",
-                      taskTime: "12h",
-                      taskExecutor:"German",
-                      contentItems:[
-                          {contentId: 0, contentName: "Название поля", content: "Содержание поля"},
-                          {contentId: 1, contentName: "ipsum", content: "Lorem ipsum dolor sit amet"}
-                      ]},
-                     {taskId:1,
-                      taskName: "impedit",
-                      statusId: 0,
-                      taskDate: "12.02.2018",
-                      taskTime: "4h",
-                      taskExecutor:"Exec",
-                      contentItems:[
-                          {contentId: 3, contentName: "dolor", content: "Контееент!"},
-                          {contentId: 4, contentName: "sit", content: "Абракадабра"}
-                      ]}
-                 ]},
-                {statusId: 1,
-                 statusName: "Deserunt",
-                 taskItems:[
-                     {taskId:2,
-                      taskName: "Task 3",
-                      statusId: 1,
-                      taskDate: "01.01.2018",
-                      taskTime: "36h",
-                      taskExecutor:"Thomas Check",
-                      contentItems:[
-                          {contentId: 5, contentName: "amet", content: "Content 5"},
-                          {contentId: 6, contentName: "consectetur", content: "eius dolor impedit"},
-                          {contentId: 7, contentName: "adipisicing", content: "Content 7"},
-                          {contentId: 8, contentName: "elit", content: "dolor sit amet"}
-                      ]},
-                     {taskId:3,
-                      taskName: "voluptates",
-                      statusId: 1,
-                      taskDate: "28.01.2017",
-                      taskTime: "1h",
-                      taskExecutor:"Fill Kill",
-                      contentItems:[
-                          {contentId: 9, contentName: "Eaque", content: "deserunt explicabo voluptates"},
-                          {contentId: 10, contentName: "officia", content: "Eaque ad officia"}
-                      ]}
-                 ]},
-                {statusId: 2,
-                 statusName: "Explicabo",
-                 taskItems:[
-                   {taskId:4,
-                    taskName: "beatae",
-                    statusId: 2,
-                    taskDate: "21.08.2018",
-                    taskTime: "5h",
-                    taskExecutor:"Rus Lang",
-                    contentItems:[
-                        {contentId: 11, contentName: "magnam", content: "Content 11"}
-                    ]}
-                ]}
-            ]
+            showTaskMenu: false,
+            clickedTask:"",
+            currentUser:"",
+            currentBoard:"",
+            boardList:"",
+            statusList:"",
+            taskList:"",
+            selectedBoardID:"",
+            showNewBoardMenu: false
         }
     },
     beforeCreate(){
         var self = this;
         if(getCookie("access_token")){
-            axios.get("http://localhost:8080/api/getUsername?access_token=" + getCookie("access_token"))
+            axios.get("http://localhost:8080/api/getUserId?access_token=" + getCookie("access_token"))
                 .then(function(response){
-                    self.userName = response.data;
+                    axios.get("http://localhost:8080/api/users/"+response.data).then(function(response){
+                        self.currentUser = response.data;
+                        axios.get("http://localhost:8080/api/users/"+self.currentUser.id+"/boards")
+                            .then(function(response){
+                            if(response.data.length == 0){
+                                self.showNewBoardMenu = true;
+                            }else{
+                                self.boardList = response.data;
+                            }
+                        })
+                    })
                 })
                 .catch(function(error){
                     delete_cookie("access_token");
-                    return error;
+                    alert(error);
                 });
+
         }
         else{
             document.location.replace("/auth");
+        }
+    },
+    mounted(){
+        var self = this;
+        this.$root.$on('clickOnTaskName', function(task){
+            self.clickedTask = task;
+            self.showTaskMenu = !self.showTaskMenu;
+        });
+        this.$root.$on('onBoardSelect', function(board){
+            self.selectedBoardID = board.id;
+            set_cookie("current_board", board.id);
+        })
+        this.$root.$on('updateBoard',function(){
+            self.updateBoard();
+        })
+        if(getCookie("current_board")){
+                this.selectedBoardID = getCookie("current_board");
+            }
+    },
+    watch:{
+        selectedBoardID : function(){
+            this.updateBoard();
+        },
+        showNewBoardMenu: function(value){
+            if(value == "false"){
+                document.location.replace("/board");
+            }
         }
     },
     methods:{
         logOut(){
             axios.get("http://localhost:8080/api/logouts?access_token="+getCookie("access_token"))
                 .then(function(response){
-                    delete_cookie("access_token")
+                    delete_cookie("access_token");
+                    delete_cookie("current_board");
                     document.location.replace("/auth");
                 })
+        },
+        updateBoard(){
+            var self = this;
+            if (this.selectedBoardID){
+                axios.get("http://localhost:8080/api/boards/"+self.selectedBoardID).then(function(response){
+                    self.currentBoard = response.data;
+                }).catch(function(error){
+                    alert(error);
+                }).then(function(){
+                    axios.get("http://localhost:8080/api/boards/"+self.currentBoard.id+"/statuses").then(function(response){
+                        self.statusList = response.data;
+                        console.log(self.statusList);
+                    }).catch(function(error){
+                        alert(error);
+                    })
+                }).then(function(){
+                    axios.get("http://localhost:8080/api/boards/"+self.currentBoard.id+"/tasks").then(function(response){
+                        self.taskList = response.data;
+                    }).catch(function(error){
+                        alert(error);
+                    })
+                })
+            }
         }
     }
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+    .menu__wrapper{
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(#000,.5);
+        z-index: 0;
+    }
+    .menu__body{
+        text-align: center;
+        position: absolute;
+        z-index: 100;
+        padding: 10px 30px;
+        top: 50px;
+        left: 20%;
+        right: 20%;
+        max-height: 560px;
+        width: 800px;
+        overflow-y: auto;
+        border: 2px solid black;
+        background-color: #cccccc;
+    }
     .board__header{
         display: flex;
         justify-content: space-between;
@@ -148,6 +168,9 @@ export default{
     .board__button,.user__avatar, .user__name{
         display: inline-block;
         vertical-align: middle;
+    }
+    .user__name{
+        margin-right: 10px;
     }
     .user__logout{
         text-decoration: none;
