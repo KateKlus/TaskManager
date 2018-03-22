@@ -34,33 +34,25 @@ export default{
                 url: 'http://localhost:8080/api/statuses/',
                 data:self.newStatus
             }).then(function (response) {
-                self.addNewBoardStatus();
+                self.addNewBoardStatus(response.data);
             }).catch(function (error) {
                 alert("Error! "+ error)
             });
 
         },
-        addNewBoardStatus(){
+        addNewBoardStatus(taskstatus){
             var self = this;
-            axios.get("http://localhost:8080/api/statuses/").then(function(response){
-                        response.data.forEach(function(item){
-                            if(item.statusName == self.newStatus.statusName){
-                                axios({
-                                    method: 'post',
-                                    url: 'http://localhost:8080/api/boards/'+getCookie("current_board")+'/statuses',
-                                    data:item
-                                }).then(function (response) {
-                                    alert("Success!");
-                                    self.$root.$emit('updateBoard');
-                                    self.$emit('wrapperClick');
-                                }).catch(function (error) {
-                                    alert("Error! "+ error)
-                                });
-                            }
-                        });
-                    }).catch(function(error){
-                        alert(error);
-                    })
+            axios({
+                method: 'post',
+                url: 'http://localhost:8080/api/boards/'+getCookie("current_board")+'/statuses',
+                data:taskstatus
+            }).then(function (response) {
+                alert("Success!");
+                self.$root.$emit('updateBoard');
+                self.$emit('wrapperClick');
+            }).catch(function (error) {
+                alert("Error! "+ error)
+            });
         }
     }
 }
