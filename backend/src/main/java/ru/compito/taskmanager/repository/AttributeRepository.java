@@ -3,7 +3,9 @@ package ru.compito.taskmanager.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.compito.taskmanager.entity.Attribute;
+import ru.compito.taskmanager.entity.TaskTemplate;
 
 @Transactional(readOnly = true)
 public interface AttributeRepository extends JpaRepository<Attribute, Integer> {
+    Attribute findByTaskTemplatesAndId(TaskTemplate taskTemplate, Integer attributeId);
 }

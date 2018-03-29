@@ -32,6 +32,12 @@ public class TaskTemplate {
     public TaskTemplate() {
     }
 
+    public TaskTemplate(String taskTemplateName, List<Attribute> attributes, Boolean isDefault) {
+        this.taskTemplateName = taskTemplateName;
+        this.attributes = attributes;
+        this.isDefault = isDefault;
+    }
+
     public Integer getId() {
         return id;
     }

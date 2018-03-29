@@ -28,8 +28,8 @@ public class TaskController {
 
     @PutMapping(value = "/{id}/",
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public void update(@PathVariable Integer id, @RequestBody Task task) {
-        taskService.update(task);
+    public Task update(@PathVariable Integer id, @RequestBody Task task) {
+        return taskService.update(task);
     }
 
     @DeleteMapping("/{id}/")
@@ -37,4 +37,5 @@ public class TaskController {
     public void delete(@PathVariable Integer id) {
         taskService.delete(id);
     }
+
 }

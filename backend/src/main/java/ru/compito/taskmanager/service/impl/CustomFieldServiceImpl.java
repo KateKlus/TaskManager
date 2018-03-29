@@ -3,7 +3,9 @@ package ru.compito.taskmanager.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.compito.taskmanager.entity.Attribute;
 import ru.compito.taskmanager.entity.CustomField;
+import ru.compito.taskmanager.repository.AttributeRepository;
 import ru.compito.taskmanager.repository.CustomFieldRepository;
 import ru.compito.taskmanager.service.CustomFieldService;
 
@@ -15,6 +17,8 @@ public class CustomFieldServiceImpl implements CustomFieldService{
 
     @Autowired
     private CustomFieldRepository customFieldRepository;
+    @Autowired
+    private AttributeRepository attributeRepository;
 
     @Override
     public CustomField getOne(Integer Id) {
@@ -32,12 +36,25 @@ public class CustomFieldServiceImpl implements CustomFieldService{
     }
 
     @Override
-    public void update(CustomField updatedCustomField) {
-        customFieldRepository.save(updatedCustomField);
+    public CustomField update(CustomField updatedCustomField) {
+        return customFieldRepository.save(updatedCustomField);
     }
 
     @Override
     public void delete(Integer customFieldId) {
         customFieldRepository.delete(customFieldId);
     }
+
+    @Override
+    public List<CustomField> findByAttributeId(Integer attributeId) {
+        Attribute attribute = attributeRepository.getOne(attributeId);
+        return customFieldRepository.findAllByAttribute(attribute);
+    }
+
+    @Override
+    public CustomField getByAttributeAndCustomFieldId(Integer attributeId, Integer customFieldId) {
+        Attribute attribute = attributeRepository.getOne(attributeId);
+        return customFieldRepository.findByAttributeAndId(attribute,customFieldId);
+    }
+
 }

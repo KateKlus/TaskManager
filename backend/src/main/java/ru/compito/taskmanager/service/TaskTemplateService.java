@@ -8,6 +8,7 @@ public interface TaskTemplateService {
     TaskTemplate getOne(Integer Id);
     List<TaskTemplate> findAll();
     TaskTemplate save(TaskTemplate taskTemplate);
-    void update(TaskTemplate updatedTaskTemplate);
+    TaskTemplate update(TaskTemplate updatedTaskTemplate);
     void delete(Integer taskTemplateId);
+
 }
