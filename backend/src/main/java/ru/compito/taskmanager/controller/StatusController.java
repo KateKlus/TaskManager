@@ -20,7 +20,7 @@ public class StatusController {
     public List<TaskStatus> getAll() {
         return taskStatusService.findAll();
     }
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{id}/", produces = MediaType.APPLICATION_JSON_VALUE)
     public TaskStatus getOne(@PathVariable Integer id) {
         return taskStatusService.getOne(id);
     }
@@ -30,12 +30,12 @@ public class StatusController {
     public TaskStatus createTask(@RequestBody TaskStatus taskStatus) {
         return taskStatusService.save(taskStatus);
     }
-    @PutMapping(value = "/{id}",
+    @PutMapping(value = "/{id}/",
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public void update(@PathVariable Integer id, @RequestBody TaskStatus taskStatus) {
         taskStatusService.update(taskStatus);
     }
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}/")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Integer id) {
         taskStatusService.delete(id);

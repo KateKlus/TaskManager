@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.compito.taskmanager.entity.Task;
+import ru.compito.taskmanager.entity.TaskTemplate;
 import ru.compito.taskmanager.entity.User;
 import ru.compito.taskmanager.repository.TaskRepository;
+import ru.compito.taskmanager.repository.TaskTemplateRepository;
 import ru.compito.taskmanager.repository.UserRepository;
 import ru.compito.taskmanager.service.TaskService;
 
@@ -20,6 +22,8 @@ public class TaskServiceImpl implements TaskService {
     private TaskRepository taskRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private TaskTemplateRepository taskTemplateRepository;
 
     @Override
     public Task getOne(Integer Id) {
@@ -37,17 +41,12 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<Task> findByUsername(String username) {
-        return taskRepository.findByUsername(username);
-    }
-
-    @Override
     public Task save(Integer userId, Task task) {
         User user = userRepository.getOne(userId);
+        TaskTemplate taskTemplate = new TaskTemplate("Default",null,true);
         task.setAuthor(user);
+        task.setTaskTemplate(taskTemplate);
         task.getUsers().add(user);
-        //user.getTasks().add(task);
-        //userRepository.save(user);
         return taskRepository.save(task);
     }
 
@@ -73,7 +72,27 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void update(Task updatedTask) {
-      taskRepository.save(updatedTask);
+    public List<Task> findByTaskTemplateId(Integer taskTemplateId) {
+        TaskTemplate taskTemplate = taskTemplateRepository.getOne(taskTemplateId);
+        return taskRepository.findAllByTaskTemplate(taskTemplate);
+    }
+
+    @Override
+    public Task getByTaskTemplateAndTaskId(Integer taskTemplateId, Integer taskId) {
+        TaskTemplate taskTemplate = taskTemplateRepository.getOne(taskTemplateId);
+        return taskRepository.findByTaskTemplateAndId(taskTemplate,taskId);
+    }
+
+    @Override
+    public Task updateTaskTemplate(Integer taskTemplateId, Integer taskId) {
+        Task task = taskRepository.getOne(taskId);
+        TaskTemplate taskTemplate = taskTemplateRepository.getOne(taskTemplateId);
+        task.setTaskTemplate(taskTemplate);
+        return taskRepository.save(task);
+    }
+
+    @Override
+    public Task update(Task updatedTask) {
+      return taskRepository.save(updatedTask);
     }
 }

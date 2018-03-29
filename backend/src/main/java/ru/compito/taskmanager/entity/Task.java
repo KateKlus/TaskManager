@@ -34,6 +34,10 @@ public class Task {
     @JoinColumn(name = "board")
     private Board board;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tasktemplate")
+    private TaskTemplate taskTemplate;
+
     @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "users_tasks",
@@ -102,6 +106,14 @@ public class Task {
 
     public void setCurrentStatus(TaskStatus currentStatus) {
         this.currentStatus = currentStatus;
+    }
+
+    public TaskTemplate getTaskTemplate() {
+        return taskTemplate;
+    }
+
+    public void setTaskTemplate(TaskTemplate taskTemplate) {
+        this.taskTemplate = taskTemplate;
     }
 
     @Override

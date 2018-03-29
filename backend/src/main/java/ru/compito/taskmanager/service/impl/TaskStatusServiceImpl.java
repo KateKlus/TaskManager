@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.compito.taskmanager.entity.TaskStatus;
+import ru.compito.taskmanager.repository.BoardStatusRepository;
 import ru.compito.taskmanager.repository.TaskStatusRepository;
 import ru.compito.taskmanager.service.TaskStatusService;
 
@@ -13,6 +14,8 @@ import java.util.List;
 @Transactional
 public class TaskStatusServiceImpl implements TaskStatusService {
 
+    @Autowired
+    private BoardStatusRepository boardStatusRepository;
     @Autowired
     private TaskStatusRepository taskStatusRepository;
 
@@ -38,6 +41,8 @@ public class TaskStatusServiceImpl implements TaskStatusService {
 
     @Override
     public void delete(Integer taskStatusId) {
+        TaskStatus taskStatus = taskStatusRepository.getOne(taskStatusId);
+        boardStatusRepository.deleteAllByTaskStatus(taskStatus);
         taskStatusRepository.delete(taskStatusId);
     }
 }
