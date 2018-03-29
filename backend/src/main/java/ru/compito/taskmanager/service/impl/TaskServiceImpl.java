@@ -46,8 +46,6 @@ public class TaskServiceImpl implements TaskService {
         User user = userRepository.getOne(userId);
         task.setAuthor(user);
         task.getUsers().add(user);
-        //user.getTasks().add(task);
-        //userRepository.save(user);
         return taskRepository.save(task);
     }
 
