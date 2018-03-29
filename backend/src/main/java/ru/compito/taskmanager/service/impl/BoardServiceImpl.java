@@ -52,6 +52,8 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public void delete(Integer boardId) {
+        Board board = boardRepository.getOne(boardId);
+        boardStatusRepository.deleteAllByBoard(board);
         boardRepository.delete(boardId);
     }
 
@@ -87,7 +89,6 @@ public class BoardServiceImpl implements BoardService{
     @Override
     public void addBoardStatus(Integer boardId, TaskStatus taskStatus) {
         Board board = boardRepository.getOne(boardId);
-        //BoardStatusIdentity boardStatusIdentity = new BoardStatusIdentity(boardId, taskStatus.getId());
         BoardStatus boardStatus = new BoardStatus(board, taskStatus);
         boardStatusRepository.save(boardStatus);
     }
@@ -96,12 +97,6 @@ public class BoardServiceImpl implements BoardService{
     public List<BoardStatus> getBoardStatuses(Integer boardId) {
         Board board = boardRepository.getOne(boardId);
         List<BoardStatus> boardStatuses = boardStatusRepository.findAllByBoard(board);
-        /*Set<TaskStatus> taskStatuses = new HashSet<>();
-        for(BoardStatus boardStatus : boardStatuses)
-            taskStatuses.add(boardStatus.getTaskStatus());
-        List<TaskStatus> taskStatusList = new ArrayList<>();
-        taskStatusList.addAll(taskStatuses);
-        return taskStatusList;*/
         return boardStatuses;
     }
 

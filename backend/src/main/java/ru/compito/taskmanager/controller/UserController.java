@@ -28,7 +28,7 @@ public class UserController{
     @Autowired
     private TokenStore tokenStore;
 
-    @PostMapping(value = "/register")
+    @PostMapping(value = "/register/")
     public String register(@RequestBody UserRegistration userRegistration){
         if(!userRegistration.getPassword().equals(userRegistration.getPasswordConfirmation()))
             return "Error the two passwords do not match";
@@ -36,7 +36,7 @@ public class UserController{
             return "Error this username already exists";
 
         //Проверка на наличии специальных символов в имени.
-        Pattern pattern = Pattern.compile("[a-zA-Z0-9\\s']{3,250}$");
+        Pattern pattern = Pattern.compile("^[a-zA-Z][a-zA-Z0-9-_\\.]{1,20}$");
         if(pattern.matcher(userRegistration.getUsername()).find())
             return "No special characters are allowed in the username";
 
@@ -46,12 +46,12 @@ public class UserController{
         return "User created";
     }
 
-    @GetMapping(value = "/logouts")
+    @GetMapping(value = "/logouts/")
     public void logout(@RequestParam (value = "access_token") String accessToken){
         tokenStore.removeAccessToken(tokenStore.readAccessToken(accessToken));
     }
 
-    @GetMapping(value ="/getUserId")
+    @GetMapping(value ="/getUserId/")
     public Integer getUserId(){
         User user = userService.findByUsername(SecurityContextHolder
                 .getContext().getAuthentication().getName());
@@ -63,23 +63,23 @@ public class UserController{
         return userService.getAllUsers();
     }
 
-    @GetMapping(value = "/users/{Id}",produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/users/{Id}/",produces = MediaType.APPLICATION_JSON_VALUE)
     public User getUserById(@PathVariable Integer Id) {
         return userService.getUserById(Id);
     }
 
 
-    @GetMapping(value = "/users/{Id}/boards",produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/users/{Id}/boards/",produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Board> getBoardsByUserId(@PathVariable Integer Id) {
         return userService.getBoardsByUserId(Id);
     }
 
-    @GetMapping(value = "/users/{Id}/boards/{boardId}",produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/users/{Id}/boards/{boardId}/",produces = MediaType.APPLICATION_JSON_VALUE)
     public Board getBoardByUserId(@PathVariable Integer Id,@PathVariable Integer boardId ) {
         return userService.getBoardByUserId(Id,boardId);
     }
 
-    @PostMapping(value = "/users/{Id}/boards", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/users/{Id}/boards/", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void createBoard(@RequestBody Board board, @PathVariable Integer Id) {
         boardService.save(Id,board);
     }
@@ -89,13 +89,13 @@ public class UserController{
         userService.saveUser(user);
     }
 
-    @PutMapping(value = "/users/{Id}",
+    @PutMapping(value = "/users/{Id}/",
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public void update(@PathVariable Integer Id, @RequestBody User user) {
         userService.updateUserById(Id,user);
     }
 
-    @DeleteMapping("/users/{Id}")
+    @DeleteMapping("/users/{Id}/")
     public void delete(@PathVariable Integer Id) {
         userService.deleteUserById(Id);
     }

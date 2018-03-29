@@ -31,11 +31,10 @@ public class User {
 
     @Column(name = "username")
     @NotNull
-    @Pattern(regexp = "[a-zA-Z0-9\\s']{3,250}$")
+    @Pattern(regexp = "^[a-zA-Z][a-zA-Z0-9-_\\.]{1,20}$")
     private String username;
 
     @Column(name = "fullname")
-    @Pattern(regexp = "[a-zA-Z\\s']{3,250}$")
     private String fullname;
 
     @JsonIgnore
