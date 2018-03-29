@@ -48,7 +48,7 @@ export default{
             if(this.user.password == this.user.passwordConfirm){
                 axios({
                     method:'post',
-                    url:'http://localhost:8080/api/register',
+                    url:'http://'+host+':'+port+'/api/register',
                     data:{
                         username: this.user.username,
                         fullname: this.user.fullname,

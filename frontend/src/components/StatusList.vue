@@ -1,7 +1,7 @@
 <template>
     <ul class="status__list">
         <li class="status__item" v-for="(statusItem, index) in statusList">
-            <div class="status__name">{{statusItem.taskStatus.statusName}}</div>
+            <a href="" class="status__name" @click.prevent="showStatusMenu(statusItem)">{{statusItem.taskStatus.statusName}}</a>
             <taskList :statusItemID="statusList[index].taskStatus.id" :taskList="taskList"></taskList>
         </li>
     </ul>
@@ -9,11 +9,20 @@
 
 <script>
 export default{
-    props:['statusList','taskList']
+    props:['statusList','taskList'],
+    methods:{
+        showStatusMenu(statusItem){
+            this.$root.$emit('clickOnStatusName', statusItem);
+        },
+    }
 }
 </script>
 
 <style lang="scss" scoped>
+    .status__name{
+        text-decoration: none;
+        color:black;
+    }
     .status__list{
         white-space: nowrap;
         overflow-x: auto;

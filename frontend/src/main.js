@@ -13,6 +13,9 @@ import newBoardMenu from './components/NewBoardMenu.vue'
 import boardListMenu from './components/BoardListMenu.vue'
 import newStatusMenu from './components/NewStatusMenu.vue'
 import newTaskMenu from './components/NewTaskMenu.vue'
+import statusMenu from './components/StatusMenu.vue'
+import boardMenu from './components/BoardMenu.vue'
+import userMenu from './components/UserMenu.vue'
 
 Vue.component('board', board);
 Vue.component('leftMenu', leftMenu);
@@ -24,6 +27,9 @@ Vue.component('newBoardMenu', newBoardMenu);
 Vue.component('boardListMenu', boardListMenu);
 Vue.component('newStatusMenu', newStatusMenu);
 Vue.component('newTaskMenu', newTaskMenu);
+Vue.component('statusMenu', statusMenu);
+Vue.component('boardMenu', boardMenu);
+Vue.component('userMenu', userMenu);
 Vue.use(VueRouter);
 const router = new VueRouter({
     routes,

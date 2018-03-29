@@ -2,10 +2,10 @@
     <div class="wrapper">
         <header v-if="selectedBoardID" id="board__header" class="board__header">
             <leftMenu :currentUser="currentUser" :statusList="statusList"></leftMenu>
-            <div class="board__title">{{currentBoard.boardName}}</div>
+            <a href="" class="board__title" @click.prevent="showBoardMenu = !showBoardMenu">{{currentBoard.boardName}}</a>
             <div class="board__user">
                 <a href="" class="user__logout" @click.prevent="logOut">выйти</a>
-                <div class="user__name">{{currentUser.username}}</div>
+                <a href="" class="user__name" @click.prevent="showUserMenu = !showUserMenu">{{currentUser.username}}</a>
                 <div class="user__avatar">
                     <img src="./assets/avatar.jpg" alt="User" class="user__avatar-img">
                 </div>
@@ -13,6 +13,9 @@
         </header>
         <statusList v-if="selectedBoardID" :statusList="statusList" :taskList="taskList"></statusList>
         <taskMenu v-if="showTaskMenu" :taskItem="clickedTask" :statusList="statusList" @wrapperClick="showTaskMenu = !showTaskMenu"></taskMenu>
+        <statusMenu v-if="showStatusMenu" :statusItem="clickedStatus" @wrapperClick="showStatusMenu = !showStatusMenu"></statusMenu>
+        <boardMenu v-if="showBoardMenu" :currentBoard="currentBoard" @wrapperClick="showBoardMenu = !showBoardMenu"></boardMenu>
+        <userMenu v-if="showUserMenu" :currentUser="currentUser" @wrapperClick="showUserMenu = !showUserMenu"></userMenu>
         <boardListMenu v-if="!selectedBoardID&&!showNewBoardMenu"></boardListMenu>
         <newBoardMenu v-if="!selectedBoardID&&showNewBoardMenu" :currentUser="currentUser"></newBoardMenu>
     </div>
@@ -25,7 +28,11 @@ export default{
     data(){
         return{
             showTaskMenu: false,
+            showBoardMenu: false,
+            showStatusMenu: false,
+            showUserMenu: false,
             clickedTask:"",
+            clickedStatus:"",
             currentUser:"",
             currentBoard:"",
             boardList:"",
@@ -38,11 +45,11 @@ export default{
     beforeCreate(){
         var self = this;
         if(getCookie("access_token")){
-            axios.get("http://localhost:8080/api/getUserId?access_token=" + getCookie("access_token"))
+            axios.get('http://'+host+':'+port+'/api/getUserId?access_token=' + getCookie("access_token"))
                 .then(function(response){
-                    axios.get("http://localhost:8080/api/users/"+response.data).then(function(response){
+                    axios.get('http://'+host+':'+port+'/api/users/'+response.data).then(function(response){
                         self.currentUser = response.data;
-                        axios.get("http://localhost:8080/api/users/"+self.currentUser.id+"/boards")
+                        axios.get('http://'+host+':'+port+'/api/users/'+self.currentUser.id+"/boards")
                             .then(function(response){
                             if(response.data.length == 0){
                                 self.showNewBoardMenu = true;
@@ -67,7 +74,11 @@ export default{
         this.$root.$on('clickOnTaskName', function(task){
             self.clickedTask = task;
             self.showTaskMenu = !self.showTaskMenu;
-        });
+        })
+        this.$root.$on('clickOnStatusName', function(statusItem){
+            self.clickedStatus = statusItem;
+            self.showStatusMenu = !self.showStatusMenu;
+        })
         this.$root.$on('onBoardSelect', function(board){
             self.selectedBoardID = board.id;
             set_cookie("current_board", board.id);
@@ -91,7 +102,7 @@ export default{
     },
     methods:{
         logOut(){
-            axios.get("http://localhost:8080/api/logouts?access_token="+getCookie("access_token"))
+            axios.get('http://'+host+':'+port+'/api/logouts?access_token='+getCookie("access_token"))
                 .then(function(response){
                     delete_cookie("access_token");
                     delete_cookie("current_board");
@@ -101,19 +112,18 @@ export default{
         updateBoard(){
             var self = this;
             if (this.selectedBoardID){
-                axios.get("http://localhost:8080/api/boards/"+self.selectedBoardID).then(function(response){
+                axios.get('http://'+host+':'+port+'/api/boards/'+self.selectedBoardID).then(function(response){
                     self.currentBoard = response.data;
                 }).catch(function(error){
                     alert(error);
                 }).then(function(){
-                    axios.get("http://localhost:8080/api/boards/"+self.currentBoard.id+"/statuses").then(function(response){
+                    axios.get('http://'+host+':'+port+'/api/boards/'+self.currentBoard.id+"/statuses").then(function(response){
                         self.statusList = response.data;
-                        console.log(self.statusList);
                     }).catch(function(error){
                         alert(error);
                     })
                 }).then(function(){
-                    axios.get("http://localhost:8080/api/boards/"+self.currentBoard.id+"/tasks").then(function(response){
+                    axios.get('http://'+host+':'+port+'/api/boards/'+self.currentBoard.id+"/tasks").then(function(response){
                         self.taskList = response.data;
                     }).catch(function(error){
                         alert(error);
@@ -126,7 +136,7 @@ export default{
 </script>
 
 <style lang="scss">
-    .menu__wrapper{
+    .popup__wrapper{
         position: absolute;
         top: 0;
         bottom: 0;
@@ -135,7 +145,7 @@ export default{
         background: rgba(#000,.5);
         z-index: 0;
     }
-    .menu__body{
+    .popup__body{
         text-align: center;
         position: absolute;
         z-index: 100;
@@ -149,6 +159,25 @@ export default{
         border: 2px solid black;
         background-color: #cccccc;
     }
+    .popup__title{
+        font-weight: bold;
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+    .popup__label{
+
+    }
+    .popup__text{
+
+    }
+    .popup__submit{
+        display: block;
+        margin: 10px auto;
+    }
+    .board__title{
+        text-decoration: none;
+        color:black;
+    }
     .board__header{
         display: flex;
         justify-content: space-between;
@@ -157,6 +186,10 @@ export default{
         background: rgba(#333,.2);
         border: 1px solid black;
         min-width: 400px;
+    }
+    .user__name{
+        text-decoration: none;
+        color:black;
     }
     .user__avatar{
         max-width: 50px;
