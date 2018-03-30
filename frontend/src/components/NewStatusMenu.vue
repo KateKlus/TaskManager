@@ -1,13 +1,13 @@
 <template>
     <div class="newStatusMenu">
-       <div class="menu__wrapper" @click="closeMenu"></div>
-        <div class="menu__body">
-            <div class="newStatusMenu__title">Добавить новый статус</div>
-            <label for="" class="newStatusMenu__label">
-                <div class="newStatusMenu__text">Введите имя статуса:</div>
+       <div class="popup__wrapper" @click="closeMenu"></div>
+        <div class="popup__body">
+            <div class="popup__title">Добавить новый статус</div>
+            <label for="" class="popup__label">
+                <div class="popup__text">Введите имя статуса:</div>
                 <input type="text" v-model="newStatus.statusName">
             </label>
-            <button class="newStatusMenu__submit" @click.prevent="addNewStatus">Добавить статус</button>
+            <button class="popup__submit" @click.prevent="addNewStatus">Добавить статус</button>
         </div>
     </div>
 </template>
@@ -31,7 +31,7 @@ export default{
             var self = this;
             axios({
                 method: 'post',
-                url: 'http://localhost:8080/api/statuses/',
+                url: 'http://'+host+':'+port+'/api/statuses/',
                 data:self.newStatus
             }).then(function (response) {
                 self.addNewBoardStatus(response.data);
@@ -44,7 +44,7 @@ export default{
             var self = this;
             axios({
                 method: 'post',
-                url: 'http://localhost:8080/api/boards/'+getCookie("current_board")+'/statuses',
+                url: 'http://'+host+':'+port+'/api/boards/'+getCookie("current_board")+'/statuses/',
                 data:taskstatus
             }).then(function (response) {
                 alert("Success!");
@@ -57,16 +57,3 @@ export default{
     }
 }
 </script>
-
-<style lang="scss" scoped>
-    .newStatusMenu__title{
-        font-weight: bold;
-        font-size: 18px;
-        margin-bottom: 10px;
-    }
-    .newStatusMenu__submit{
-        display: block;
-        margin: 10px auto;
-    }
-
-</style>
