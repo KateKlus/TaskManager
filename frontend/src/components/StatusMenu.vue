@@ -25,7 +25,7 @@ export default{
             var self = this;
             axios({
                 method: 'put',
-                url: 'http://'+host+':'+port+'/api/statuses/'+self.statusItem.taskStatus.id,
+                url: 'http://'+host+':'+port+'/api/statuses/'+self.statusItem.taskStatus.id+'/',
                 data: self.statusItem.taskStatus
             }).then(function (response) {
                 self.$root.$emit('updateBoard');
@@ -38,11 +38,17 @@ export default{
             var self = this;
             axios({
                 method: 'delete',
-                url: 'http://'+host+':'+port+'/api/statuses/'+self.statusItem.taskStatus.id
+                url: 'http://'+host+':'+port+'/api/statuses/'+self.statusItem.taskStatus.id+'/'
             }).then(function (response) {
+                self.$root.$emit('updateBoard');
                 self.$emit('wrapperClick');
             }).catch(function (error) {
-                alert("Error! "+ error)
+                if (error.response.status == '500'){
+                    alert("Невозможно удалить статус, содержащий задачи!");
+                }
+                else{
+                    alert("Error! "+ error);
+                }
             });
         },
     }

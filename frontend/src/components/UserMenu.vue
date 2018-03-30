@@ -28,7 +28,7 @@ export default{
             var self = this;
             axios({
                 method: 'put',
-                url: 'http://'+host+':'+port+'/api/users/'+self.currentUser.id,
+                url: 'http://'+host+':'+port+'/api/users/'+self.currentUser.id+'/',
                 data: self.currentUser
             }).then(function (response) {
                 console.log(response);

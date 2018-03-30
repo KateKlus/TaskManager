@@ -43,8 +43,7 @@ export default{
                 author:{
                     id:this.currentUser.id
                 }
-            },
-            taskk:""
+            }
         }
     },
     props:['currentUser','statusList'],
@@ -57,7 +56,7 @@ export default{
             this.taskItem.board.id = getCookie("current_board");
             axios({
                 method: 'post',
-                url: 'http://'+host+':'+port+'/api/users/'+self.currentUser.id+'/tasks',
+                url: 'http://'+host+':'+port+'/api/users/'+self.currentUser.id+'/tasks/',
                 data:self.taskItem
             }).then(function (response) {
                 self.$emit('wrapperClick');

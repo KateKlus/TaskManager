@@ -30,8 +30,8 @@ export default{
     },
     created(){
         var self = this;
-        axios.get('http://'+host+':'+port+'/api/getUserId?access_token=' + getCookie("access_token")).then(function(response){
-            axios.get('http://'+host+':'+port+'/api/users/'+response.data+'/boards').then(function(response){
+        axios.get('http://'+host+':'+port+'/api/getUserId/?access_token=' + getCookie("access_token")).then(function(response){
+            axios.get('http://'+host+':'+port+'/api/users/'+response.data+'/boards/').then(function(response){
                 self.boardList = response.data;
             })
         })

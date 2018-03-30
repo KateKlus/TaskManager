@@ -44,7 +44,7 @@ export default{
             var self = this;
             axios({
                 method: 'post',
-                url: 'http://'+host+':'+port+'/api/boards/'+getCookie("current_board")+'/statuses',
+                url: 'http://'+host+':'+port+'/api/boards/'+getCookie("current_board")+'/statuses/',
                 data:taskstatus
             }).then(function (response) {
                 alert("Success!");

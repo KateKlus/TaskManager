@@ -45,11 +45,11 @@ export default{
     beforeCreate(){
         var self = this;
         if(getCookie("access_token")){
-            axios.get('http://'+host+':'+port+'/api/getUserId?access_token=' + getCookie("access_token"))
+            axios.get('http://'+host+':'+port+'/api/getUserId/?access_token=' + getCookie("access_token"))
                 .then(function(response){
-                    axios.get('http://'+host+':'+port+'/api/users/'+response.data).then(function(response){
+                    axios.get('http://'+host+':'+port+'/api/users/'+response.data+'/').then(function(response){
                         self.currentUser = response.data;
-                        axios.get('http://'+host+':'+port+'/api/users/'+self.currentUser.id+"/boards")
+                        axios.get('http://'+host+':'+port+'/api/users/'+self.currentUser.id+"/boards/")
                             .then(function(response){
                             if(response.data.length == 0){
                                 self.showNewBoardMenu = true;
@@ -102,7 +102,7 @@ export default{
     },
     methods:{
         logOut(){
-            axios.get('http://'+host+':'+port+'/api/logouts?access_token='+getCookie("access_token"))
+            axios.get('http://'+host+':'+port+'/api/logouts/?access_token='+getCookie("access_token"))
                 .then(function(response){
                     delete_cookie("access_token");
                     delete_cookie("current_board");
@@ -112,18 +112,18 @@ export default{
         updateBoard(){
             var self = this;
             if (this.selectedBoardID){
-                axios.get('http://'+host+':'+port+'/api/boards/'+self.selectedBoardID).then(function(response){
+                axios.get('http://'+host+':'+port+'/api/boards/'+self.selectedBoardID+'/').then(function(response){
                     self.currentBoard = response.data;
                 }).catch(function(error){
                     alert(error);
                 }).then(function(){
-                    axios.get('http://'+host+':'+port+'/api/boards/'+self.currentBoard.id+"/statuses").then(function(response){
+                    axios.get('http://'+host+':'+port+'/api/boards/'+self.currentBoard.id+"/statuses/").then(function(response){
                         self.statusList = response.data;
                     }).catch(function(error){
                         alert(error);
                     })
                 }).then(function(){
-                    axios.get('http://'+host+':'+port+'/api/boards/'+self.currentBoard.id+"/tasks").then(function(response){
+                    axios.get('http://'+host+':'+port+'/api/boards/'+self.currentBoard.id+"/tasks/").then(function(response){
                         self.taskList = response.data;
                     }).catch(function(error){
                         alert(error);

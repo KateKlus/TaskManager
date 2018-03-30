@@ -54,7 +54,7 @@ export default{
             var self = this;
             axios({
                 method: 'put',
-                url: 'http://'+host+':'+port+'/api/tasks/'+self.taskItem.id,
+                url: 'http://'+host+':'+port+'/api/tasks/'+self.taskItem.id+'/',
                 data:self.taskItem
             }).then(function (response) {
                 self.$emit('wrapperClick');
@@ -66,7 +66,7 @@ export default{
             var self = this;
             axios({
                 method: 'delete',
-                url: 'http://'+host+':'+port+'/api/tasks/'+self.taskItem.id
+                url: 'http://'+host+':'+port+'/api/tasks/'+self.taskItem.id+'/'
             }).then(function (response) {
                 self.$root.$emit('updateBoard');
                 self.$emit('wrapperClick');

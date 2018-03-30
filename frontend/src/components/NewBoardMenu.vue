@@ -36,11 +36,12 @@ export default{
             var self = this;
             axios({
                 method: 'post',
-                url: 'http://'+host+':'+port+'/api/users/'+self.currentUser.id+'/boards',
+                url: 'http://'+host+':'+port+'/api/users/'+self.currentUser.id+'/boards/',
                 data:self.newBoard
             }).then(function (response) {
                 self.$emit('wrapperClick');
-                document.location.replace("/board");
+                self.$root.$emit('updateBoard');
+                console.log(response);
             }).catch(function (error) {
                 alert("Error! "+ error)
             });

@@ -29,7 +29,7 @@ export default{
             var self = this;
             axios({
                 method: 'put',
-                url: 'http://'+host+':'+port+'/api/boards/'+self.currentBoard.id,
+                url: 'http://'+host+':'+port+'/api/boards/'+self.currentBoard.id+'/',
                 data: self.currentBoard
             }).then(function (response) {
                 console.log(response);
@@ -43,12 +43,18 @@ export default{
             var self = this;
             axios({
                 method: 'DELETE',
-                url: 'http://'+host+':'+port+'/api/boards/'+self.currentBoard.id
+                url: 'http://'+host+':'+port+'/api/boards/'+self.currentBoard.id+'/'
             }).then(function (response) {
                 self.$emit('wrapperClick');
                 delete_cookie("current_board");
+                document.location.replace("/board");
             }).catch(function (error) {
-                alert("Error! "+ error)
+                if(error.response.status == '500'){
+                    alert("Невозможно удалить доску, которая содержит данные!");
+                }
+                else{
+                    alert("Error! "+ error);
+                }
             });
         },
     }
