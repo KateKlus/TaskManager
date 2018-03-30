@@ -13,9 +13,14 @@
                 </div>
                 <div class="taskMenu__right">
                     <div class="popup__text">Статус</div>
-                    <select name="statusList"  @change="selectStatus" v-model="selected">
+                    <select name="statusList"  @change="selectStatus" v-model="selectedStatus">
                         <option v-for="statusItem in statusList"
                         v-bind:value="statusItem.taskStatus.id">{{statusItem.taskStatus.statusName}}</option>
+                    </select>
+                    <div class="popup__text">Шаблон</div>
+                    <select name="templateList"  @change="selectTemplate" v-model="selectedTemplate">
+                        <option v-for="templateItem in templateList"
+                        v-bind:value="templateItem">{{templateItem.taskTemplateName}}</option>
                     </select>
                 </div>
             </div>
@@ -30,7 +35,8 @@ import axios from 'axios'
 export default{
     data(){
         return{
-            selected:"",
+            selectedStatus:"",
+            selectedTemplate:"",
             taskItem:{
                 taskName:"",
                 description:"",
@@ -42,11 +48,20 @@ export default{
                 },
                 author:{
                     id:this.currentUser.id
-                }
+                },
+                taskTemplate: ""
             }
         }
     },
-    props:['currentUser','statusList'],
+    props:['currentUser','statusList', 'templateList'],
+    mounted(){
+        var self = this;
+        this.templateList.forEach(function(template){
+            if(template.default){
+                self.selectedTemplate = template;
+            }
+        });
+    },
     methods:{
         closeMenu(){
             this.$emit('wrapperClick');
@@ -54,6 +69,8 @@ export default{
         addNewTask(){
             var self = this;
             this.taskItem.board.id = getCookie("current_board");
+            this.taskItem.taskTemplate = this.selectedTemplate;
+            console.log(this.taskItem);
             axios({
                 method: 'post',
                 url: 'http://'+host+':'+port+'/api/users/'+self.currentUser.id+'/tasks/',
@@ -66,7 +83,10 @@ export default{
             });
         },
         selectStatus(){
-            this.taskItem.currentStatus.id = this.selected;
+            this.taskItem.currentStatus.id = this.selectedStatus;
+        },
+        selectTemplate(){
+            console.log(this.selectedTemplate);
         }
     }
 }

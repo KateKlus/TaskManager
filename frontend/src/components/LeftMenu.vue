@@ -10,13 +10,15 @@
                 <li class="menu__item"><a href="" class="menu__link" @click.prevent="showNewBoardMenu = !showNewBoardMenu">Создать доску</a></li>
                 <li class="menu__item"><a href="" class="menu__link" @click.prevent="showNewStatusMenu = !showNewStatusMenu">Добавить статус</a></li>
                 <li class="menu__item"><a href="" class="menu__link" @click.prevent="showNewTaskMenu = !showNewTaskMenu">Добавить задачу</a></li>
+                <li class="menu__item"><a href="" class="menu__link" @click.prevent="showNewTemplateMenu = !showNewTemplateMenu">Добавить шаблон</a></li>
                 <li class="menu__item"><a href="" class="menu__link" @click.prevent="showBoardListMenu = !showBoardListMenu">Мои доски</a></li>
             </ul>
         </div>
         <newBoardMenu v-if="showNewBoardMenu" @wrapperClick="showNewBoardMenu = !showNewBoardMenu" :currentUser="currentUser"></newBoardMenu>
         <newStatusMenu v-if="showNewStatusMenu" @wrapperClick="showNewStatusMenu = !showNewStatusMenu" :currentUser="currentUser"></newStatusMenu>
-        <newTaskMenu v-if="showNewTaskMenu" @wrapperClick="showNewTaskMenu = !showNewTaskMenu" :currentUser="currentUser" :statusList="statusList"></newTaskMenu>
+        <newTaskMenu v-if="showNewTaskMenu" @wrapperClick="showNewTaskMenu = !showNewTaskMenu" :currentUser="currentUser" :statusList="statusList" :templateList="templateList"></newTaskMenu>
         <boardListMenu v-if="showBoardListMenu" @wrapperClick="showBoardListMenu = !showBoardListMenu"></boardListMenu>
+        <newTemplateMenu v-if="showNewTemplateMenu" @wrapperClick="showNewTemplateMenu = !showNewTemplateMenu"></newTemplateMenu>
     </nav>
 
 </template>
@@ -30,10 +32,11 @@ export default{
             showNewBoardMenu: false,
             showNewStatusMenu:false,
             showNewTaskMenu:false,
-            showBoardListMenu: false
+            showBoardListMenu: false,
+            showNewTemplateMenu: false
         }
     },
-    props:['currentUser','statusList']
+    props:['currentUser','statusList','templateList']
 }
 </script>
 
