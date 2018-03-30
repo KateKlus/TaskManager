@@ -25,10 +25,11 @@
                 </div>
             </div>
             <div class="taskMenu__custom">
-                <div class="popup__text">Дополнительные поля</div>
+                <div class="popup__text-title">Дополнительные поля</div>
                 <ul class="custom__list">
-                    <li class="custom__item" v-for="attribute in attributeList">
-                        <div class="popup__text">{{attribute.attributeName}}</div>
+                    <li class="custom__item" v-for="customField in customFieldsList">
+                        <div class="popup__text">{{customField.attribute.attributeName}}</div>
+                        <input type="text" v-model="customField.stringValue" class="taskMenu__input taskMenu__taskName">
                     </li>
                 </ul>
             </div>
@@ -46,6 +47,7 @@ export default{
             selectedStatus:"",
             selectedTemplate:"",
             attributeList:"",
+            customFieldsList:[],
             taskItem:{
                 taskName:"",
                 description:"",
@@ -80,14 +82,12 @@ export default{
             var self = this;
             this.taskItem.board.id = getCookie("current_board");
             this.taskItem.taskTemplate = this.selectedTemplate;
-            console.log(this.taskItem);
             axios({
                 method: 'post',
                 url: 'http://'+host+':'+port+'/api/users/'+self.currentUser.id+'/tasks/',
                 data:self.taskItem
             }).then(function (response) {
-                self.$emit('wrapperClick');
-                self.$root.$emit('updateBoard');
+                self.sendCustomFields(response.data);
             }).catch(function (error) {
                 alert("Error! "+ error)
             });
@@ -103,9 +103,47 @@ export default{
             axios.get('http://'+host+':'+port+'/api/tasktemplates/'+templateId+'/attributes/').then(function(response){
                 self.attributeList = response.data;
                 self.$root.$emit('updateBoard');
+                self.addNewCustomField();
             }).catch(function(error){
                 alert(error);
             })
+        },
+        addNewCustomField(){
+            var self = this;
+            self.customFieldsList=[];
+            this.attributeList.forEach(function(attribute){
+                var customField = {
+                attribute: "",
+                stringValue: "",
+                numericValue: "",
+                dateValue: "",
+                task:""
+            }
+                customField.attribute = attribute;
+                self.customFieldsList.push(customField);
+            });
+
+        },
+        sendCustomFields(taskItem){
+            var self = this;
+            var postError = false;
+            this.customFieldsList.forEach(function(customField){
+                customField.task = taskItem;
+                axios({
+                    method: 'post',
+                    url: 'http://'+host+':'+port+'/api/customfields/',
+                    data:customField
+                }).catch(function (error) {
+                    postError = error;
+                });
+            });
+            if (!postError){
+            self.$root.$emit('updateBoard');
+            self.$emit('wrapperClick');
+            }
+            else{
+                alert(postError);
+            }
         }
     }
 }

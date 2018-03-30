@@ -22,10 +22,11 @@
                 </div>
             </div>
             <div class="taskMenu__custom">
-                <div class="popup__text">Дополнительные поля</div>
+                <div class="popup__text-title">Дополнительные поля</div>
                 <ul class="custom__list">
-                    <li class="custom__item" v-for="attribute in attributeList">
-                        <div class="popup__text">{{attribute.attributeName}}</div>
+                    <li class="custom__item" v-for="customField in customFieldsList">
+                        <div class="popup__text">{{customField.attribute.attributeName}}</div>
+                        <input type="text" class="taskMenu__input taskMenu__taskName" v-model="customField.stringValue">
                     </li>
                 </ul>
             </div>
@@ -42,12 +43,12 @@ export default{
     data(){
         return{
             selected:this.taskItem.currentStatus.id,
-            attributeList:""
+            customFieldsList:[]
         }
     },
     props:['taskItem','statusList'],
     mounted(){
-        this.getListOfAttributes(this.taskItem.taskTemplate.id);
+        this.getCustomFieldsList(this.taskItem.id);
     },
     methods:{
         closeMenu(){
@@ -63,8 +64,7 @@ export default{
                 url: 'http://'+host+':'+port+'/api/tasks/'+self.taskItem.id+'/',
                 data:self.taskItem
             }).then(function (response) {
-                self.$root.$emit('updateBoard');
-                self.$emit('wrapperClick');
+                self.editCustomFields();
             }).catch(function (error) {
                 alert("Error! "+ error)
             });
@@ -81,14 +81,37 @@ export default{
                 alert("Error! "+ error)
             });
         },
-        getListOfAttributes(templateId){
+        getCustomFieldsList(taskItemId){
             var self = this;
-            axios.get('http://'+host+':'+port+'/api/tasktemplates/'+templateId+'/attributes/').then(function(response){
-                self.attributeList = response.data;
-                self.$root.$emit('updateBoard');
+            axios.get('http://'+host+':'+port+'/api/customfields/').then(function(response){
+                response.data.forEach(function(customField){
+                    if(customField.task.id == taskItemId){
+                        self.customFieldsList.push(customField);
+                    }
+                });
             }).catch(function(error){
                 alert(error);
             })
+        },
+        editCustomFields(){
+            var self = this;
+            var postError = false;
+            this.customFieldsList.forEach(function(customField){
+                axios({
+                    method: 'put',
+                    url: 'http://'+host+':'+port+'/api/customfields/'+customField.id+'/',
+                    data:customField
+                }).catch(function (error) {
+                    postError = error;
+                });
+            });
+            if (!postError){
+            self.$root.$emit('updateBoard');
+            self.$emit('wrapperClick');
+            }
+            else{
+                alert(postError);
+            }
         }
     }
 }
@@ -104,6 +127,9 @@ export default{
         display: flex;
         justify-content: space-between;
         margin: 0 30px;
+    }
+    .taskMenu__taskName{
+        margin: 0 auto;
     }
     .taskMenu__input{
         display: block;

@@ -177,6 +177,9 @@ export default{
     .popup__text{
 
     }
+    .popup__text-title{
+        font-weight: bold;
+    }
     .popup__button{
         display: inline-block;
         cursor: pointer;
