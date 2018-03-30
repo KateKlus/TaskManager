@@ -10,8 +10,6 @@
                 <div class="taskMenu__left">
                    <div class="popup__text">Описание задачи</div>
                     <textarea v-model="taskItem.description" placeholder="Описание задачи" class="taskMenu__textarea"></textarea>
-                    <div class="popup__text">Дата создания задачи</div>
-                    <input type="text" v-model="taskItem.taskDate" placeholder="Дата" class="taskMenu__input">
                 </div>
                 <div class="taskMenu__right">
                     <div class="popup__text">Автор задачи</div>
@@ -21,11 +19,15 @@
                         <option v-for="statusItem in statusList"
                         v-bind:value="statusItem.taskStatus.id">{{statusItem.taskStatus.statusName}}</option>
                     </select>
-                    <div class="popup__text">Исполнители</div>
-                    <input type="text" v-model="taskItem.taskExecutor" placeholder="Исполнители" class="taskMenu__input">
-                    <div class="popup__text">Затраченное время</div>
-                    <input type="text" v-model="taskItem.taskTime" placeholder="Затраченное время" class="taskMenu__input">
                 </div>
+            </div>
+            <div class="taskMenu__custom">
+                <div class="popup__text">Дополнительные поля</div>
+                <ul class="custom__list">
+                    <li class="custom__item" v-for="attribute in attributeList">
+                        <div class="popup__text">{{attribute.attributeName}}</div>
+                    </li>
+                </ul>
             </div>
         <button class="popup__submit" @click=saveChanges>Сохранить</button>
         <button class="popup__submit" @click=deleteTask>Удалить</button>
@@ -39,10 +41,14 @@ import axios from 'axios'
 export default{
     data(){
         return{
-            selected:this.taskItem.currentStatus.id
+            selected:this.taskItem.currentStatus.id,
+            attributeList:""
         }
     },
     props:['taskItem','statusList'],
+    mounted(){
+        this.getListOfAttributes(this.taskItem.taskTemplate.id);
+    },
     methods:{
         closeMenu(){
             this.$emit('wrapperClick')
@@ -57,6 +63,7 @@ export default{
                 url: 'http://'+host+':'+port+'/api/tasks/'+self.taskItem.id+'/',
                 data:self.taskItem
             }).then(function (response) {
+                self.$root.$emit('updateBoard');
                 self.$emit('wrapperClick');
             }).catch(function (error) {
                 alert("Error! "+ error)
@@ -74,6 +81,15 @@ export default{
                 alert("Error! "+ error)
             });
         },
+        getListOfAttributes(templateId){
+            var self = this;
+            axios.get('http://'+host+':'+port+'/api/tasktemplates/'+templateId+'/attributes/').then(function(response){
+                self.attributeList = response.data;
+                self.$root.$emit('updateBoard');
+            }).catch(function(error){
+                alert(error);
+            })
+        }
     }
 }
 </script>
@@ -82,19 +98,18 @@ export default{
     .taskMenu__header{
         display: flex;
         justify-content: space-around;
+        padding: 20px;
     }
     .taskMenu__body{
         display: flex;
-        justify-content: space-around;
+        justify-content: space-between;
+        margin: 0 30px;
     }
     .taskMenu__input{
         display: block;
     }
-    .taskMenu__header{
-        padding:20px;
-    }
     .taskMenu__left,.taskMenu__right{
-        padding: 20px;
+        padding: 10px;
         border: 1px solid black;
     }
     .taskMenu__left{
@@ -105,8 +120,9 @@ export default{
         min-height: 100px;
         resize: none;
     }
-    .taskMenu__button{
-        display: inline-block;
-        margin: 20px auto;
+    .taskMenu__custom{
+        border: 1px solid black;
+        margin: 20px 30px;
+        padding: 10px;
     }
 </style>

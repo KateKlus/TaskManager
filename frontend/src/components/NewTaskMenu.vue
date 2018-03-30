@@ -24,6 +24,14 @@
                     </select>
                 </div>
             </div>
+            <div class="taskMenu__custom">
+                <div class="popup__text">Дополнительные поля</div>
+                <ul class="custom__list">
+                    <li class="custom__item" v-for="attribute in attributeList">
+                        <div class="popup__text">{{attribute.attributeName}}</div>
+                    </li>
+                </ul>
+            </div>
         <button class="popup__submit" @click=addNewTask>Добавить</button>
         </div>
     </div>
@@ -37,6 +45,7 @@ export default{
         return{
             selectedStatus:"",
             selectedTemplate:"",
+            attributeList:"",
             taskItem:{
                 taskName:"",
                 description:"",
@@ -59,6 +68,7 @@ export default{
         this.templateList.forEach(function(template){
             if(template.default){
                 self.selectedTemplate = template;
+                self.getListOfAttributes(template.id);
             }
         });
     },
@@ -86,7 +96,16 @@ export default{
             this.taskItem.currentStatus.id = this.selectedStatus;
         },
         selectTemplate(){
-            console.log(this.selectedTemplate);
+            this.getListOfAttributes(this.selectedTemplate.id);
+        },
+        getListOfAttributes(templateId){
+            var self = this;
+            axios.get('http://'+host+':'+port+'/api/tasktemplates/'+templateId+'/attributes/').then(function(response){
+                self.attributeList = response.data;
+                self.$root.$emit('updateBoard');
+            }).catch(function(error){
+                alert(error);
+            })
         }
     }
 }
@@ -94,21 +113,22 @@ export default{
 
 <style lang="scss" scoped>
     .taskMenu__header{
-        display: flex;
-        justify-content: space-around;
+        width: 100%;
+        padding: 20px;
+    }
+    .taskMenu__taskName{
+        margin: 0 auto;
     }
     .taskMenu__body{
         display: flex;
-        justify-content: space-around;
+        justify-content: space-between;
+        margin: 0 30px;
     }
     .taskMenu__input{
         display: block;
     }
-    .taskMenu__header{
-        padding:20px;
-    }
     .taskMenu__left,.taskMenu__right{
-        padding: 20px;
+        padding: 10px;
         border: 1px solid black;
     }
     .taskMenu__left{
@@ -118,5 +138,10 @@ export default{
         width: 400px;
         min-height: 100px;
         resize: none;
+    }
+    .taskMenu__custom{
+        border: 1px solid black;
+        margin: 20px 30px;
+        padding: 10px;
     }
 </style>
