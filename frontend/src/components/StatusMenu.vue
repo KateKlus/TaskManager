@@ -16,7 +16,7 @@
 <script>
 import axios from 'axios'
 export default{
-    props:['statusItem'],
+    props:['statusItem','taskList'],
     methods:{
         closeMenu(){
             this.$emit('wrapperClick');
@@ -36,6 +36,16 @@ export default{
         },
         deleteStatus(){
             var self = this;
+            this.taskList.forEach(function(task){
+                if(task.currentStatus.id == self.statusItem.taskStatus.id){
+                    axios({
+                        method: 'delete',
+                        url: 'http://'+host+':'+port+'/api/tasks/'+task.id+'/'
+                    }).catch(function (error) {
+                        alert("Error! "+ error);
+                    });
+                }
+            })
             axios({
                 method: 'delete',
                 url: 'http://'+host+':'+port+'/api/statuses/'+self.statusItem.taskStatus.id+'/'
@@ -43,12 +53,7 @@ export default{
                 self.$root.$emit('updateBoard');
                 self.$emit('wrapperClick');
             }).catch(function (error) {
-                if (error.response.status == '500'){
-                    alert("Невозможно удалить статус, содержащий задачи!");
-                }
-                else{
-                    alert("Error! "+ error);
-                }
+                alert("Error! "+ error);
             });
         },
     }

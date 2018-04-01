@@ -47,7 +47,6 @@ export default{
                 url: 'http://'+host+':'+port+'/api/boards/'+getCookie("current_board")+'/statuses/',
                 data:taskstatus
             }).then(function (response) {
-                alert("Success!");
                 self.$root.$emit('updateBoard');
                 self.$emit('wrapperClick');
             }).catch(function (error) {
