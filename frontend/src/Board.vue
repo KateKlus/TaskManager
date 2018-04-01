@@ -13,7 +13,7 @@
         </header>
         <statusList v-if="selectedBoardID" :statusList="statusList" :taskList="taskList"></statusList>
         <taskMenu v-if="showTaskMenu" :taskItem="clickedTask" :statusList="statusList" @wrapperClick="showTaskMenu = !showTaskMenu"></taskMenu>
-        <statusMenu v-if="showStatusMenu" :statusItem="clickedStatus" @wrapperClick="showStatusMenu = !showStatusMenu"></statusMenu>
+        <statusMenu v-if="showStatusMenu" :statusItem="clickedStatus" :taskList="taskList" @wrapperClick="showStatusMenu = !showStatusMenu"></statusMenu>
         <boardMenu v-if="showBoardMenu" :currentBoard="currentBoard" @wrapperClick="showBoardMenu = !showBoardMenu"></boardMenu>
         <userMenu v-if="showUserMenu" :currentUser="currentUser" @wrapperClick="showUserMenu = !showUserMenu"></userMenu>
         <boardListMenu v-if="!selectedBoardID&&!showNewBoardMenu"></boardListMenu>
@@ -118,13 +118,13 @@ export default{
                 }).catch(function(error){
                     alert(error);
                 }).then(function(){
-                    axios.get('http://'+host+':'+port+'/api/boards/'+self.currentBoard.id+"/statuses/").then(function(response){
+                    axios.get('http://'+host+':'+port+'/api/boards/'+self.currentBoard.id+'/statuses/').then(function(response){
                         self.statusList = response.data;
                     }).catch(function(error){
                         alert(error);
                     })
                 }).then(function(){
-                    axios.get('http://'+host+':'+port+'/api/boards/'+self.currentBoard.id+"/tasks/").then(function(response){
+                    axios.get('http://'+host+':'+port+'/api/boards/'+self.currentBoard.id+'/tasks/').then(function(response){
                         self.taskList = response.data;
                     }).catch(function(error){
                         alert(error);

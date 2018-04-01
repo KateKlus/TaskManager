@@ -8,7 +8,7 @@
                     <a href="" class="TemplateMenu__link" @click.prevent="showNewTemplateMenu = !showNewTemplateMenu">Создать шаблон</a>
                 </li>
                 <li class="TemplateMenu__item">
-                    <a href="" class="TemplateMenu__link" @click.prevent="">Редактировать шаблон</a>
+                    <a href="" class="TemplateMenu__link" @click.prevent="showEditTemplateMenu =!showEditTemplateMenu">Редактировать шаблон</a>
                 </li>
                 <li class="TemplateMenu__item">
                     <a href="" class="TemplateMenu__link" @click.prevent="showDelTemplateMenu = !showDelTemplateMenu">Удалить шаблон</a>
@@ -17,6 +17,7 @@
 
         </div>
         <newTemplateMenu v-if="showNewTemplateMenu" @wrapperClick="showNewTemplateMenu = !showNewTemplateMenu"></newTemplateMenu>
+        <editTemplateMenu v-if="showEditTemplateMenu" @wrapperClick="showEditTemplateMenu = !showEditTemplateMenu" :templateList="templateList"></editTemplateMenu>
         <delTemplateMenu v-if="showDelTemplateMenu" @wrapperClick="showDelTemplateMenu = !showDelTemplateMenu" :templateList="templateList"></delTemplateMenu>
     </div>
 </template>
@@ -27,7 +28,8 @@ export default{
     data(){
         return{
             showNewTemplateMenu: false,
-            showDelTemplateMenu: false
+            showDelTemplateMenu: false,
+            showEditTemplateMenu: false
         }
     },
     props:['templateList'],
