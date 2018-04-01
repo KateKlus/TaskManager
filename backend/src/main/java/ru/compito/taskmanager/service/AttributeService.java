@@ -8,7 +8,7 @@ public interface AttributeService {
     Attribute getOne(Integer Id);
     List<Attribute> findAll();
     Attribute save(Integer taskTemplateId, Attribute attribute);
-    Attribute update(Attribute updatedAttribute);
+    Attribute update(Integer attributeId, Attribute updatedAttribute);
     void delete(Integer attributeId);
     List<Attribute> findByTaskTemplateId(Integer taskTemplateId);
     Attribute getByTaskTemplateAndAttributeId(Integer taskTemplateId, Integer attributeId);

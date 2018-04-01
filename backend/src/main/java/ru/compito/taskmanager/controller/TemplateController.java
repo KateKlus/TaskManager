@@ -34,8 +34,8 @@ public class TemplateController {
 
     @PutMapping(value = "/{taskTemplateId}/",
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public TaskTemplate update(@PathVariable Integer taskTemplateId, @RequestBody TaskTemplate taskTemplate) {
-        return taskTemplateService.update(taskTemplate);
+    public TaskTemplate update(@PathVariable Integer taskTemplateId, @RequestBody TaskTemplate updatedTaskTemplate) {
+        return taskTemplateService.update(taskTemplateId,updatedTaskTemplate);
     }
 
     @DeleteMapping("/{taskTemplateId}/")

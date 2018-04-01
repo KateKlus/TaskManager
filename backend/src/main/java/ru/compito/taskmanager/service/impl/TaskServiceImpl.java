@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.compito.taskmanager.entity.Task;
 import ru.compito.taskmanager.entity.TaskTemplate;
 import ru.compito.taskmanager.entity.User;
+import ru.compito.taskmanager.repository.CustomFieldRepository;
 import ru.compito.taskmanager.repository.TaskRepository;
 import ru.compito.taskmanager.repository.TaskTemplateRepository;
 import ru.compito.taskmanager.repository.UserRepository;
@@ -24,6 +25,8 @@ public class TaskServiceImpl implements TaskService {
     private UserRepository userRepository;
     @Autowired
     private TaskTemplateRepository taskTemplateRepository;
+    @Autowired
+    private CustomFieldRepository customFieldRepository;
 
     @Override
     public Task getOne(Integer Id) {
@@ -43,9 +46,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Task save(Integer userId, Task task) {
         User user = userRepository.getOne(userId);
-        TaskTemplate taskTemplate = new TaskTemplate("Default",null,true);
         task.setAuthor(user);
-        task.setTaskTemplate(taskTemplate);
         task.getUsers().add(user);
         return taskRepository.save(task);
     }
@@ -53,6 +54,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void delete(Integer taskId) {
         Task task = taskRepository.getOne(taskId);
+        customFieldRepository.deleteAllByTask(task);
         task.setUsers(Collections.emptyList());
         taskRepository.save(task);
         taskRepository.delete(task);
