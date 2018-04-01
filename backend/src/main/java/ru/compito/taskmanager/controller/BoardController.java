@@ -53,13 +53,13 @@ public class BoardController {
 
     @PostMapping(value = "/{Id}/statuses/", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void createBoard(@RequestBody TaskStatus taskStatus, @PathVariable Integer Id) {
-        boardService.addBoardStatus(Id, taskStatus);
+         boardService.addBoardStatus(Id, taskStatus);
     }
 
     @PutMapping(value = "/{id}/",
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public void update(@PathVariable Integer id, @RequestBody Board board) {
-        boardService.update(board);
+    public Board update(@PathVariable Integer id, @RequestBody Board board) {
+        return boardService.update(board);
     }
 
     @DeleteMapping("/{id}/")
