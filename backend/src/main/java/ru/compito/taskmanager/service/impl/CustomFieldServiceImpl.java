@@ -5,8 +5,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.compito.taskmanager.entity.Attribute;
 import ru.compito.taskmanager.entity.CustomField;
+import ru.compito.taskmanager.entity.Task;
 import ru.compito.taskmanager.repository.AttributeRepository;
 import ru.compito.taskmanager.repository.CustomFieldRepository;
+import ru.compito.taskmanager.repository.TaskRepository;
 import ru.compito.taskmanager.service.CustomFieldService;
 
 import java.util.List;
@@ -19,6 +21,8 @@ public class CustomFieldServiceImpl implements CustomFieldService{
     private CustomFieldRepository customFieldRepository;
     @Autowired
     private AttributeRepository attributeRepository;
+    @Autowired
+    private TaskRepository taskRepository;
 
     @Override
     public CustomField getOne(Integer Id) {
@@ -55,6 +59,12 @@ public class CustomFieldServiceImpl implements CustomFieldService{
     public CustomField getByAttributeAndCustomFieldId(Integer attributeId, Integer customFieldId) {
         Attribute attribute = attributeRepository.getOne(attributeId);
         return customFieldRepository.findByAttributeAndId(attribute,customFieldId);
+    }
+
+    @Override
+    public List<CustomField> getAllCustomFieldsByTask(Integer taskId) {
+        Task task = taskRepository.getOne(taskId);
+        return customFieldRepository.findAllByTask(task);
     }
 
 }

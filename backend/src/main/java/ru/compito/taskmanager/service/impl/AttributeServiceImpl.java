@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.compito.taskmanager.entity.Attribute;
 import ru.compito.taskmanager.entity.TaskTemplate;
 import ru.compito.taskmanager.repository.AttributeRepository;
+import ru.compito.taskmanager.repository.CustomFieldRepository;
 import ru.compito.taskmanager.repository.TaskTemplateRepository;
 import ru.compito.taskmanager.service.AttributeService;
 
@@ -21,6 +22,9 @@ public class AttributeServiceImpl implements AttributeService{
 
     @Autowired
     private TaskTemplateRepository taskTemplateRepository;
+
+    @Autowired
+    private CustomFieldRepository customFieldRepository;
 
     @Override
     public Attribute getOne(Integer Id) {
@@ -41,13 +45,16 @@ public class AttributeServiceImpl implements AttributeService{
     }
 
     @Override
-    public Attribute update(Attribute updatedAttribute) {
+    public Attribute update(Integer attributeId, Attribute updatedAttribute) {
+        Attribute attribute = attributeRepository.getOne(attributeId);
+        updatedAttribute.setTaskTemplates(attribute.getTaskTemplates());
         return attributeRepository.save(updatedAttribute);
     }
 
     @Override
     public void delete(Integer attributeId) {
         Attribute attribute = attributeRepository.getOne(attributeId);
+        customFieldRepository.deleteAllByAttribute(attribute);
         attribute.setTaskTemplates(Collections.emptyList());
         attributeRepository.save(attribute);
         attributeRepository.delete(attributeId);

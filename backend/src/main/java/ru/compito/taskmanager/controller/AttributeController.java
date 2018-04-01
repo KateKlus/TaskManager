@@ -28,8 +28,8 @@ public class AttributeController {
 
     @PutMapping(value = "/{attributeId}/",
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Attribute update(@PathVariable Integer attributeId, @RequestBody Attribute attribute) {
-        return attributeService.update(attribute);
+    public Attribute update(@PathVariable Integer attributeId, @RequestBody Attribute updatedAttribute) {
+        return attributeService.update(attributeId, updatedAttribute);
     }
 
     @DeleteMapping("/{attributeId}/")

@@ -16,7 +16,6 @@ public class CustomField {
     @Column(name = "customfield_id")
     private Integer id;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_id")
     private Task task;

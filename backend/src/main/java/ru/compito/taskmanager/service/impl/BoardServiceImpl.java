@@ -10,10 +10,7 @@ import ru.compito.taskmanager.repository.TaskRepository;
 import ru.compito.taskmanager.repository.UserRepository;
 import ru.compito.taskmanager.service.BoardService;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service(value = "BoardService")
 @Transactional
@@ -46,15 +43,21 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public void update(Board updatedBoard) {
-        boardRepository.save(updatedBoard);
+    public Board update(Board updatedBoard) {
+        return boardRepository.save(updatedBoard);
     }
 
     @Override
     public void delete(Integer boardId) {
         Board board = boardRepository.getOne(boardId);
         boardStatusRepository.deleteAllByBoard(board);
-        boardRepository.delete(boardId);
+        List<Task> tasks = taskRepository.findAllByBoard(board);
+        for(Task task:tasks){
+            task.setUsers(Collections.emptyList());
+            taskRepository.save(task);
+        }
+        taskRepository.deleteAllByBoard(board);
+        boardRepository.delete(board);
     }
 
     @Override

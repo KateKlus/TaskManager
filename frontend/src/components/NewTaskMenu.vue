@@ -1,25 +1,25 @@
 <template>
     <div class="taskMenu">
-        <div class="menu__wrapper" @click="closeMenu"></div>
-        <div class="menu__body">
+        <div class="popup__wrapper" @click="closeMenu"></div>
+        <div class="popup__body">
             <div class="taskMenu__header">
                 <input type="text" v-model="taskItem.taskName" placeholder="Имя задачи" class="taskMenu__input taskMenu__taskName">
 
             </div>
             <div class="taskMenu__body">
                 <div class="taskMenu__left">
-                   <div class="taskMenu__text">Описание задачи</div>
+                   <div class="popup__text">Описание задачи</div>
                     <textarea v-model="taskItem.description" placeholder="Описание задачи" class="taskMenu__textarea"></textarea>
                 </div>
                 <div class="taskMenu__right">
-                    <div class="taskMenu__text">Статус</div>
+                    <div class="popup__text">Статус</div>
                     <select name="statusList"  @change="selectStatus" v-model="selected">
                         <option v-for="statusItem in statusList"
                         v-bind:value="statusItem.taskStatus.id">{{statusItem.taskStatus.statusName}}</option>
                     </select>
                 </div>
             </div>
-        <button class="taskMenu__save" @click=addNewTask>Добавить</button>
+        <button class="popup__submit" @click=addNewTask>Добавить</button>
         </div>
     </div>
 
@@ -43,8 +43,7 @@ export default{
                 author:{
                     id:this.currentUser.id
                 }
-            },
-            taskk:""
+            }
         }
     },
     props:['currentUser','statusList'],
@@ -57,7 +56,7 @@ export default{
             this.taskItem.board.id = getCookie("current_board");
             axios({
                 method: 'post',
-                url: 'http://localhost:8080/api/users/'+self.currentUser.id+'/tasks',
+                url: 'http://'+host+':'+port+'/api/users/'+self.currentUser.id+'/tasks/',
                 data:self.taskItem
             }).then(function (response) {
                 self.$emit('wrapperClick');
@@ -99,9 +98,5 @@ export default{
         width: 400px;
         min-height: 100px;
         resize: none;
-    }
-    .taskMenu__save{
-        display: block;
-        margin: 20px auto;
     }
 </style>

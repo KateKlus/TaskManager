@@ -37,7 +37,7 @@ public class UserController{
 
         //Проверка на наличии специальных символов в имени.
         Pattern pattern = Pattern.compile("^[a-zA-Z][a-zA-Z0-9-_\\.]{1,20}$");
-        if(pattern.matcher(userRegistration.getUsername()).find())
+        if(!pattern.matcher(userRegistration.getUsername()).find())
             return "No special characters are allowed in the username";
 
         userService.saveUser(new User(userRegistration.getUsername(),
@@ -80,8 +80,8 @@ public class UserController{
     }
 
     @PostMapping(value = "/users/{Id}/boards/", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void createBoard(@RequestBody Board board, @PathVariable Integer Id) {
-        boardService.save(Id,board);
+    public Board createBoard(@RequestBody Board board, @PathVariable Integer Id) {
+        return boardService.save(Id,board);
     }
 
     @PostMapping(value = "/users/", consumes = MediaType.APPLICATION_JSON_VALUE)
