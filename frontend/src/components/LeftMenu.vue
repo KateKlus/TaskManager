@@ -10,7 +10,7 @@
                 <li class="menu__item"><a href="" class="menu__link" @click.prevent="showNewBoardMenu = !showNewBoardMenu">Создать доску</a></li>
                 <li class="menu__item"><a href="" class="menu__link" @click.prevent="showNewStatusMenu = !showNewStatusMenu">Добавить статус</a></li>
                 <li class="menu__item"><a href="" class="menu__link" @click.prevent="showNewTaskMenu = !showNewTaskMenu">Добавить задачу</a></li>
-                <li class="menu__item"><a href="" class="menu__link" @click.prevent="showNewTemplateMenu = !showNewTemplateMenu">Добавить шаблон</a></li>
+                <li class="menu__item"><a href="" class="menu__link" @click.prevent="showTemplateMenu = !showTemplateMenu">Управление шаблонами</a></li>
                 <li class="menu__item"><a href="" class="menu__link" @click.prevent="showBoardListMenu = !showBoardListMenu">Мои доски</a></li>
             </ul>
         </div>
@@ -18,7 +18,7 @@
         <newStatusMenu v-if="showNewStatusMenu" @wrapperClick="showNewStatusMenu = !showNewStatusMenu" :currentUser="currentUser"></newStatusMenu>
         <newTaskMenu v-if="showNewTaskMenu" @wrapperClick="showNewTaskMenu = !showNewTaskMenu" :currentUser="currentUser" :statusList="statusList" :templateList="templateList"></newTaskMenu>
         <boardListMenu v-if="showBoardListMenu" @wrapperClick="showBoardListMenu = !showBoardListMenu"></boardListMenu>
-        <newTemplateMenu v-if="showNewTemplateMenu" @wrapperClick="showNewTemplateMenu = !showNewTemplateMenu"></newTemplateMenu>
+        <templateMenu v-if="showTemplateMenu" @wrapperClick="showTemplateMenu = !showTemplateMenu" :templateList="templateList"></templateMenu>
     </nav>
 
 </template>
@@ -33,7 +33,7 @@ export default{
             showNewStatusMenu:false,
             showNewTaskMenu:false,
             showBoardListMenu: false,
-            showNewTemplateMenu: false
+            showTemplateMenu: false
         }
     },
     props:['currentUser','statusList','templateList']
