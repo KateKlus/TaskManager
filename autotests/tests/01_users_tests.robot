@@ -30,7 +30,7 @@ Test geting list of users
     Should Be Equal  ${actual.status_code}    ${200}
     Log  ${actual.content}
     ${actualList}  Create actual result user list  @{actual.json()}
-    @{db}    Query  SELECT * FROM users;
+    @{db}    Query  SELECT username, email FROM users;
     ${expectedlList}  Create expected result user list  @{db}
     Should Be Equal  ${actualList}  ${expectedlList}
 
@@ -41,7 +41,7 @@ Test geting user info
     Should Be Equal  ${actual.status_code}    ${200}
     Log  ${actual.content}
     ${actualList}  Create actual result user list  ${actual.json()}
-    @{db}    Query  SELECT * FROM users where user_id=${USER_ID};
+    @{db}    Query  SELECT username, email FROM users where user_id=${USER_ID};
     ${expectedlList}  Create expected result user list  @{db}
     Should Be Equal  ${actualList}  ${expectedlList}
 
