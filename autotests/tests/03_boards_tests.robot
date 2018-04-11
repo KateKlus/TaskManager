@@ -41,7 +41,7 @@ Test getting boards list
 Test getting boards tasks list
     [Tags]    board task
     [Documentation]  Получение списка всех задач доски
-    ${actual}  Get  ${API_URL}boards/1/tasks/
+    ${actual}  Get  ${API_URL}boards/${BOARD_ID}/tasks/
     Should Be Equal  ${actual.status_code}    ${200}
     Log  ${actual.content}
     ${actualList}  Create actual result task list  @{actual.json()}
