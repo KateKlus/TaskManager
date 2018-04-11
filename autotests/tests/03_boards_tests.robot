@@ -46,7 +46,7 @@ Test getting boards tasks list
     Log  ${actual.content}
     ${actualList}  Create actual result task list  @{actual.json()}
     ${sql}  catenate
-    ...  SELECT users_tasks.task_id, tasks.task_name, users.username, users_tasks.user_id, tasks.current_status, tasks.board FROM users_tasks
+    ...  SELECT users_tasks.task_id, tasks.task_name, users.username, users_tasks.user_id, tasks.board FROM users_tasks
     ...  inner join tasks on tasks.task_id=users_tasks.task_id
     ...  inner join users on users.user_id=users_tasks.user_id
     ...  where tasks.board=${BOARD_ID};
@@ -54,23 +54,6 @@ Test getting boards tasks list
     Log  ${db}
     ${expectedlList}  Create expected result task list  @{db}
     should be equal  ${actualList}  ${expectedlList}
-
-#Test getting users task
-#    [Tags]    task
-#    [Documentation]  Получение информации о задаче пользователя
-#    ${actual}  Get  ${API_URL}users/${USER_ID}/tasks/${TASK_ID}/
-#    Should Be Equal  ${actual.status_code}    ${200}
-#    Log  ${actual.content}
-#    ${actualList}  Create actual result board list  ${actual.json()}
-#    ${sql}  catenate
-#    ...  SELECT users_tasks.task_id, tasks.task_name, users.username, users_tasks.user_id, tasks.current_status, tasks.board FROM users_tasks
-#    ...  inner join tasks on tasks.task_id=users_tasks.task_id
-#    ...  inner join users on users.user_id=users_tasks.user_id
-#    ...  where tasks.user_id=${USER_ID} and tasks.task_id=${TASK_ID};
-#    ${db}    Query    ${sql}
-#    Log  ${db}
-#    ${expectedlList}  Create expected result board list  @{db}
-#    should be equal  ${actualList}  ${expectedlList}
 
 
 *** Keywords ***
