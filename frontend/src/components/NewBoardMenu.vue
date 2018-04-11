@@ -41,7 +41,7 @@ export default{
             }).then(function (response) {
                 self.$emit('wrapperClick');
                 self.$root.$emit('updateBoard');
-                console.log(response);
+                document.location.replace("/board");
             }).catch(function (error) {
                 alert("Error! "+ error)
             });

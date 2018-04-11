@@ -16,6 +16,10 @@ import newTaskMenu from './components/NewTaskMenu.vue'
 import statusMenu from './components/StatusMenu.vue'
 import boardMenu from './components/BoardMenu.vue'
 import userMenu from './components/UserMenu.vue'
+import templateMenu from './components/TemplateMenu.vue'
+import newTemplateMenu from './components/NewTemplateMenu.vue'
+import delTemplateMenu from './components/DelTemplateMenu.vue'
+import editTemplateMenu from './components/EditTemplateMenu.vue'
 
 Vue.component('board', board);
 Vue.component('leftMenu', leftMenu);
@@ -30,6 +34,10 @@ Vue.component('newTaskMenu', newTaskMenu);
 Vue.component('statusMenu', statusMenu);
 Vue.component('boardMenu', boardMenu);
 Vue.component('userMenu', userMenu);
+Vue.component('templateMenu', templateMenu);
+Vue.component('newTemplateMenu', newTemplateMenu);
+Vue.component('delTemplateMenu', delTemplateMenu);
+Vue.component('editTemplateMenu', editTemplateMenu);
 Vue.use(VueRouter);
 const router = new VueRouter({
     routes,

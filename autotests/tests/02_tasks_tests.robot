@@ -26,7 +26,7 @@ ${TASK_ID}  2
 Test getting users tasks list
     [Tags]    task
     [Documentation]  Получение списка задач пользователя
-    ${actual}  Get  ${API_URL}users/${USER_ID}/tasks
+    ${actual}  Get  ${API_URL}users/${USER_ID}/tasks/
     Should Be Equal  ${actual.status_code}    ${200}
     Log  ${actual.content}
     ${actualList}  Create actual result task list  @{actual.json()}

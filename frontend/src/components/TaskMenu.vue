@@ -10,8 +10,6 @@
                 <div class="taskMenu__left">
                    <div class="popup__text">Описание задачи</div>
                     <textarea v-model="taskItem.description" placeholder="Описание задачи" class="taskMenu__textarea"></textarea>
-                    <div class="popup__text">Дата создания задачи</div>
-                    <input type="text" v-model="taskItem.taskDate" placeholder="Дата" class="taskMenu__input">
                 </div>
                 <div class="taskMenu__right">
                     <div class="popup__text">Автор задачи</div>
@@ -21,11 +19,16 @@
                         <option v-for="statusItem in statusList"
                         v-bind:value="statusItem.taskStatus.id">{{statusItem.taskStatus.statusName}}</option>
                     </select>
-                    <div class="popup__text">Исполнители</div>
-                    <input type="text" v-model="taskItem.taskExecutor" placeholder="Исполнители" class="taskMenu__input">
-                    <div class="popup__text">Затраченное время</div>
-                    <input type="text" v-model="taskItem.taskTime" placeholder="Затраченное время" class="taskMenu__input">
                 </div>
+            </div>
+            <div class="taskMenu__custom">
+                <div class="popup__text-title">Дополнительные поля</div>
+                <ul class="custom__list">
+                    <li class="custom__item" v-for="customField in customFieldsList">
+                        <div class="popup__text">{{customField.attribute.attributeName}}</div>
+                        <input type="text" class="taskMenu__input taskMenu__taskName" v-model="customField.stringValue">
+                    </li>
+                </ul>
             </div>
         <button class="popup__submit" @click=saveChanges>Сохранить</button>
         <button class="popup__submit" @click=deleteTask>Удалить</button>
@@ -39,10 +42,14 @@ import axios from 'axios'
 export default{
     data(){
         return{
-            selected:this.taskItem.currentStatus.id
+            selected:this.taskItem.currentStatus.id,
+            customFieldsList:[]
         }
     },
     props:['taskItem','statusList'],
+    mounted(){
+        this.getCustomFieldsList(this.taskItem.id);
+    },
     methods:{
         closeMenu(){
             this.$emit('wrapperClick')
@@ -57,7 +64,7 @@ export default{
                 url: 'http://'+host+':'+port+'/api/tasks/'+self.taskItem.id+'/',
                 data:self.taskItem
             }).then(function (response) {
-                self.$emit('wrapperClick');
+                self.editCustomFields();
             }).catch(function (error) {
                 alert("Error! "+ error)
             });
@@ -74,6 +81,38 @@ export default{
                 alert("Error! "+ error)
             });
         },
+        getCustomFieldsList(taskItemId){
+            var self = this;
+            axios.get('http://'+host+':'+port+'/api/customfields/').then(function(response){
+                response.data.forEach(function(customField){
+                    if(customField.task.id == taskItemId){
+                        self.customFieldsList.push(customField);
+                    }
+                });
+            }).catch(function(error){
+                alert(error);
+            })
+        },
+        editCustomFields(){
+            var self = this;
+            var postError = false;
+            this.customFieldsList.forEach(function(customField){
+                axios({
+                    method: 'put',
+                    url: 'http://'+host+':'+port+'/api/customfields/'+customField.id+'/',
+                    data:customField
+                }).catch(function (error) {
+                    postError = error;
+                });
+            });
+            if (!postError){
+            self.$root.$emit('updateBoard');
+            self.$emit('wrapperClick');
+            }
+            else{
+                alert(postError);
+            }
+        }
     }
 }
 </script>
@@ -82,19 +121,21 @@ export default{
     .taskMenu__header{
         display: flex;
         justify-content: space-around;
+        padding: 20px;
     }
     .taskMenu__body{
         display: flex;
-        justify-content: space-around;
+        justify-content: space-between;
+        margin: 0 30px;
+    }
+    .taskMenu__taskName{
+        margin: 0 auto;
     }
     .taskMenu__input{
         display: block;
     }
-    .taskMenu__header{
-        padding:20px;
-    }
     .taskMenu__left,.taskMenu__right{
-        padding: 20px;
+        padding: 10px;
         border: 1px solid black;
     }
     .taskMenu__left{
@@ -105,8 +146,9 @@ export default{
         min-height: 100px;
         resize: none;
     }
-    .taskMenu__button{
-        display: inline-block;
-        margin: 20px auto;
+    .taskMenu__custom{
+        border: 1px solid black;
+        margin: 20px 30px;
+        padding: 10px;
     }
 </style>
