@@ -37,7 +37,7 @@ Test geting list of users
 Test geting user info
     [Tags]    user
     [Documentation]  Получение информации о пользователе
-    ${actual}  Get  ${API_URL}users/${USER_ID}
+    ${actual}  Get  ${API_URL}users/${USER_ID}/
     Should Be Equal  ${actual.status_code}    ${200}
     Log  ${actual.content}
     ${actualList}  Create actual result user list  ${actual.json()}
