@@ -32,3 +32,6 @@ frontend/node_modules/
 frontend/target
 frontend/package-lock.json
 frontend/README.md
+
+### Autotests logs ###
+autotests/tests/*.html
