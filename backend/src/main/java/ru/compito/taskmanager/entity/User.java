@@ -46,12 +46,7 @@ public class User {
     @NotNull
     //@Pattern(regexp = EMAIL_REGEX)
     private String email;
-    /*
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_role", joinColumns
-            = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    private List<Role> roles;*/
+
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "users")
     private List<Task> createdTasks = new ArrayList<>();
