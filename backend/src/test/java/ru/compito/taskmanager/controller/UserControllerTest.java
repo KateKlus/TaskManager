@@ -1,5 +1,8 @@
 package ru.compito.taskmanager.controller;
 
+import io.restassured.http.ContentType;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,7 +16,7 @@ import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static org.junit.Assert.assertEquals;
-
+import static org.junit.Assert.assertTrue;
 
 
 @RunWith(SpringRunner.class)
@@ -24,6 +27,8 @@ import static org.junit.Assert.assertEquals;
 )
 public class UserControllerTest {
     private static final String BASE_URL = "http://localhost:8080/api";
+    private static final String USER_EXIST="Error this username already exists";
+    private static final String BAD_LOGIN="No special characters are allowed in the username";
 
     @Test
     public void getUserByIdTest() {
@@ -55,5 +60,47 @@ public class UserControllerTest {
             assertEquals(userList.get(i-1).getUsername(), receivedUser.getUsername());
             assertEquals(userList.get(i-1).getEmail(), receivedUser.getEmail());
         }
+    }
+    @Test
+    public void registerTest() throws JSONException {
+        Boolean result = false;
+        String answer;
+        List userList;
+        JSONObject newUser = new JSONObject();
+        newUser.put("username", "TestMe");
+        newUser.put("fullname", "TestMe");
+        newUser.put("password", "PassworD");
+        newUser.put("passwordConfirmation", "PassworD");
+        newUser.put("email", "TestMe@mail.ru");
+        answer = given()
+                .contentType(ContentType.JSON)
+                .body(newUser.toString())
+                .when()
+                .post(BASE_URL + "/register/")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract().body().asString();
+        assertEquals(USER_EXIST, answer);
+         userList = given()
+                .when()
+                .get(BASE_URL + "/users/")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract().body().as(List.class);
+        for (Object user : userList.toArray()) {
+            if (user.toString().contains(newUser.get("username").toString())) {
+                result = true;
+            }
+        }
+        assertTrue(result);
+        newUser.put("username", "Te234#$!@#stMe");
+        answer = given()
+                .contentType(ContentType.JSON)
+                .body(newUser.toString())
+                .when()
+                .post(BASE_URL + "/register/")
+                .then()
+                .statusCode(HttpStatus.OK.value()).extract().body().asString();
+        assertEquals(BAD_LOGIN, answer);
     }
 }
