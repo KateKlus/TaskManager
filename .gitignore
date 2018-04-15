@@ -35,3 +35,4 @@ frontend/README.md
 
 ### Autotests logs ###
 autotests/tests/*.html
+autotests/tests/*.xml
