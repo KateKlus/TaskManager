@@ -11,9 +11,9 @@
                 <div class="popup__text">Изменить описание доски:</div>
                 <input type="text" v-model="currentBoard.description">
             </label>
-            <ul>
-                <li class="menu__item"><a href="" class="menu__link" @click.prevent="showUserListMenu = !showUserListMenu">Пригласить пользователя</a></li>
-            </ul>
+
+                <button class="popup__submit" @click.prevent="showUserListMenu = !showUserListMenu"> Пригласить пользователя</button>
+
             <button class="popup__submit" @click.prevent="editBoard">Изменить доску</button>
             <button class="popup__submit" @click.prevent="deleteBoard">Удалить доску</button>
         </div>

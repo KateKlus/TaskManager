@@ -4,7 +4,7 @@
         <div class="popup__body">
             <div class="popup__title">Список пользователей</div>
             <ul class="userListMenu__list">
-                <li class="userListMenu__item" v-for="user in currentBoardUsers">
+                <li class="userListMenu__item" v-for="user in userList">
                     <a href="" class="userListMenu__link" @click.prevent="selectUser(user)">{{user.username}}</a>
                 </li>
             </ul>
@@ -58,25 +58,6 @@ export default{
         axios.get('http://'+host+':'+port+'/api/users/?access_token=' + getCookie("access_token")).then(function(response){
                 self.userList = response.data;
         });
-        console.log("asdf");
-
-            console.log(userList);
-
-                console.log(currentBoardUsers);
-
-
-
-//        function Difference(A,B)
-//        {
-//            var M=A.length, N=B.length, C=[];
-//            for (var i=0; i<M; i++)
-//            { var j=0, k=0;
-//                while (B[j]!==A[i] && j<N) j++;
-//                while (C[k]!==A[i] && k<C.length) k++;
-//                if (j==N && k==C.length) C[C.length]=A[i];
-//            }
-//            return C;
-//        }
     }
 }
 </script>
@@ -97,6 +78,10 @@ export default{
         &:hover{
             background: #ffffff;
         }
+    }
+
+    .popup__body{
+        min-height: 290px;
     }
 
 </style>
