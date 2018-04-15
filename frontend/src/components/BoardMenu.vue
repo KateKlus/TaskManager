@@ -67,17 +67,6 @@ export default{
                 }
             });
         },
-        inviteUser(){
-            var self = this;
-            axios({
-                method: 'GET',
-                url: 'http://' + host + ':' + port + '/api/users/'
-            }).then(function (response) {
-                console.log(response)
-            }).catch(function (error) {
-                alert("Error! "+ error)
-            });
-        },
     }
 }
 </script>
