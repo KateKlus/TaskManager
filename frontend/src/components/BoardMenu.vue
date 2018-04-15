@@ -11,15 +11,25 @@
                 <div class="popup__text">Изменить описание доски:</div>
                 <input type="text" v-model="currentBoard.description">
             </label>
+            <ul>
+                <li class="menu__item"><a href="" class="menu__link" @click.prevent="showUserListMenu = !showUserListMenu">Пригласить пользователя</a></li>
+            </ul>
             <button class="popup__submit" @click.prevent="editBoard">Изменить доску</button>
             <button class="popup__submit" @click.prevent="deleteBoard">Удалить доску</button>
         </div>
+        <userListMenu v-if="showUserListMenu" @wrapperClick="showUserListMenu = !showUserListMenu"></userListMenu>
     </div>
-</template>
 
+</template>
 <script>
+
 import axios from 'axios'
 export default{
+    data() {
+        return {
+            showUserListMenu: false,
+        }
+    },
     props:['currentBoard'],
     methods:{
         closeMenu(){
@@ -55,6 +65,17 @@ export default{
                 else{
                     alert("Error! "+ error);
                 }
+            });
+        },
+        inviteUser(){
+            var self = this;
+            axios({
+                method: 'GET',
+                url: 'http://' + host + ':' + port + '/api/users/'
+            }).then(function (response) {
+                console.log(response)
+            }).catch(function (error) {
+                alert("Error! "+ error)
             });
         },
     }
