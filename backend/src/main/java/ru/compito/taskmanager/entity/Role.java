@@ -10,7 +10,7 @@ import javax.persistence.*;
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name="role_name")
     private String roleName;
@@ -26,15 +26,24 @@ public class Role {
     @JoinColumn(name = "board_id")
     private Board board;
 
+    public Role() {
+    }
+
     public Role(String name) {
         this.roleName = name;
     }
 
-    public Long getId() {
+    public Role(String roleName, User user, Board board) {
+        this.roleName = roleName;
+        this.user = user;
+        this.board = board;
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
