@@ -5,7 +5,7 @@ Library  DatabaseLibrary
 Library  OperatingSystem
 Library  json
 
-Resource  ./tests/variables.robot
+Resource  ../tests/variables.robot
 
 *** Keywords ***
 Create actual result task list
