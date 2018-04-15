@@ -58,25 +58,6 @@ export default{
         axios.get('http://'+host+':'+port+'/api/users/?access_token=' + getCookie("access_token")).then(function(response){
                 self.userList = response.data;
         });
-        console.log("asdf");
-
-            console.log(userList);
-
-                console.log(currentBoardUsers);
-
-
-
-//        function Difference(A,B)
-//        {
-//            var M=A.length, N=B.length, C=[];
-//            for (var i=0; i<M; i++)
-//            { var j=0, k=0;
-//                while (B[j]!==A[i] && j<N) j++;
-//                while (C[k]!==A[i] && k<C.length) k++;
-//                if (j==N && k==C.length) C[C.length]=A[i];
-//            }
-//            return C;
-//        }
     }
 }
 </script>
