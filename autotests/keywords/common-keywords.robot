@@ -5,7 +5,7 @@ Library  DatabaseLibrary
 Library  OperatingSystem
 Library  json
 
-Resource  ./tests/variables.robot
+Resource  ../tests/variables.robot
 
 *** Keywords ***
 Create actual result task list
@@ -18,11 +18,9 @@ Create actual result task list
     \    ${author}  Get From Dictionary  ${ELEMENT}  author
     \    ${authorName}  Get From Dictionary  ${author}  username
     \    ${authorId}  Get From Dictionary  ${author}  id
-    \    ${currentStatus}  Get From Dictionary  ${ELEMENT}  currentStatus
-    \    ${currentStatusId}  Get From Dictionary  ${currentStatus}  id
     \    ${board}  Get From Dictionary  ${ELEMENT}  board
     \    ${boardId}  Get From Dictionary  ${board}  id
-    \    APPEND TO LIST  ${result}  ${id}  ${taskName}  ${authorName}  ${authorId}  ${currentStatusId}  ${boardId}
+    \    APPEND TO LIST  ${result}  ${id}  ${taskName}  ${authorName}  ${authorId}  ${boardId}
     Log  ${result}
     [Return]  ${result}
 
@@ -31,7 +29,7 @@ Create expected result task list
     ${result}  create list
     :FOR    ${ELEMENT}    IN    @{db}
     \    Log    ${ELEMENT}
-    \    APPEND TO LIST  ${result}  ${ELEMENT[0]}  ${ELEMENT[1]}  ${ELEMENT[2]}  ${ELEMENT[3]}  ${ELEMENT[4]}  ${ELEMENT[5]}
+    \    APPEND TO LIST  ${result}  ${ELEMENT[0]}  ${ELEMENT[1]}  ${ELEMENT[2]}  ${ELEMENT[3]}  ${ELEMENT[4]}
     Log  ${result}
     [Return]  ${result}
 
@@ -51,6 +49,6 @@ Create expected result user list
     ${result}  create list
     :FOR    ${ELEMENT}    IN    @{db}
     \    Log    ${ELEMENT}
-    \    APPEND TO LIST  ${result}  ${ELEMENT[4]}  ${ELEMENT[1]}
+    \    APPEND TO LIST  ${result}  ${ELEMENT[0]}  ${ELEMENT[1]}
     Log  ${result}
     [Return]  ${result}

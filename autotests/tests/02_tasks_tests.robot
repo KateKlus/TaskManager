@@ -26,12 +26,12 @@ ${TASK_ID}  2
 Test getting users tasks list
     [Tags]    task
     [Documentation]  Получение списка задач пользователя
-    ${actual}  Get  ${API_URL}users/${USER_ID}/tasks
+    ${actual}  Get  ${API_URL}users/${USER_ID}/tasks/
     Should Be Equal  ${actual.status_code}    ${200}
     Log  ${actual.content}
     ${actualList}  Create actual result task list  @{actual.json()}
     ${sql}  catenate
-    ...  SELECT users_tasks.task_id, tasks.task_name, users.username, users_tasks.user_id, tasks.current_status, tasks.board FROM users_tasks
+    ...  SELECT users_tasks.task_id, tasks.task_name, users.username, users_tasks.user_id, tasks.board FROM users_tasks
     ...  inner join tasks on tasks.task_id=users_tasks.task_id
     ...  inner join users on users.user_id=users_tasks.user_id
     ...  where tasks.user_id=${USER_ID};
@@ -48,7 +48,7 @@ Test getting users task
     Log  ${actual.content}
     ${actualList}  Create actual result task list  ${actual.json()}
     ${sql}  catenate
-    ...  SELECT users_tasks.task_id, tasks.task_name, users.username, users_tasks.user_id, tasks.current_status, tasks.board FROM users_tasks
+    ...  SELECT users_tasks.task_id, tasks.task_name, users.username, users_tasks.user_id, tasks.board FROM users_tasks
     ...  inner join tasks on tasks.task_id=users_tasks.task_id
     ...  inner join users on users.user_id=users_tasks.user_id
     ...  where tasks.user_id=${USER_ID} and tasks.task_id=${TASK_ID};

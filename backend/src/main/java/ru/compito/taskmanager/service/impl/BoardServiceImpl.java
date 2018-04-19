@@ -4,16 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.compito.taskmanager.entity.*;
-import ru.compito.taskmanager.repository.BoardRepository;
-import ru.compito.taskmanager.repository.BoardStatusRepository;
-import ru.compito.taskmanager.repository.TaskRepository;
-import ru.compito.taskmanager.repository.UserRepository;
+import ru.compito.taskmanager.repository.*;
 import ru.compito.taskmanager.service.BoardService;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service(value = "BoardService")
 @Transactional
@@ -27,6 +21,8 @@ public class BoardServiceImpl implements BoardService{
     private TaskRepository taskRepository;
     @Autowired
     private BoardStatusRepository boardStatusRepository;
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Override
     public Board getOne(Integer Id) {
@@ -42,19 +38,27 @@ public class BoardServiceImpl implements BoardService{
     public Board save(Integer userId, Board board) {
         User user = userRepository.getOne(userId);
         board.setBoardOwner(user);
+        Role role = new Role("Owner",user,board);
+        roleRepository.save(role);
         return boardRepository.save(board);
     }
 
     @Override
-    public void update(Board updatedBoard) {
-        boardRepository.save(updatedBoard);
+    public Board update(Board updatedBoard) {
+        return boardRepository.save(updatedBoard);
     }
 
     @Override
     public void delete(Integer boardId) {
         Board board = boardRepository.getOne(boardId);
         boardStatusRepository.deleteAllByBoard(board);
-        boardRepository.delete(boardId);
+        List<Task> tasks = taskRepository.findAllByBoard(board);
+        for(Task task:tasks){
+            task.setUsers(Collections.emptyList());
+            taskRepository.save(task);
+        }
+        taskRepository.deleteAllByBoard(board);
+        boardRepository.delete(board);
     }
 
     @Override
@@ -77,13 +81,10 @@ public class BoardServiceImpl implements BoardService{
     @Override
     public List<User> getUsersById(Integer boardId) {
         Board board = boardRepository.getOne(boardId);
-        List<Task> tasks = taskRepository.findAllByBoard(board);
-        Set<User> users = new HashSet<>();
+        List<Role> roles = roleRepository.findAllByBoard(board);
         List<User> userList = new ArrayList<>();
-        for(Task task : tasks){
-            users.addAll(userRepository.findAllByTasks(task));
-        }
-        userList.addAll(users);
+        for(Role role : roles)
+            userList.add(role.getUser());
         return userList;
     }
     @Override

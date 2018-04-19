@@ -10,7 +10,7 @@ Library  DatabaseLibrary
 Library  OperatingSystem
 Library  String
 
-Resource  ./variables.
+Resource  ./variables.robot
 Resource  ../keywords/common-keywords.robot
 
 Suite Setup       Connect To Database    pymysql   ${DBName}    ${DBUser}    ${DBPass}    ${DBHost}    ${DBPort}    utf8
@@ -30,18 +30,18 @@ Test geting list of users
     Should Be Equal  ${actual.status_code}    ${200}
     Log  ${actual.content}
     ${actualList}  Create actual result user list  @{actual.json()}
-    @{db}    Query  SELECT * FROM users;
+    @{db}    Query  SELECT username, email FROM users;
     ${expectedlList}  Create expected result user list  @{db}
     Should Be Equal  ${actualList}  ${expectedlList}
 
 Test geting user info
     [Tags]    user
     [Documentation]  Получение информации о пользователе
-    ${actual}  Get  ${API_URL}users/${USER_ID}
+    ${actual}  Get  ${API_URL}users/${USER_ID}/
     Should Be Equal  ${actual.status_code}    ${200}
     Log  ${actual.content}
     ${actualList}  Create actual result user list  ${actual.json()}
-    @{db}    Query  SELECT * FROM users where user_id=${USER_ID};
+    @{db}    Query  SELECT username, email FROM users where user_id=${USER_ID};
     ${expectedlList}  Create expected result user list  @{db}
     Should Be Equal  ${actualList}  ${expectedlList}
 

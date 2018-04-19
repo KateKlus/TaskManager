@@ -11,8 +11,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.compito.taskmanager.entity.Board;
+import ru.compito.taskmanager.entity.Role;
 import ru.compito.taskmanager.entity.User;
 import ru.compito.taskmanager.repository.BoardRepository;
+import ru.compito.taskmanager.repository.RoleRepository;
 import ru.compito.taskmanager.repository.UserRepository;
 import ru.compito.taskmanager.service.UserService;
 
@@ -29,6 +31,9 @@ public class UserServiceImpl implements UserService,UserDetailsService {
 
     @Autowired
     private BoardRepository boardRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -50,8 +55,11 @@ public class UserServiceImpl implements UserService,UserDetailsService {
     @Override
     public List<Board> getBoardsByUserId(Integer userId) {
         User user = userRepository.getOne(userId);
-
-        return boardRepository.findAllByBoardOwner(user);
+        List<Role> roles = roleRepository.findAllByUser(user);
+        List<Board> boardList = new ArrayList<>();
+        for(Role role : roles)
+            boardList.add(role.getBoard());
+        return boardList;
     }
 
     @Override
