@@ -11,13 +11,13 @@
                 <div class="popup__text">Изменить описание доски:</div>
                 <input type="text" v-model="currentBoard.description">
             </label>
-
-                <button class="popup__submit" @click.prevent="showUserListMenu = !showUserListMenu"> Пригласить пользователя</button>
-
-            <button class="popup__submit" @click.prevent="editBoard">Изменить доску</button>
-            <button class="popup__submit" @click.prevent="deleteBoard">Удалить доску</button>
+                <button class="popup__submit" @click.prevent="editBoard">Изменить доску</button>
+                <button class="popup__submit" @click.prevent="deleteBoard">Удалить доску</button>
+                <button class="popup__submit" @click.prevent="showUserInviteMenu = !showUserInviteMenu">Пригласить пользователя</button>
+                <button class="popup__submit" @click.prevent="showInvitedUserMenu = !showInvitedUserMenu">Приглашенные пользователи</button>
         </div>
-        <userListMenu v-if="showUserListMenu" @wrapperClick="showUserListMenu = !showUserListMenu"></userListMenu>
+        <userInviteMenu v-if="showUserInviteMenu" @wrapperClick="showUserInviteMenu = !showUserInviteMenu" :currentBoard="currentBoard"></userInviteMenu>
+        <invitedUserMenu v-if="showInvitedUserMenu" @wrapperClick="showInvitedUserMenu = !showInvitedUserMenu" :currentBoard="currentBoard"></invitedUserMenu>
     </div>
 
 </template>
@@ -27,7 +27,8 @@ import axios from 'axios'
 export default{
     data() {
         return {
-            showUserListMenu: false,
+            showUserInviteMenu: false,
+            showInvitedUserMenu: false
         }
     },
     props:['currentBoard'],
