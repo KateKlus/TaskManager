@@ -22,4 +22,5 @@ public interface ServiceConstants {
     String ROLE_PATH = API_URL + ROLES;
     String STATUS_PATH = API_URL + STATUSES;
     String TASKTEMPLATE_PATH = API_URL + TASKTEMPLATES;
+    String REGISTER_PATH = API_URL + "register/";
 }

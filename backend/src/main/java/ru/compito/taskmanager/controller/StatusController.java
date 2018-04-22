@@ -11,7 +11,7 @@ import ru.compito.taskmanager.service.TaskStatusService;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = ServiceConstants.STATUSES)
+@RequestMapping(value = ServiceConstants.STATUS_PATH)
 public class StatusController {
 
     @Autowired
