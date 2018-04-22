@@ -5,10 +5,13 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.web.bind.annotation.*;
+import ru.compito.taskmanager.config.ServiceConstants;
 import ru.compito.taskmanager.entity.Board;
+import ru.compito.taskmanager.entity.Member;
 import ru.compito.taskmanager.entity.User;
 import ru.compito.taskmanager.pojos.UserRegistration;
 import ru.compito.taskmanager.service.BoardService;
+import ru.compito.taskmanager.service.MemberService;
 import ru.compito.taskmanager.service.UserService;
 
 import javax.validation.Valid;
@@ -16,88 +19,62 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping(value = ServiceConstants.USER_PATH)
 public class UserController{
 
     @Autowired
     private UserService userService;
-
     @Autowired
     private BoardService boardService;
-
     @Autowired
-    private TokenStore tokenStore;
+    private MemberService memberService;
 
-    @PostMapping(value = "/register/")
-    public String register(@RequestBody UserRegistration userRegistration){
-        if(!userRegistration.getPassword().equals(userRegistration.getPasswordConfirmation()))
-            return "Error the two passwords do not match";
-        else if(userService.findByUsername(userRegistration.getUsername()) != null)
-            return "Error this username already exists";
 
-        //Проверка на наличии специальных символов в имени.
-        Pattern pattern = Pattern.compile("^[a-zA-Z][a-zA-Z0-9-_\\.]{1,20}$");
-        if(!pattern.matcher(userRegistration.getUsername()).find())
-            return "No special characters are allowed in the username";
-
-        userService.saveUser(new User(userRegistration.getUsername(),
-                userRegistration.getPassword(),userRegistration.getEmail()));
-
-        return "User created";
-    }
-
-    @GetMapping(value = "/logouts/")
-    public void logout(@RequestParam (value = "access_token") String accessToken){
-        tokenStore.removeAccessToken(tokenStore.readAccessToken(accessToken));
-    }
-
-    @GetMapping(value ="/getUserId/")
-    public Integer getUserId(){
-        User user = userService.findByUsername(SecurityContextHolder
-                .getContext().getAuthentication().getName());
-        return user.getId();
-    }
-
-    @GetMapping(value = "/users/",produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/",produces = MediaType.APPLICATION_JSON_VALUE)
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
 
-    @GetMapping(value = "/users/{Id}/",produces = MediaType.APPLICATION_JSON_VALUE)
-    public User getUserById(@PathVariable Integer Id) {
-        return userService.getUserById(Id);
+    @GetMapping(value = "/{userId}/",produces = MediaType.APPLICATION_JSON_VALUE)
+    public User getUserById(@PathVariable Integer userId) {
+        return userService.getUserById(userId);
     }
 
 
-    @GetMapping(value = "/users/{Id}/boards/",produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Board> getBoardsByUserId(@PathVariable Integer Id) {
-        return userService.getBoardsByUserId(Id);
+    @GetMapping(value = "/{userId}/boards/",produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Board> getBoardsByUserId(@PathVariable Integer userId) {
+        return userService.getBoardsByUserId(userId);
     }
 
-    @GetMapping(value = "/users/{Id}/boards/{boardId}/",produces = MediaType.APPLICATION_JSON_VALUE)
-    public Board getBoardByUserId(@PathVariable Integer Id,@PathVariable Integer boardId ) {
-        return userService.getBoardByUserId(Id,boardId);
+    @GetMapping(value = "/{userId}/members/",produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Member> getMembersByUserId(@PathVariable Integer userId) {
+        return memberService.getAllByUserId(userId);
     }
 
-    @PostMapping(value = "/users/{Id}/boards/", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Board createBoard(@RequestBody Board board, @PathVariable Integer Id) {
-        return boardService.save(Id,board);
+    @GetMapping(value = "/{userId}/boards/{boardId}/",produces = MediaType.APPLICATION_JSON_VALUE)
+    public Board getBoardByUserId(@PathVariable Integer userId,@PathVariable Integer boardId ) {
+        return userService.getBoardByUserId(userId,boardId);
     }
 
-    @PostMapping(value = "/users/", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/{userId}/boards/", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Board createBoard(@RequestBody Board board, @PathVariable Integer userId) {
+        return boardService.save(userId,board);
+    }
+
+    @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void create(@RequestBody User user) {
         userService.saveUser(user);
     }
 
-    @PutMapping(value = "/users/{Id}/",
+    @PutMapping(value = "/{userId}/",
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public void update(@PathVariable Integer Id, @RequestBody User user) {
-        userService.updateUserById(Id,user);
+    public void update(@PathVariable Integer userId, @RequestBody User user) {
+        userService.updateUserById(userId,user);
     }
 
-    @DeleteMapping("/users/{Id}/")
-    public void delete(@PathVariable Integer Id) {
-        userService.deleteUserById(Id);
+    @DeleteMapping("/{userId}/")
+    public void delete(@PathVariable Integer userId) {
+        userService.deleteUserById(userId);
     }
 
 }
