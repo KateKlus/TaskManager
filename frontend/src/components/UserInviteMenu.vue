@@ -64,15 +64,14 @@ export default{
                     this.selectedRole.user = this.selectedUser;
                     axios({
                         method: 'post',
-                        url: 'http://'+host+':'+port+'/api/roles/',
+                        url: 'http://'+host+':'+port+'/api/roles/?access_token='+getCookie("access_token"),
                         data:self.selectedRole
                     }).then(function (response) {
-                        alert("Пользователь "+this.selectedUser.username+" успешно приглашен c ролью "+this.selectedRole.roleName);
+                        alert("Пользователь "+self.selectedUser.username+" успешно приглашен c ролью "+self.selectedRole.roleName);
                         self.$emit('wrapperClick');
                     }).catch(function (error) {
                         alert("Error! "+ error)
                     });
-                    this.$emit('wrapperClick');
                 }
                 else{
                     alert("Выберите роль для пользователя!");

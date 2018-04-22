@@ -40,10 +40,9 @@ export default{
             var self = this;
             axios({
                 method: 'put',
-                url: 'http://'+host+':'+port+'/api/boards/'+self.currentBoard.id+'/',
+                url: 'http://'+host+':'+port+'/api/boards/'+self.currentBoard.id+'/?access_token='+getCookie("access_token"),
                 data: self.currentBoard
             }).then(function (response) {
-                console.log(response);
                 self.$root.$emit('updateBoard');
                 self.$emit('wrapperClick');
             }).catch(function (error) {
@@ -54,7 +53,7 @@ export default{
             var self = this;
             axios({
                 method: 'DELETE',
-                url: 'http://'+host+':'+port+'/api/boards/'+self.currentBoard.id+'/'
+                url: 'http://'+host+':'+port+'/api/boards/'+self.currentBoard.id+'/?access_token='+getCookie("access_token")
             }).then(function (response) {
                 self.$emit('wrapperClick');
                 delete_cookie("current_board");

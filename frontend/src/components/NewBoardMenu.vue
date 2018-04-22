@@ -36,9 +36,10 @@ export default{
             var self = this;
             axios({
                 method: 'post',
-                url: 'http://'+host+':'+port+'/api/users/'+self.currentUser.id+'/boards/',
+                url: 'http://'+host+':'+port+'/api/users/'+self.currentUser.id+'/boards/?access_token='+getCookie("access_token"),
                 data:self.newBoard
             }).then(function (response) {
+                self.$root.$emit('onBoardSelect', response.data);
                 self.$emit('wrapperClick');
                 self.$root.$emit('updateBoard');
                 document.location.replace("/board");

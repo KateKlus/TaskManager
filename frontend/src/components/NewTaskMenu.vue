@@ -84,7 +84,7 @@ export default{
             this.taskItem.taskTemplate = this.selectedTemplate;
             axios({
                 method: 'post',
-                url: 'http://'+host+':'+port+'/api/users/'+self.currentUser.id+'/tasks/',
+                url: 'http://'+host+':'+port+'/api/users/'+self.currentUser.id+'/tasks/?access_token='+getCookie("access_token"),
                 data:self.taskItem
             }).then(function (response) {
                 self.sendCustomFields(response.data);
@@ -131,7 +131,7 @@ export default{
                 customField.task = taskItem;
                 axios({
                     method: 'post',
-                    url: 'http://'+host+':'+port+'/api/customfields/',
+                    url: 'http://'+host+':'+port+'/api/customfields/?access_token='+getCookie("access_token"),
                     data:customField
                 }).catch(function (error) {
                     postError = error;

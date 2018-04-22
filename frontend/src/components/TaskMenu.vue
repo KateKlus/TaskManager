@@ -61,7 +61,7 @@ export default{
             var self = this;
             axios({
                 method: 'put',
-                url: 'http://'+host+':'+port+'/api/tasks/'+self.taskItem.id+'/',
+                url: 'http://'+host+':'+port+'/api/tasks/'+self.taskItem.id+'/?access_token='+getCookie("access_token"),
                 data:self.taskItem
             }).then(function (response) {
                 self.editCustomFields();
@@ -73,7 +73,7 @@ export default{
             var self = this;
             axios({
                 method: 'delete',
-                url: 'http://'+host+':'+port+'/api/tasks/'+self.taskItem.id+'/'
+                url: 'http://'+host+':'+port+'/api/tasks/'+self.taskItem.id+'/?access_token='+getCookie("access_token")
             }).then(function (response) {
                 self.$root.$emit('updateBoard');
                 self.$emit('wrapperClick');
@@ -99,7 +99,7 @@ export default{
             this.customFieldsList.forEach(function(customField){
                 axios({
                     method: 'put',
-                    url: 'http://'+host+':'+port+'/api/customfields/'+customField.id+'/',
+                    url: 'http://'+host+':'+port+'/api/customfields/'+customField.id+'/?access_token='+getCookie("access_token"),
                     data:customField
                 }).catch(function (error) {
                     postError = error;

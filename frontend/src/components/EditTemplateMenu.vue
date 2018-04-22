@@ -81,7 +81,7 @@ export default{
             else{
                 axios({
                     method: 'put',
-                    url: 'http://'+host+':'+port+'/api/tasktemplates/'+self.selectedTemplate.id+'/',
+                    url: 'http://'+host+':'+port+'/api/tasktemplates/'+self.selectedTemplate.id+'/?access_token='+getCookie("access_token"),
                     data:self.selectedTemplate
                 }).then(function (response) {
                     self.editAttributes(response.data);
@@ -97,7 +97,7 @@ export default{
                 if(attribute.id){
                     axios({
                         method: 'put',
-                        url: 'http://'+host+':'+port+'/api/attributes/'+attribute.id+'/',
+                        url: 'http://'+host+':'+port+'/api/attributes/'+attribute.id+'/?access_token='+getCookie("access_token"),
                         data: attribute
                     }).catch(function (error) {
                         postError = error;
@@ -106,7 +106,7 @@ export default{
                 else{
                     axios({
                         method: 'post',
-                        url: 'http://'+host+':'+port+'/api/tasktemplates/'+template.id+'/attributes/',
+                        url: 'http://'+host+':'+port+'/api/tasktemplates/'+template.id+'/attributes/?access_token='+getCookie("access_token"),
                         data: attribute
                     }).catch(function (error) {
                         postError = error;

@@ -25,7 +25,7 @@ export default{
             var self = this;
             axios({
                 method: 'put',
-                url: 'http://'+host+':'+port+'/api/statuses/'+self.statusItem.taskStatus.id+'/',
+                url: 'http://'+host+':'+port+'/api/statuses/'+self.statusItem.taskStatus.id+'/?access_token='+getCookie("access_token"),
                 data: self.statusItem.taskStatus
             }).then(function (response) {
                 self.$root.$emit('updateBoard');
@@ -40,7 +40,7 @@ export default{
                 if(task.currentStatus.id == self.statusItem.taskStatus.id){
                     axios({
                         method: 'delete',
-                        url: 'http://'+host+':'+port+'/api/tasks/'+task.id+'/'
+                        url: 'http://'+host+':'+port+'/api/tasks/'+task.id+'/?access_token='+getCookie("access_token")
                     }).catch(function (error) {
                         alert("Error! "+ error);
                     });
@@ -48,7 +48,7 @@ export default{
             })
             axios({
                 method: 'delete',
-                url: 'http://'+host+':'+port+'/api/statuses/'+self.statusItem.taskStatus.id+'/'
+                url: 'http://'+host+':'+port+'/api/statuses/'+self.statusItem.taskStatus.id+'/?access_token='+getCookie("access_token")
             }).then(function (response) {
                 self.$root.$emit('updateBoard');
                 self.$emit('wrapperClick');

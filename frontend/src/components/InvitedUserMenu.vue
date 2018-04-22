@@ -65,17 +65,20 @@ export default{
                 if(this.selectedRole){
                     this.selectedRole.board = this.currentBoard;
                     this.selectedRole.user = this.selectedUser;
-                    axios({
-                        method: 'put',
-                        url: 'http://'+host+':'+port+'/api/roles/',
-                        data:self.selectedRole
-                    }).then(function (response) {
-                        alert("Роль пользователя "+this.selectedUser.username+" успешно изменена на "+this.selectedRole.roleName);
-                        self.$emit('wrapperClick');
-                    }).catch(function (error) {
-                        alert("Error! "+ error)
-                    });
-                    this.$emit('wrapperClick');
+                    this.roleList.forEach(function(role){
+                        if((role.user.id == self.selectedUser.id)&&(role.board.id == self.currentBoard.id)){
+                            axios({
+                                method: 'put',
+                                url: 'http://'+host+':'+port+'/api/roles/'+role.id+'/?access_token='+getCookie("access_token"),
+                                data:self.selectedRole
+                            }).then(function (response) {
+                                alert("Роль пользователя "+self.selectedUser.username+" успешно изменена на "+self.selectedRole.roleName);
+                                self.$emit('wrapperClick');
+                            }).catch(function (error) {
+                                alert("Error! "+ error)
+                            });
+                        }
+                    })
                 }
                 else{
                     alert("Выберите роль для пользователя!");
