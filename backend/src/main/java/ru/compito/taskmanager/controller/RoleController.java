@@ -3,14 +3,9 @@ package ru.compito.taskmanager.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import ru.compito.taskmanager.entity.Board;
 import ru.compito.taskmanager.entity.Role;
-import ru.compito.taskmanager.entity.User;
-import ru.compito.taskmanager.service.BoardService;
 import ru.compito.taskmanager.service.RoleService;
-import ru.compito.taskmanager.service.UserService;
 
 import java.util.List;
 
@@ -19,44 +14,30 @@ import java.util.List;
 public class RoleController {
 
     @Autowired
-    private RoleService roleService;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private BoardService boardService;
+    RoleService roleService;
 
     @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Role> getAll() {
         return roleService.findAll();
     }
-
-    @GetMapping(value = "/{roleId}/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Role getOne(@PathVariable Integer roleId) {
-        return roleService.getOne(roleId);
+    @GetMapping(value = "/{id}/", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Role getOne(@PathVariable Integer id) {
+        return roleService.getOne(id);
     }
-
-    @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Role addRole(@RequestBody Role role) {
-        User currentUser = userService.findByUsername(SecurityContextHolder
-                .getContext().getAuthentication().getName());
-        User boardOwner = boardService.getBoardOwner(role.getBoard().getId());
-        Role newRole = null;
-        if(currentUser.equals(boardOwner)){
-            newRole = roleService.save(role);
-        }
-        return newRole;
+    @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public Role createRole(@RequestBody Role role) {
+        return roleService.save(role);
     }
-
-    @PutMapping(value = "/{roleId}/",
+    @PutMapping(value = "/{id}/",
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Role update(@PathVariable Integer roleId, @RequestBody Role role) {
-        return roleService.update(role);
+    public void update(@PathVariable Integer id, @RequestBody Role role) {
+        roleService.update(role);
     }
-
-    @DeleteMapping("/{roleId}/")
+    @DeleteMapping("/{id}/")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Integer roleId) {
-        roleService.delete(roleId);
+    public void delete(@PathVariable Integer id) {
+        roleService.delete(id);
     }
-
 }

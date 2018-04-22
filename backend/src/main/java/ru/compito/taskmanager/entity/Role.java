@@ -18,25 +18,11 @@ public class Role {
     @Column(name="description")
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_id")
-    private Board board;
-
     public Role() {
     }
 
-    public Role(String name) {
-        this.roleName = name;
-    }
-
-    public Role(String roleName, User user, Board board) {
+    public Role(String roleName) {
         this.roleName = roleName;
-        this.user = user;
-        this.board = board;
     }
 
     public Integer getId() {
@@ -61,22 +47,6 @@ public class Role {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Board getBoard() {
-        return board;
-    }
-
-    public void setBoard(Board board) {
-        this.board = board;
     }
 
     @Override

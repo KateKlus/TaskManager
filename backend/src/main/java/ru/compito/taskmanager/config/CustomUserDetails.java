@@ -3,7 +3,6 @@ package ru.compito.taskmanager.config;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ru.compito.taskmanager.entity.Role;
 import ru.compito.taskmanager.entity.User;
 
 import java.util.ArrayList;

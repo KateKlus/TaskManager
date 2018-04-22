@@ -27,7 +27,7 @@ public class StatusController {
     @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public TaskStatus createTask(@RequestBody TaskStatus taskStatus) {
+    public TaskStatus createTaskStatus(@RequestBody TaskStatus taskStatus) {
         return taskStatusService.save(taskStatus);
     }
     @PutMapping(value = "/{id}/",

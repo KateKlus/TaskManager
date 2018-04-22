@@ -100,11 +100,11 @@ public class User {
         this.email = email;
     }
 /*
-    public List<Role> getRoles() {
+    public List<Member> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(List<Member> roles) {
         this.roles = roles;
     }
 */
