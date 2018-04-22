@@ -4,13 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import ru.compito.taskmanager.config.ServiceConstants;
 import ru.compito.taskmanager.entity.CustomField;
 import ru.compito.taskmanager.service.CustomFieldService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/customfields")
+@RequestMapping(value = ServiceConstants.CUSTOMFIELD_PATH)
 public class CustomFieldController {
 
     @Autowired

@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.compito.taskmanager.entity.Member;
+import ru.compito.taskmanager.entity.User;
 import ru.compito.taskmanager.repository.MemberRepository;
+import ru.compito.taskmanager.repository.UserRepository;
 import ru.compito.taskmanager.service.MemberService;
 
 import java.util.List;
@@ -15,6 +17,8 @@ public class MemberServiceImpl implements MemberService {
 
     @Autowired
     private MemberRepository memberRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public List<Member> findAll() {
@@ -29,6 +33,12 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Member update(Member updatedMember) {
         return memberRepository.save(updatedMember);
+    }
+
+    @Override
+    public List<Member> getAllByUserId(Integer userId) {
+        User user = userRepository.getOne(userId);
+        return memberRepository.findAllByUser(user);
     }
 
 }

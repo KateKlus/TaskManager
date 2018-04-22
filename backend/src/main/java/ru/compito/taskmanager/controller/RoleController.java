@@ -4,13 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import ru.compito.taskmanager.config.ServiceConstants;
 import ru.compito.taskmanager.entity.Role;
 import ru.compito.taskmanager.service.RoleService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/roles")
+@RequestMapping(value = ServiceConstants.ROLE_PATH)
 public class RoleController {
 
     @Autowired

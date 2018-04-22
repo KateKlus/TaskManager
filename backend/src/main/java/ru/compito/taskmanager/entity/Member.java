@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name="members")
@@ -81,21 +82,16 @@ public class Member {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Member that = (Member) o;
-        return (user.getId() == that.user.getId())&&(board.getId() == that.board.getId());
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Member member = (Member) o;
+        return Objects.equals(user, member.user) &&
+                Objects.equals(board, member.board);
     }
 
     @Override
     public int hashCode() {
-        int result = 17;
-        result = 37*result + user.getId();
-        result = 37*result + board.getId();
-        return Long.valueOf(result).hashCode();
+
+        return Objects.hash(user, board);
     }
 }

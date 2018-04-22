@@ -8,4 +8,5 @@ public interface MemberService {
     List<Member> findAll();
     Member save(Member member);
     Member update(Member updatedMember);
+    List<Member> getAllByUserId(Integer userId);
 }

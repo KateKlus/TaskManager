@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import ru.compito.taskmanager.config.ServiceConstants;
 import ru.compito.taskmanager.entity.Member;
 import ru.compito.taskmanager.entity.User;
 import ru.compito.taskmanager.service.BoardService;
@@ -14,7 +15,7 @@ import ru.compito.taskmanager.service.UserService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/members")
+@RequestMapping(value = ServiceConstants.MEMBER_PATH)
 public class MemberController {
 
     @Autowired
