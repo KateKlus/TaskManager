@@ -44,9 +44,10 @@ public class BoardServiceImpl implements BoardService{
         if(!roleRepository.existsByRoleName("Owner"))
             roleRepository.save(new Role("Owner"));
         Role role = roleRepository.findByRoleName("Owner");
-        Member member = new Member(role,user,board);
+        Member member = new Member(user,board, role);
+        Board newBoard = boardRepository.save(board);
         memberRepository.save(member);
-        return boardRepository.save(board);
+        return newBoard;
     }
 
     @Override

@@ -10,7 +10,9 @@ import java.util.List;
 public interface MemberRepository extends JpaRepository<Member,MemberIdentity>{
     List<Member> findAllByBoard(Board board);
     List<Member> findAllByUser(User user);
+    Member findByUserAndBoard(User user, Board board);
     void deleteAllByRole(Role role);
     void deleteAllByBoard(Board board);
+    void deleteByUserAndBoard(User user, Board board);
     void  deleteAllByUser(User user);
 }

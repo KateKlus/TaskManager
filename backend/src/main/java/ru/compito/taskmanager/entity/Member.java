@@ -50,12 +50,6 @@ public class Member {
         this.memberIdentity = memberIdentity;
     }
 
-    public Member(Role role, User user, Board board) {
-        this.role = role;
-        this.user = user;
-        this.board = board;
-    }
-
     public User getUser() {
         return user;
     }

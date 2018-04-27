@@ -2,6 +2,7 @@ package ru.compito.taskmanager.pojos;
 
 public class UserRegistration {
     private String username;
+    private String fullname;
     private String password;
     private String passwordConfirmation;
     private String email;
@@ -9,9 +10,9 @@ public class UserRegistration {
     public UserRegistration() {
     }
 
-    public UserRegistration(String username, String password,
-                            String passwordConfirmation,String email) {
+    public UserRegistration(String username, String fullname, String password, String passwordConfirmation, String email) {
         this.username = username;
+        this.fullname = fullname;
         this.password = password;
         this.passwordConfirmation = passwordConfirmation;
         this.email = email;
@@ -23,6 +24,14 @@ public class UserRegistration {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getFullname() {
+        return fullname;
+    }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
     }
 
     public String getPassword() {
