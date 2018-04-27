@@ -4,7 +4,7 @@
         <div class="popup__body">
             <div class="popup__title">Список досок</div>
             <ul class="boardListMenu__list">
-                <li class="boardListMenu__item" v-for="board in boardList"><a href="" class="boardListMenu__link" @click.prevent="selectBoard(board)">{{board.boardName}}</a></li>
+                <li class="boardListMenu__item" v-for="member in memberList"><a href="" class="boardListMenu__link" @click.prevent="selectBoard(member.board)"> {{member.board.boardName}} [{{member.role.roleName}}]</a></li>
             </ul>
 
         </div>
@@ -16,7 +16,7 @@ import axios from 'axios'
 export default{
     data(){
         return{
-            boardList: ""
+            memberList: ""
         }
     },
     methods:{
@@ -31,8 +31,8 @@ export default{
     created(){
         var self = this;
         axios.get('http://'+host+':'+port+'/api/getUserId/?access_token=' + getCookie("access_token")).then(function(response){
-            axios.get('http://'+host+':'+port+'/api/users/'+response.data+'/boards/').then(function(response){
-                self.boardList = response.data;
+            axios.get('http://'+host+':'+port+'/api/users/'+response.data+'/members/?access_token='+getCookie("access_token")).then(function(response){
+                self.memberList = response.data;
             })
         })
     }

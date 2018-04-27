@@ -11,13 +11,13 @@
                 <div class="popup__text">Изменить описание доски:</div>
                 <input type="text" v-model="currentBoard.description">
             </label>
-
-                <button class="popup__submit" @click.prevent="showUserListMenu = !showUserListMenu"> Пригласить пользователя</button>
-
-            <button class="popup__submit" @click.prevent="editBoard">Изменить доску</button>
-            <button class="popup__submit" @click.prevent="deleteBoard">Удалить доску</button>
+                <button class="popup__submit" @click.prevent="editBoard">Изменить доску</button>
+                <button class="popup__submit" @click.prevent="deleteBoard">Удалить доску</button>
+                <button class="popup__submit" @click.prevent="showUserInviteMenu = !showUserInviteMenu">Пригласить пользователя</button>
+                <button class="popup__submit" @click.prevent="showInvitedUserMenu = !showInvitedUserMenu">Приглашенные пользователи</button>
         </div>
-        <userListMenu v-if="showUserListMenu" @wrapperClick="showUserListMenu = !showUserListMenu"></userListMenu>
+        <userInviteMenu v-if="showUserInviteMenu" @wrapperClick="showUserInviteMenu = !showUserInviteMenu" :currentBoard="currentBoard"></userInviteMenu>
+        <invitedUserMenu v-if="showInvitedUserMenu" @wrapperClick="showInvitedUserMenu = !showInvitedUserMenu" :currentBoard="currentBoard"></invitedUserMenu>
     </div>
 
 </template>
@@ -27,7 +27,8 @@ import axios from 'axios'
 export default{
     data() {
         return {
-            showUserListMenu: false,
+            showUserInviteMenu: false,
+            showInvitedUserMenu: false
         }
     },
     props:['currentBoard'],
@@ -39,10 +40,9 @@ export default{
             var self = this;
             axios({
                 method: 'put',
-                url: 'http://'+host+':'+port+'/api/boards/'+self.currentBoard.id+'/',
+                url: 'http://'+host+':'+port+'/api/boards/'+self.currentBoard.id+'/?access_token='+getCookie("access_token"),
                 data: self.currentBoard
             }).then(function (response) {
-                console.log(response);
                 self.$root.$emit('updateBoard');
                 self.$emit('wrapperClick');
             }).catch(function (error) {
@@ -53,7 +53,7 @@ export default{
             var self = this;
             axios({
                 method: 'DELETE',
-                url: 'http://'+host+':'+port+'/api/boards/'+self.currentBoard.id+'/'
+                url: 'http://'+host+':'+port+'/api/boards/'+self.currentBoard.id+'/?access_token='+getCookie("access_token")
             }).then(function (response) {
                 self.$emit('wrapperClick');
                 delete_cookie("current_board");

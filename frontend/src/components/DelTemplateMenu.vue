@@ -35,7 +35,7 @@ export default{
             else{
                 axios({
                     method: 'DELETE',
-                    url: 'http://'+host+':'+port+'/api/tasktemplates/'+self.selectedTemplate.id+'/'
+                    url: 'http://'+host+':'+port+'/api/tasktemplates/'+self.selectedTemplate.id+'/?access_token='+getCookie("access_token")
                 }).then(function (response) {
                     alert("Шаблон успешно удалён!")
                     self.$emit('wrapperClick');

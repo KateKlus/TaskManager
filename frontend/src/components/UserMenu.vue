@@ -28,10 +28,9 @@ export default{
             var self = this;
             axios({
                 method: 'put',
-                url: 'http://'+host+':'+port+'/api/users/'+self.currentUser.id+'/',
+                url: 'http://'+host+':'+port+'/api/users/'+self.currentUser.id+'/?access_token='+getCookie("access_token"),
                 data: self.currentUser
             }).then(function (response) {
-                console.log(response);
                 self.$root.$emit('updateBoard');
                 self.$emit('wrapperClick');
             }).catch(function (error) {

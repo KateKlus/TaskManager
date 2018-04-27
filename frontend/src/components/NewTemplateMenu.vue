@@ -69,7 +69,7 @@ export default{
             var self = this;
             axios({
                 method: 'post',
-                url: 'http://'+host+':'+port+'/api/tasktemplates/',
+                url: 'http://'+host+':'+port+'/api/tasktemplates/?access_token='+getCookie("access_token"),
                 data:self.newTemplate
             }).then(function (response) {
                 self.createNewAttributes(response.data);
@@ -83,7 +83,7 @@ export default{
             this.attributeList.forEach(function(attribute){
                 axios({
                     method: 'post',
-                    url: 'http://'+host+':'+port+'/api/tasktemplates/'+template.id+'/attributes/',
+                    url: 'http://'+host+':'+port+'/api/tasktemplates/'+template.id+'/attributes/?access_token='+getCookie("access_token"),
                     data: attribute
                 }).catch(function (error) {
                     postError = error;
