@@ -26,7 +26,7 @@
                 <ul class="custom__list">
                     <li class="custom__item" v-for="customField in customFieldsList">
                         <div class="popup__text">{{customField.attribute.attributeName}}</div>
-                        <input type="text" class="taskMenu__input taskMenu__taskName" v-model="customField.stringValue">
+                        <input :type="customField.attribute.attributeType" class="taskMenu__input taskMenu__taskName" v-model="customField.stringValue">
                     </li>
                 </ul>
             </div>

@@ -56,7 +56,7 @@ export default{
         loadAttributeList(){
             var self = this;
             this.attributeList = [];
-            axios.get('http://'+host+':'+port+'/api/tasktemplates/'+self.selectedTemplate.id+'/attributes/').then(function(response){
+            axios.get('http://'+host+':'+port+'/api/tasktemplates/'+self.selectedTemplate.id+'/attributes/?access_token='+getCookie("access_token")).then(function(response){
                 response.data.forEach(function(attribute){
                     self.attributeList.push(attribute);
                 })

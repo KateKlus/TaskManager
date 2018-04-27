@@ -29,7 +29,7 @@
                 <ul class="custom__list">
                     <li class="custom__item" v-for="customField in customFieldsList">
                         <div class="popup__text">{{customField.attribute.attributeName}}</div>
-                        <input type="text" v-model="customField.stringValue" class="taskMenu__input taskMenu__taskName">
+                        <input :type="customField.attribute.attributeType" v-model="customField.stringValue" class="taskMenu__input taskMenu__taskName">
                     </li>
                 </ul>
             </div>
@@ -100,7 +100,7 @@ export default{
         },
         getListOfAttributes(templateId){
             var self = this;
-            axios.get('http://'+host+':'+port+'/api/tasktemplates/'+templateId+'/attributes/').then(function(response){
+            axios.get('http://'+host+':'+port+'/api/tasktemplates/'+templateId+'/attributes/?access_token='+getCookie("access_token")).then(function(response){
                 self.attributeList = response.data;
                 self.$root.$emit('updateBoard');
                 self.addNewCustomField();

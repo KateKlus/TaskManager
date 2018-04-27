@@ -29,27 +29,48 @@ import axios from 'axios'
 export default{
     data(){
         return{
-            userList: "",
-            currentBoardUsers:"",
+            userList:"",
+            inviteUser:{
+                role:"",
+                user:"",
+                board:""
+            },
             selectedUser:"",
             selectedRole:"",
-            roleList:""
+            roleList:"",
+            invitedUserList:[]
         }
     },
     props:['currentBoard'],
     created(){
         var self = this;
-        axios.get('http://'+host+':'+port+'/api/users/?access_token=' + getCookie("access_token")).then(function(response){
-                self.userList = response.data;
-        });
-        axios.get('http://'+host+':'+port+'/api/roles/')
+        axios.get('http://'+host+':'+port+'/api/roles/?access_token='+getCookie("access_token"))
             .then(function(response){
                 self.roleList = response.data;
             })
             .catch(function(error){
                 alert(error);
             });
-
+        axios.get('http://'+host+':'+port+'/api/members/?access_token='+getCookie("access_token"))
+            .then(function(response){
+                self.invitedUserList = [];
+                response.data.forEach(function(member){
+                    if(member.board.id == self.currentBoard.id){
+                        self.invitedUserList.push(member.user);
+                    }
+                })
+            })
+            .catch(function(error){
+                alert(error);
+            }).then(function(){
+                axios.get('http://'+host+':'+port+'/api/users/?access_token='+getCookie("access_token")).then(function(response){
+                self.userList = response.data;
+                self.clearUserList();
+            })
+            .catch(function(error){
+                alert(error);
+            })
+        })
     },
 
     methods:{
@@ -60,12 +81,13 @@ export default{
             var self = this;
             if(this.selectedUser){
                 if(this.selectedRole){
-                    this.selectedRole.board = this.currentBoard;
-                    this.selectedRole.user = this.selectedUser;
+                    this.inviteUser.role = this.selectedRole;
+                    this.inviteUser.user = this.selectedUser;
+                    this.inviteUser.board = this.currentBoard;
                     axios({
                         method: 'post',
-                        url: 'http://'+host+':'+port+'/api/roles/?access_token='+getCookie("access_token"),
-                        data:self.selectedRole
+                        url: 'http://'+host+':'+port+'/api/members/?access_token='+getCookie("access_token"),
+                        data:self.inviteUser
                     }).then(function (response) {
                         alert("Пользователь "+self.selectedUser.username+" успешно приглашен c ролью "+self.selectedRole.roleName);
                         self.$emit('wrapperClick');
@@ -81,6 +103,19 @@ export default{
                 alert("Выберите пользователя!");
             }
 
+        },
+        clearUserList(){
+            var self = this;
+            var count = this.userList.length;
+            console.log(self.userList);
+            for(var i = 0; i < count; i++){
+                self.invitedUserList.forEach(function(invitedUser){
+                    if(self.userList[i].id == invitedUser.id){
+                        self.userList.splice(i,1);
+                        count -= 1;
+                    }
+                })
+            }
         }
     },
 }

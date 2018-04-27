@@ -5,9 +5,9 @@
             <div class="popup__title">Приглашенные пользователи</div>
             <label for="" class="popup__label">
                 <div class="popup__text">Выберите пользователя:</div>
-                <select name="userList" v-model="selectedUser" size="10">
+                <select name="userList" v-model="selectedMember" size="10">
                    <option value="" selected disabled>Выберите пользователя</option>
-                    <option v-for="user in userList" v-bind:value="user">{{user.username}}</option>
+                    <option v-for="member in memberList" v-bind:value="member">{{member.user.username}} [{{member.role.roleName}}]</option>
                 </select>
             </label>
             <label for="" class="popup__label">
@@ -19,6 +19,7 @@
             </label>
             <label for="" class="popup__label">
                 <button @click="editRole" class="popup__submit">Изменить роль</button>
+                <button @click="deleteRole" class="popup__submit">Удалить пользователя из доски</button>
             </label>
         </div>
     </div>
@@ -29,25 +30,32 @@ import axios from 'axios'
 export default{
     data(){
         return{
-            userList: "",
-            selectedUser:"",
+            selectedMember:"",
             selectedRole:"",
-            roleList:""
+            roleList:"",
+            memberList:[]
         }
     },
     props:['currentBoard'],
     created(){
         var self = this;
-        axios.get('http://'+host+':'+port+'/api/boards/'+self.currentBoard.id+'/users/')
+        axios.get('http://'+host+':'+port+'/api/roles/?access_token='+getCookie("access_token"))
             .then(function(response){
-                self.userList = response.data;
+                self.roleList = response.data;
             })
             .catch(function(error){
                 alert(error);
             });
-        axios.get('http://'+host+':'+port+'/api/roles/')
+        axios.get('http://'+host+':'+port+'/api/members/?access_token='+getCookie("access_token"))
             .then(function(response){
-                self.roleList = response.data;
+                self.memberList = [];
+                response.data.forEach(function(member){
+                    if(member.board.id == self.currentBoard.id){
+                        if(member.user.id != self.currentBoard.boardOwner.id){
+                            self.memberList.push(member);
+                        }
+                    }
+                })
             })
             .catch(function(error){
                 alert(error);
@@ -61,24 +69,19 @@ export default{
         },
         editRole(){
             var self = this;
-            if(this.selectedUser){
+            if(this.selectedMember){
                 if(this.selectedRole){
-                    this.selectedRole.board = this.currentBoard;
-                    this.selectedRole.user = this.selectedUser;
-                    this.roleList.forEach(function(role){
-                        if((role.user.id == self.selectedUser.id)&&(role.board.id == self.currentBoard.id)){
-                            axios({
-                                method: 'put',
-                                url: 'http://'+host+':'+port+'/api/roles/'+role.id+'/?access_token='+getCookie("access_token"),
-                                data:self.selectedRole
-                            }).then(function (response) {
-                                alert("Роль пользователя "+self.selectedUser.username+" успешно изменена на "+self.selectedRole.roleName);
-                                self.$emit('wrapperClick');
-                            }).catch(function (error) {
-                                alert("Error! "+ error)
-                            });
-                        }
-                    })
+                    this.selectedMember.role = this.selectedRole;
+                    axios({
+                        method: 'put',
+                        url: 'http://'+host+':'+port+'/api/members/?access_token='+getCookie("access_token"),
+                        data: self.selectedMember
+                    }).then(function (response) {
+                        alert("Роль пользователя "+self.selectedMember.user.username+" успешно изменена на "+self.selectedRole.roleName);
+                        self.$emit('wrapperClick');
+                    }).catch(function (error) {
+                        alert("Error! "+ error)
+                    });
                 }
                 else{
                     alert("Выберите роль для пользователя!");
@@ -87,7 +90,19 @@ export default{
             else{
                 alert("Выберите пользователя!");
             }
-
+        },
+        deleteRole(){
+            var self = this;
+            axios({
+                method: 'DELETE',
+                url: 'http://'+host+':'+port+'/api/users/'+self.selectedMember.user.id+'/boards/'+self.currentBoard.id+'/?access_token='+getCookie("access_token")
+            }).then(function (response) {
+                alert("Пользователь успешно удалён из доски!")
+                self.$emit('wrapperClick');
+                self.$root.$emit('updateBoard');
+            }).catch(function (error) {
+                alert("Error! "+ error);
+            });
         }
     },
 }
