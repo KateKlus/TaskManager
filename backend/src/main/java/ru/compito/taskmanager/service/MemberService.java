@@ -9,4 +9,5 @@ public interface MemberService {
     Member save(Member member);
     Member update(Member updatedMember);
     List<Member> getAllByUserId(Integer userId);
+    void deleteMember(Integer userId, Integer boardId);
 }

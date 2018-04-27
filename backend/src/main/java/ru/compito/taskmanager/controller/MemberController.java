@@ -42,9 +42,8 @@ public class MemberController {
         return newMember;
     }
 
-    @PutMapping(value = "/{roleId}/",
-            consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Member update(@PathVariable Integer roleId, @RequestBody Member member) {
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Member update(@RequestBody Member member) {
         return memberService.update(member);
     }
 

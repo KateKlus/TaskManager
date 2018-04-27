@@ -72,6 +72,11 @@ public class UserController{
         userService.updateUserById(userId,user);
     }
 
+    @DeleteMapping(value = "/{userId}/boards/{boardId}/")
+    public void deleteMember(@PathVariable Integer userId,@PathVariable Integer boardId) {
+        memberService.deleteMember(userId,boardId);
+    }
+
     @DeleteMapping("/{userId}/")
     public void delete(@PathVariable Integer userId) {
         userService.deleteUserById(userId);

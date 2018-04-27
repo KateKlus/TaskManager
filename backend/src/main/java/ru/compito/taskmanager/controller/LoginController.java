@@ -32,7 +32,7 @@ public class LoginController {
         if(!pattern.matcher(userRegistration.getUsername()).find())
             return "No special characters are allowed in the username";
 
-        userService.saveUser(new User(userRegistration.getUsername(),
+        userService.saveUser(new User(userRegistration.getUsername(),userRegistration.getFullname(),
                 userRegistration.getPassword(),userRegistration.getEmail()));
 
         return "User created";
