@@ -107,7 +107,6 @@ export default{
         clearUserList(){
             var self = this;
             var count = this.userList.length;
-            console.log(self.userList);
             for(var i = 0; i < count; i++){
                 self.invitedUserList.forEach(function(invitedUser){
                     if(self.userList[i].id == invitedUser.id){
