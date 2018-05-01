@@ -6,4 +6,6 @@ import ru.compito.taskmanager.entity.Role;
 
 @Transactional(readOnly = true)
 public interface RoleRepository extends JpaRepository<Role,Integer>{
+    Role findByRoleName(String roleName);
+    Boolean existsByRoleName(String roleName);
 }

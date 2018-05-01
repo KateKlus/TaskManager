@@ -31,6 +31,7 @@ public class BoardStatus {
     public BoardStatus(Board board, TaskStatus taskStatus) {
         this.board = board;
         this.taskStatus = taskStatus;
+        this.boardStatusIdentity = new BoardStatusIdentity(board.getId(), taskStatus.getId());
     }
 
     public BoardStatus(BoardStatusIdentity boardStatusIdentity, Integer priorityLevel) {

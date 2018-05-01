@@ -13,5 +13,7 @@ import java.util.List;
 public interface BoardStatusRepository extends JpaRepository<BoardStatus, BoardStatusIdentity> {
 
 List<BoardStatus> findAllByBoard(Board board);
+void deleteAllByTaskStatus(TaskStatus taskStatus);
+void deleteAllByBoard(Board board);
 
 }
