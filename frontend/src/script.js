@@ -10,5 +10,4 @@ function set_cookie(name, value) {
 function delete_cookie(name) {
     document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 }
-var host = "localhost";
-var port = "8080";
+var host = "https://compito.herokuapp.com";

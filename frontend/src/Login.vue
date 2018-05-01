@@ -51,7 +51,7 @@ export default{
             params.append('password', this.user.password);
             axios({
                 method: 'post',
-                url: 'http://'+host+':'+port+'/oauth/token',
+                url: host+'/oauth/token',
                 auth: {username: 'my-trusted-client', password: 'secret'},
                 headers: {"Content-type": "application/x-www-form-urlencoded; charset=utf-8"},
                 data:params

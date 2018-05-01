@@ -36,7 +36,7 @@ export default{
             var self = this;
             axios({
                 method: 'post',
-                url: 'http://'+host+':'+port+'/api/users/'+self.currentUser.id+'/boards/?access_token='+getCookie("access_token"),
+                url: host+'/api/users/'+self.currentUser.id+'/boards/?access_token='+getCookie("access_token"),
                 data:self.newBoard
             }).then(function (response) {
                 self.$root.$emit('onBoardSelect', response.data);
