@@ -81,7 +81,7 @@
                 if(this.newTemplate.taskTemplateName!=""){
                     axios({
                         method: 'post',
-                        url: 'http://'+host+':'+port+'/api/tasktemplates/?access_token='+getCookie("access_token"),
+                        url: host+'/api/tasktemplates/?access_token='+getCookie("access_token"),
                         data:self.newTemplate
                     }).then(function (response) {
                         self.createNewAttributes(response.data);
@@ -102,7 +102,7 @@
                         if(attribute.attributeType!=""){
                             axios({
                                 method: 'post',
-                                url: 'http://'+host+':'+port+'/api/tasktemplates/'+template.id+'/attributes/?access_token='+getCookie("access_token"),
+                                url: host+'/api/tasktemplates/'+template.id+'/attributes/?access_token='+getCookie("access_token"),
                                 data: attribute
                             }).catch(function (error) {
                                 postError = error;

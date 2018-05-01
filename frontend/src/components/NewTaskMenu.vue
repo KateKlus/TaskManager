@@ -84,7 +84,7 @@ export default{
             this.taskItem.taskTemplate = this.selectedTemplate;
             axios({
                 method: 'post',
-                url: 'http://'+host+':'+port+'/api/users/'+self.currentUser.id+'/tasks/?access_token='+getCookie("access_token"),
+                url: host+'/api/users/'+self.currentUser.id+'/tasks/?access_token='+getCookie("access_token"),
                 data:self.taskItem
             }).then(function (response) {
                 self.sendCustomFields(response.data);
@@ -100,7 +100,7 @@ export default{
         },
         getListOfAttributes(templateId){
             var self = this;
-            axios.get('http://'+host+':'+port+'/api/tasktemplates/'+templateId+'/attributes/?access_token='+getCookie("access_token")).then(function(response){
+            axios.get(host+'/api/tasktemplates/'+templateId+'/attributes/?access_token='+getCookie("access_token")).then(function(response){
                 self.attributeList = response.data;
                 self.$root.$emit('updateBoard');
                 self.addNewCustomField();
@@ -131,7 +131,7 @@ export default{
                 customField.task = taskItem;
                 axios({
                     method: 'post',
-                    url: 'http://'+host+':'+port+'/api/customfields/?access_token='+getCookie("access_token"),
+                    url: host+'/api/customfields/?access_token='+getCookie("access_token"),
                     data:customField
                 }).catch(function (error) {
                     postError = error;

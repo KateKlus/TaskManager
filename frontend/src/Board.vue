@@ -46,11 +46,11 @@ export default{
     beforeCreate(){
         var self = this;
         if(getCookie("access_token")){
-            axios.get('http://'+host+':'+port+'/api/getUserId/?access_token='+getCookie("access_token"))
+            axios.get(host+'/api/getUserId/?access_token='+getCookie("access_token"))
                 .then(function(response){
-                    axios.get('http://'+host+':'+port+'/api/users/'+response.data+'/?access_token='+getCookie("access_token")).then(function(response){
+                    axios.get(host+'/api/users/'+response.data+'/?access_token='+getCookie("access_token")).then(function(response){
                         self.currentUser = response.data;
-                        axios.get('http://'+host+':'+port+'/api/users/'+self.currentUser.id+'/boards/?access_token='+getCookie("access_token"))
+                        axios.get(host+'/api/users/'+self.currentUser.id+'/boards/?access_token='+getCookie("access_token"))
                             .then(function(response){
                             if(response.data.length == 0){
                                 self.showNewBoardMenu = true;
@@ -103,7 +103,7 @@ export default{
     },
     methods:{
         logOut(){
-            axios.get('http://'+host+':'+port+'/api/logouts/?access_token='+getCookie("access_token"))
+            axios.get(host+'/api/logouts/?access_token='+getCookie("access_token"))
                 .then(function(response){
                     delete_cookie("access_token");
                     delete_cookie("current_board");
@@ -113,24 +113,24 @@ export default{
         updateBoard(){
             var self = this;
             if (this.selectedBoardID){
-                axios.get('http://'+host+':'+port+'/api/boards/'+self.selectedBoardID+'/?access_token='+getCookie("access_token")).then(function(response){
+                axios.get(host+'/api/boards/'+self.selectedBoardID+'/?access_token='+getCookie("access_token")).then(function(response){
                     self.currentBoard = response.data;
                 }).catch(function(error){
                     alert(error);
                 }).then(function(){
-                    axios.get('http://'+host+':'+port+'/api/boards/'+self.currentBoard.id+'/statuses/?access_token='+getCookie("access_token")).then(function(response){
+                    axios.get(host+'/api/boards/'+self.currentBoard.id+'/statuses/?access_token='+getCookie("access_token")).then(function(response){
                         self.statusList = response.data;
                     }).catch(function(error){
                         alert(error);
                     })
                 }).then(function(){
-                    axios.get('http://'+host+':'+port+'/api/boards/'+self.currentBoard.id+'/tasks/?access_token='+getCookie("access_token")).then(function(response){
+                    axios.get(host+'/api/boards/'+self.currentBoard.id+'/tasks/?access_token='+getCookie("access_token")).then(function(response){
                         self.taskList = response.data;
                     }).catch(function(error){
                         alert(error);
                     })
                 }).then(function(){
-                    axios.get('http://'+host+':'+port+'/api/tasktemplates/?access_token='+getCookie("access_token")).then(function(response){
+                    axios.get(host+'/api/tasktemplates/?access_token='+getCookie("access_token")).then(function(response){
                         self.templateList = response.data;
                     }).catch(function(error){
                         alert(error);

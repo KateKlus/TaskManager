@@ -63,7 +63,7 @@
             loadAttributeList(){
                 var self = this;
                 this.attributeList = [];
-                axios.get('http://'+host+':'+port+'/api/tasktemplates/'+self.selectedTemplate.id+'/attributes/?access_token='+getCookie("access_token")).then(function(response){
+                axios.get(host+'/api/tasktemplates/'+self.selectedTemplate.id+'/attributes/?access_token='+getCookie("access_token")).then(function(response){
                     response.data.forEach(function(attribute){
                         self.attributeList.push(attribute);
                     })
@@ -88,7 +88,7 @@
                 else{
                     axios({
                         method: 'put',
-                        url: 'http://'+host+':'+port+'/api/tasktemplates/'+self.selectedTemplate.id+'/?access_token='+getCookie("access_token"),
+                        url: host+'/api/tasktemplates/'+self.selectedTemplate.id+'/?access_token='+getCookie("access_token"),
                         data:self.selectedTemplate
                     }).then(function (response) {
                         self.editAttributes(response.data);
@@ -100,7 +100,7 @@
             deleteAttributeItem(attribute){
                 axios({
                     method: 'DELETE',
-                    url: 'http://'+host+':'+port+'/api/attributes/'+attribute.id+'/?access_token='+getCookie("access_token"),
+                    url: host+'/api/attributes/'+attribute.id+'/?access_token='+getCookie("access_token"),
                 }).then(function (response) {
                 }).catch(function (error) {
                     alert("Error! "+ error);
@@ -114,7 +114,7 @@
                     if(attribute.id){
                         axios({
                             method: 'put',
-                            url: 'http://'+host+':'+port+'/api/attributes/'+attribute.id+'/?access_token='+getCookie("access_token"),
+                            url: host+'/api/attributes/'+attribute.id+'/?access_token='+getCookie("access_token"),
                             data: attribute
                         }).catch(function (error) {
                             postError = error;
@@ -123,7 +123,7 @@
                     else{
                         axios({
                             method: 'post',
-                            url: 'http://'+host+':'+port+'/api/tasktemplates/'+template.id+'/attributes/?access_token='+getCookie("access_token"),
+                            url: host+'/api/tasktemplates/'+template.id+'/attributes/?access_token='+getCookie("access_token"),
                             data: attribute
                         }).catch(function (error) {
                             postError = error;

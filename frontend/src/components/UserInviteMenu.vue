@@ -44,14 +44,14 @@ export default{
     props:['currentBoard'],
     created(){
         var self = this;
-        axios.get('http://'+host+':'+port+'/api/roles/?access_token='+getCookie("access_token"))
+        axios.get(host+'/api/roles/?access_token='+getCookie("access_token"))
             .then(function(response){
                 self.roleList = response.data;
             })
             .catch(function(error){
                 alert(error);
             });
-        axios.get('http://'+host+':'+port+'/api/members/?access_token='+getCookie("access_token"))
+        axios.get(host+'/api/members/?access_token='+getCookie("access_token"))
             .then(function(response){
                 self.invitedUserList = [];
                 response.data.forEach(function(member){
@@ -63,7 +63,7 @@ export default{
             .catch(function(error){
                 alert(error);
             }).then(function(){
-                axios.get('http://'+host+':'+port+'/api/users/?access_token='+getCookie("access_token")).then(function(response){
+                axios.get(host+'/api/users/?access_token='+getCookie("access_token")).then(function(response){
                 self.userList = response.data;
                 self.clearUserList();
             })
@@ -86,7 +86,7 @@ export default{
                     this.inviteUser.board = this.currentBoard;
                     axios({
                         method: 'post',
-                        url: 'http://'+host+':'+port+'/api/members/?access_token='+getCookie("access_token"),
+                        url: host+'/api/members/?access_token='+getCookie("access_token"),
                         data:self.inviteUser
                     }).then(function (response) {
                         alert("Пользователь "+self.selectedUser.username+" успешно приглашен c ролью "+self.selectedRole.roleName);

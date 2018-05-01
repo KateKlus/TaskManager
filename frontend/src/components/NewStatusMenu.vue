@@ -31,7 +31,7 @@ export default{
             var self = this;
             axios({
                 method: 'post',
-                url: 'http://'+host+':'+port+'/api/statuses/?access_token='+getCookie("access_token"),
+                url: host+'/api/statuses/?access_token='+getCookie("access_token"),
                 data:self.newStatus
             }).then(function (response) {
                 self.addNewBoardStatus(response.data);
@@ -44,7 +44,7 @@ export default{
             var self = this;
             axios({
                 method: 'post',
-                url: 'http://'+host+':'+port+'/api/boards/'+getCookie("current_board")+'/statuses/?access_token='+getCookie("access_token"),
+                url: host+'/api/boards/'+getCookie("current_board")+'/statuses/?access_token='+getCookie("access_token"),
                 data:taskstatus
             }).then(function (response) {
                 self.$root.$emit('updateBoard');

@@ -61,7 +61,7 @@ export default{
             var self = this;
             axios({
                 method: 'put',
-                url: 'http://'+host+':'+port+'/api/tasks/'+self.taskItem.id+'/?access_token='+getCookie("access_token"),
+                url: host+'/api/tasks/'+self.taskItem.id+'/?access_token='+getCookie("access_token"),
                 data:self.taskItem
             }).then(function (response) {
                 self.editCustomFields();
@@ -73,7 +73,7 @@ export default{
             var self = this;
             axios({
                 method: 'delete',
-                url: 'http://'+host+':'+port+'/api/tasks/'+self.taskItem.id+'/?access_token='+getCookie("access_token")
+                url: host+'/api/tasks/'+self.taskItem.id+'/?access_token='+getCookie("access_token")
             }).then(function (response) {
                 self.$root.$emit('updateBoard');
                 self.$emit('wrapperClick');
@@ -83,7 +83,7 @@ export default{
         },
         getCustomFieldsList(taskItemId){
             var self = this;
-            axios.get('http://'+host+':'+port+'/api/customfields/').then(function(response){
+            axios.get(host+'/api/customfields/').then(function(response){
                 response.data.forEach(function(customField){
                     if(customField.task.id == taskItemId){
                         self.customFieldsList.push(customField);
@@ -99,7 +99,7 @@ export default{
             this.customFieldsList.forEach(function(customField){
                 axios({
                     method: 'put',
-                    url: 'http://'+host+':'+port+'/api/customfields/'+customField.id+'/?access_token='+getCookie("access_token"),
+                    url: host+'/api/customfields/'+customField.id+'/?access_token='+getCookie("access_token"),
                     data:customField
                 }).catch(function (error) {
                     postError = error;

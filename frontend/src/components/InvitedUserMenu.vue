@@ -39,14 +39,14 @@ export default{
     props:['currentBoard'],
     created(){
         var self = this;
-        axios.get('http://'+host+':'+port+'/api/roles/?access_token='+getCookie("access_token"))
+        axios.get(host+'/api/roles/?access_token='+getCookie("access_token"))
             .then(function(response){
                 self.roleList = response.data;
             })
             .catch(function(error){
                 alert(error);
             });
-        axios.get('http://'+host+':'+port+'/api/members/?access_token='+getCookie("access_token"))
+        axios.get(host+'/api/members/?access_token='+getCookie("access_token"))
             .then(function(response){
                 self.memberList = [];
                 response.data.forEach(function(member){
@@ -74,7 +74,7 @@ export default{
                     this.selectedMember.role = this.selectedRole;
                     axios({
                         method: 'put',
-                        url: 'http://'+host+':'+port+'/api/members/?access_token='+getCookie("access_token"),
+                        url: host+'/api/members/?access_token='+getCookie("access_token"),
                         data: self.selectedMember
                     }).then(function (response) {
                         alert("Роль пользователя "+self.selectedMember.user.username+" успешно изменена на "+self.selectedRole.roleName);
@@ -95,7 +95,7 @@ export default{
             var self = this;
             axios({
                 method: 'DELETE',
-                url: 'http://'+host+':'+port+'/api/users/'+self.selectedMember.user.id+'/boards/'+self.currentBoard.id+'/?access_token='+getCookie("access_token")
+                url: host+'/api/users/'+self.selectedMember.user.id+'/boards/'+self.currentBoard.id+'/?access_token='+getCookie("access_token")
             }).then(function (response) {
                 alert("Пользователь успешно удалён из доски!")
                 self.$emit('wrapperClick');

@@ -28,7 +28,7 @@ export default{
             var self = this;
             axios({
                 method: 'put',
-                url: 'http://'+host+':'+port+'/api/users/'+self.currentUser.id+'/?access_token='+getCookie("access_token"),
+                url: host+'/api/users/'+self.currentUser.id+'/?access_token='+getCookie("access_token"),
                 data: self.currentUser
             }).then(function (response) {
                 self.$root.$emit('updateBoard');
