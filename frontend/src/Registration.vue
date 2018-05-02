@@ -59,7 +59,7 @@ export default{
                 }).then(function(response){
                     alert(response.data);
                     if(response.data == "User created"){
-                        document.location.replace("/board");
+                        window.location = "#/board";
                     }
                 });
             }else{

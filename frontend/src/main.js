@@ -44,8 +44,7 @@ Vue.component('editTemplateMenu', editTemplateMenu);
 Vue.component('invitedUserMenu', invitedUserMenu);
 Vue.use(VueRouter);
 const router = new VueRouter({
-    routes,
-    mode: 'history'
+    routes
 });
 
 new Vue({
