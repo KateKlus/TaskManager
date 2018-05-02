@@ -67,7 +67,7 @@ export default{
 
         }
         else{
-            document.location.replace("/auth");
+            window.location = "#/auth";
         }
     },
     mounted(){
@@ -97,7 +97,7 @@ export default{
         },
         showNewBoardMenu: function(value){
             if(value == "false"){
-                document.location.replace("/board");
+                window.location = "#/board";
             }
         }
     },
@@ -107,7 +107,7 @@ export default{
                 .then(function(response){
                     delete_cookie("access_token");
                     delete_cookie("current_board");
-                    document.location.replace("/auth");
+                    window.location = "#/auth";
                 })
         },
         updateBoard(){
