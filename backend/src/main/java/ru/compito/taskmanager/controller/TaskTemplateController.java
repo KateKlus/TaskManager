@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import ru.compito.taskmanager.config.ServiceConstants;
 import ru.compito.taskmanager.entity.Task;
 import ru.compito.taskmanager.entity.TaskTemplate;
 import ru.compito.taskmanager.service.TaskService;
@@ -12,7 +13,7 @@ import ru.compito.taskmanager.service.TaskTemplateService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/tasktemplates")
+@RequestMapping(value = ServiceConstants.TASKTEMPLATE_PATH)
 public class TaskTemplateController {
     @Autowired
     private TaskTemplateService taskTemplateService;

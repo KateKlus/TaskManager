@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import ru.compito.taskmanager.config.ServiceConstants;
 import ru.compito.taskmanager.entity.CustomField;
 import ru.compito.taskmanager.entity.Task;
 import ru.compito.taskmanager.service.CustomFieldService;
@@ -12,7 +13,7 @@ import ru.compito.taskmanager.service.TaskService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/tasks")
+@RequestMapping(value = ServiceConstants.TASK_PATH)
 public class TaskController {
 
     @Autowired

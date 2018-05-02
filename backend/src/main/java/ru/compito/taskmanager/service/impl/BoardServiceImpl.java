@@ -22,6 +22,8 @@ public class BoardServiceImpl implements BoardService{
     @Autowired
     private BoardStatusRepository boardStatusRepository;
     @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
     private RoleRepository roleRepository;
 
     @Override
@@ -38,9 +40,14 @@ public class BoardServiceImpl implements BoardService{
     public Board save(Integer userId, Board board) {
         User user = userRepository.getOne(userId);
         board.setBoardOwner(user);
-        Role role = new Role("Owner",user,board);
-        roleRepository.save(role);
-        return boardRepository.save(board);
+
+        if(!roleRepository.existsByRoleName("Owner"))
+            roleRepository.save(new Role("Owner"));
+        Role role = roleRepository.findByRoleName("Owner");
+        Member member = new Member(user,board, role);
+        Board newBoard = boardRepository.save(board);
+        memberRepository.save(member);
+        return newBoard;
     }
 
     @Override
@@ -57,6 +64,7 @@ public class BoardServiceImpl implements BoardService{
             task.setUsers(Collections.emptyList());
             taskRepository.save(task);
         }
+        memberRepository.deleteAllByBoard(board);
         taskRepository.deleteAllByBoard(board);
         boardRepository.delete(board);
     }
@@ -81,10 +89,10 @@ public class BoardServiceImpl implements BoardService{
     @Override
     public List<User> getUsersById(Integer boardId) {
         Board board = boardRepository.getOne(boardId);
-        List<Role> roles = roleRepository.findAllByBoard(board);
+        List<Member> members = memberRepository.findAllByBoard(board);
         List<User> userList = new ArrayList<>();
-        for(Role role : roles)
-            userList.add(role.getUser());
+        for(Member member : members)
+            userList.add(member.getUser());
         return userList;
     }
     @Override

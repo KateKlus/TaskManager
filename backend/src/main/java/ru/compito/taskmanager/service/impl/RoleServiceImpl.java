@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.compito.taskmanager.entity.Role;
 import ru.compito.taskmanager.repository.RoleRepository;
+import ru.compito.taskmanager.repository.MemberRepository;
 import ru.compito.taskmanager.service.RoleService;
 
 import java.util.List;
@@ -16,9 +17,12 @@ public class RoleServiceImpl implements RoleService {
     @Autowired
     private RoleRepository roleRepository;
 
+    @Autowired
+    private MemberRepository memberRepository;
+
     @Override
-    public Role getOne(Integer roleId) {
-        return roleRepository.getOne(roleId);
+    public Role getOne(Integer Id) {
+        return roleRepository.getOne(Id);
     }
 
     @Override
@@ -32,12 +36,14 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Role update(Role updatedRole) {
-        return roleRepository.save(updatedRole);
+    public void update(Role updatedRole) {
+        roleRepository.save(updatedRole);
     }
 
     @Override
     public void delete(Integer roleId) {
+        Role role = roleRepository.getOne(roleId);
+        memberRepository.deleteAllByRole(role);
         roleRepository.delete(roleId);
     }
 }

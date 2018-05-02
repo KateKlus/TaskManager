@@ -40,7 +40,6 @@ public class AttributeServiceImpl implements AttributeService{
     public Attribute save(Integer taskTemplateId, Attribute attribute) {
         TaskTemplate taskTemplate = taskTemplateRepository.getOne(taskTemplateId);
         attribute.getTaskTemplates().add(taskTemplate);
-        attribute.setId((int)attributeRepository.count()+1);
         return attributeRepository.save(attribute);
     }
 

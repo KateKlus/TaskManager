@@ -27,7 +27,7 @@ public class TaskManagerApplication {
 	@Autowired
 	public void authenticationManager(AuthenticationManagerBuilder builder, UserRepository userRepository, UserService userService) throws Exception {
 		if (userRepository.count()==0)
-			userService.saveUser(new User("admin", "adminPassword","admin@gmail.com"));
+			userService.saveUser(new User("admin","admin", "adminPassword","admin@gmail.com"));
 		builder.userDetailsService(userDetailsService(userRepository)).passwordEncoder(passwordEncoder);
 	}
 
