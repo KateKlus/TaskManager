@@ -57,7 +57,7 @@ export default{
             }).then(function (response) {
                 self.$emit('wrapperClick');
                 delete_cookie("current_board");
-                document.location.replace("/board");
+                window.location.reload();
             }).catch(function (error) {
                 if(error.response.status == '500'){
                     alert("Невозможно удалить доску, которая содержит данные!");

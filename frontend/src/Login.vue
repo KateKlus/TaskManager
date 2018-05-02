@@ -14,7 +14,7 @@
             </label>
             <div class="form__links">
                 <a href="" class="link__forgot">Забыли пароль?</a>
-                <a href="/registration" class="link__registration">Регистрация</a>
+                <a href="" class="link__registration" @click.prevent="toRegistration">Регистрация</a>
             </div>
             <button class="form__submit" type="submit" @click.prevent="login">Войти</button>
         </form>
@@ -39,7 +39,7 @@ export default{
     },
     mounted(){
         if(getCookie("access_token")){
-            document.location.replace("/board");
+            window.location = "#/board";
         }
     },
     methods: {
@@ -57,13 +57,16 @@ export default{
                 data:params
             }).then(function (response) {
                 set_cookie("access_token", response.data.access_token);
-                document.location.replace("/board");
+                window.location = "#/board";
             }).catch(function (error) {
                 self.show = !self.show;
                 setTimeout(function(){
                     self.show = !self.show;
                 },2000);
             });
+        },
+        toRegistration(){
+            window.location = "#/registration";
         }
     }
 }

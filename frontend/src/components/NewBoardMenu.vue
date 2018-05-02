@@ -42,7 +42,7 @@ export default{
                 self.$root.$emit('onBoardSelect', response.data);
                 self.$emit('wrapperClick');
                 self.$root.$emit('updateBoard');
-                document.location.replace("/board");
+                window.location = "#/board";
             }).catch(function (error) {
                 alert("Error! "+ error)
             });
