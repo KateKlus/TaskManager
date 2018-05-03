@@ -3,10 +3,19 @@ package ru.compito.taskmanager.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import ru.compito.taskmanager.config.ServiceConstants;
 import ru.compito.taskmanager.entity.Attribute;
+import ru.compito.taskmanager.entity.CustomField;
+import ru.compito.taskmanager.entity.Task;
+import ru.compito.taskmanager.entity.TaskTemplate;
 import ru.compito.taskmanager.service.AttributeService;
+import ru.compito.taskmanager.service.ContentRelatedRoleService;
+import ru.compito.taskmanager.service.TaskService;
+import ru.compito.taskmanager.service.TaskTemplateService;
 
 import java.util.List;
 
@@ -16,27 +25,51 @@ public class TemplateAttributesController {
 
     @Autowired
     private AttributeService attributeService;
+    @Autowired
+    private ContentRelatedRoleService contentRelatedRoleService;
+    @Autowired
+    private TaskService taskService;
 
     @GetMapping(value = "/{taskTemplateId}/attributes/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Attribute> getAttributes(@PathVariable Integer taskTemplateId) {
-        return attributeService.findByTaskTemplateId(taskTemplateId);
+    public @ResponseBody ResponseEntity<Object> getAttributes(@PathVariable Integer taskTemplateId) {
+        List<Attribute> attributes = attributeService.findByTaskTemplateId(taskTemplateId);
+        return new ResponseEntity<>(attributes, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{taskTemplateId}/attributes/{attributeId}/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Attribute getAttribute(@PathVariable Integer taskTemplateId, @PathVariable Integer attributeId) {
-        return attributeService.getByTaskTemplateAndAttributeId(taskTemplateId,attributeId);
+    public @ResponseBody ResponseEntity<Attribute> getAttribute(@PathVariable Integer taskTemplateId, @PathVariable Integer attributeId) {
+        Attribute attribute = attributeService.getByTaskTemplateAndAttributeId(taskTemplateId,attributeId);
+        return new ResponseEntity<>(attribute, HttpStatus.OK);
     }
     @PostMapping(value = "/{taskTemplateId}/attributes/", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
-    public Attribute createAttribute(@PathVariable Integer taskTemplateId, @RequestBody Attribute attribute) {
-        return attributeService.save(taskTemplateId, attribute);
+    public @ResponseBody ResponseEntity<Attribute> createAttribute(@PathVariable Integer taskTemplateId, @RequestBody Attribute attribute) {
+        Task task  = taskService.getByTaskTemplateId(taskTemplateId);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Integer boardId = task.getBoard().getId();
+        if(contentRelatedRoleService.isContentOwner(boardId,authentication) ||
+                contentRelatedRoleService.isContentAdministrator(boardId,authentication)||
+                contentRelatedRoleService.isContentModerator(boardId,authentication)) {
+            Attribute newAttribute = attributeService.save(taskTemplateId, attribute);
+            return new ResponseEntity<>(newAttribute, HttpStatus.CREATED);
+        }else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
     }
-
 
     @DeleteMapping("/{taskTemplateId}/attributes/")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteAttributes(@PathVariable Integer taskTemplateId) {
-        attributeService.deleteAllForTaskTemplate(taskTemplateId);
+    public @ResponseBody ResponseEntity<?> deleteAttributes(@PathVariable Integer taskTemplateId) {
+        Task task  = taskService.getByTaskTemplateId(taskTemplateId);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Integer boardId = task.getBoard().getId();
+        if(contentRelatedRoleService.isContentOwner(boardId,authentication) ||
+                contentRelatedRoleService.isContentAdministrator(boardId,authentication)||
+                contentRelatedRoleService.isContentModerator(boardId,authentication)) {
+            attributeService.deleteAllForTaskTemplate(taskTemplateId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
     }
 }

@@ -15,6 +15,7 @@ public interface TaskService {
     void deleteAllForUser(Integer userId);
     Task getTaskByUserId(Integer userId, Integer taskId);
     List<Task> findByTaskTemplateId(Integer taskTemplateId);
+    Task getByTaskTemplateId(Integer taskTemplateId);
     Task getByTaskTemplateAndTaskId(Integer taskTemplateId, Integer taskId);
     Task updateTaskTemplate(Integer taskTemplateId, Integer taskId);
 }

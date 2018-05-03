@@ -3,39 +3,71 @@ package ru.compito.taskmanager.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import ru.compito.taskmanager.config.ServiceConstants;
 import ru.compito.taskmanager.entity.Attribute;
+import ru.compito.taskmanager.entity.CustomField;
 import ru.compito.taskmanager.service.AttributeService;
+import ru.compito.taskmanager.service.ContentRelatedRoleService;
+import ru.compito.taskmanager.service.CustomFieldService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping(value = ServiceConstants.ATTRIBUTES)
+@RequestMapping(value = ServiceConstants.ATTRIBUTE_PATH)
 public class AttributeController {
 
     @Autowired
     private AttributeService attributeService;
+    @Autowired
+    private CustomFieldService customFieldService;
+    @Autowired
+    private ContentRelatedRoleService contentRelatedRoleService;
 
     @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Attribute> getAll() {
-        return attributeService.findAll();
+    public @ResponseBody ResponseEntity<Object> getAll() {
+        List<Attribute> attributes = attributeService.findAll();
+        return new ResponseEntity<>(attributes, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{attributeId}/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Attribute getOne(@PathVariable Integer attributeId) {
-        return attributeService.getOne(attributeId);
+    public @ResponseBody ResponseEntity<Attribute> getOne(@PathVariable Integer attributeId) {
+        Attribute attribute = attributeService.getOne(attributeId);
+        return new ResponseEntity<>(attribute, HttpStatus.OK);
     }
 
     @PutMapping(value = "/{attributeId}/",
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Attribute update(@PathVariable Integer attributeId, @RequestBody Attribute updatedAttribute) {
-        return attributeService.update(attributeId, updatedAttribute);
+    public @ResponseBody ResponseEntity<Attribute> update(@PathVariable Integer attributeId, @RequestBody Attribute updatedAttribute) {
+        CustomField customField = customFieldService.getByAttribute(attributeId);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Integer boardId = customField.getTask().getBoard().getId();
+        if(contentRelatedRoleService.isContentOwner(boardId,authentication) ||
+                contentRelatedRoleService.isContentAdministrator(boardId,authentication)||
+                contentRelatedRoleService.isContentModerator(boardId,authentication)) {
+            Attribute attribute = attributeService.update(attributeId, updatedAttribute);
+            return new ResponseEntity<>(attribute, HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
     }
 
     @DeleteMapping("/{attributeId}/")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Integer attributeId) {
-        attributeService.delete(attributeId);
+    public @ResponseBody ResponseEntity<?> delete(@PathVariable Integer attributeId) {
+        CustomField customField = customFieldService.getByAttribute(attributeId);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Integer boardId = customField.getTask().getBoard().getId();
+        if(contentRelatedRoleService.isContentOwner(boardId,authentication) ||
+                contentRelatedRoleService.isContentAdministrator(boardId,authentication)||
+                contentRelatedRoleService.isContentModerator(boardId,authentication)) {
+            attributeService.delete(attributeId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
     }
 }

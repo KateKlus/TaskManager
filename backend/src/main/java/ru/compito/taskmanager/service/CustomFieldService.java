@@ -13,5 +13,6 @@ public interface CustomFieldService {
     void delete(Integer customFieldId);
     List<CustomField> findByAttributeId(Integer attributeId);
     CustomField getByAttributeAndCustomFieldId(Integer attributeId, Integer customFieldId);
+    CustomField getByAttribute(Integer attributeId);
     List<CustomField> getAllCustomFieldsByTask(Integer taskId);
 }

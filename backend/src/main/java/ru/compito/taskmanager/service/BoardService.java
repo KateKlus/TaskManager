@@ -15,5 +15,5 @@ public interface BoardService {
     List<Task> getTaskById(Integer boardId, Integer taskId);
     List<User> getUsersById(Integer boardId);
     List<BoardStatus> getBoardStatuses(Integer boardId);
-    void addBoardStatus(Integer boardId, TaskStatus taskStatus);
+    BoardStatus addBoardStatus(Integer boardId, TaskStatus taskStatus);
 }
