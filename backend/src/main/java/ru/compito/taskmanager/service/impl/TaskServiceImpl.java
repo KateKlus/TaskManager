@@ -80,6 +80,12 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public Task getByTaskTemplateId(Integer taskTemplateId) {
+        TaskTemplate taskTemplate = taskTemplateRepository.getOne(taskTemplateId);
+        return taskRepository.findByTaskTemplate(taskTemplate);
+    }
+
+    @Override
     public Task getByTaskTemplateAndTaskId(Integer taskTemplateId, Integer taskId) {
         TaskTemplate taskTemplate = taskTemplateRepository.getOne(taskTemplateId);
         return taskRepository.findByTaskTemplateAndId(taskTemplate,taskId);

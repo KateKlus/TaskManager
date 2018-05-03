@@ -4,10 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import ru.compito.taskmanager.config.ServiceConstants;
 import ru.compito.taskmanager.entity.*;
 import ru.compito.taskmanager.service.BoardService;
+import ru.compito.taskmanager.service.ContentRelatedRoleService;
 
 import java.util.List;
 
@@ -17,6 +20,8 @@ public class BoardController {
     
     @Autowired
     private BoardService boardService;
+    @Autowired
+    private ContentRelatedRoleService contentRelatedRoleService;
 
     @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<Object> getAll() {
@@ -76,7 +81,9 @@ public class BoardController {
     @DeleteMapping("/{boardId}/")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Integer boardId) {
-        boardService.delete(boardId);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(contentRelatedRoleService.isContentOwner(boardId,authentication))
+            boardService.delete(boardId);
     }
 
 }

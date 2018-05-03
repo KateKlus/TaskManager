@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import ru.compito.taskmanager.entity.Member;
 import ru.compito.taskmanager.entity.User;
 import ru.compito.taskmanager.pojos.UserRegistration;
 import ru.compito.taskmanager.service.BoardService;
+import ru.compito.taskmanager.service.ContentRelatedRoleService;
 import ru.compito.taskmanager.service.MemberService;
 import ru.compito.taskmanager.service.UserService;
 
@@ -30,6 +32,8 @@ public class UserController{
     private BoardService boardService;
     @Autowired
     private MemberService memberService;
+    @Autowired
+    private ContentRelatedRoleService contentRelatedRoleService;
 
 
     @GetMapping(value = "/",produces = MediaType.APPLICATION_JSON_VALUE)
@@ -78,8 +82,16 @@ public class UserController{
 
     @DeleteMapping(value = "/{userId}/boards/{boardId}/")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteMember(@PathVariable Integer userId,@PathVariable Integer boardId) {
-        memberService.deleteMember(userId,boardId);
+    public @ResponseBody ResponseEntity<?> deleteMember(@PathVariable Integer userId,@PathVariable Integer boardId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(contentRelatedRoleService.isContentOwner(boardId,authentication) ||
+                contentRelatedRoleService.isContentAdministrator(boardId,authentication)) {
+            memberService.deleteMember(userId, boardId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+        }
     }
 
     @DeleteMapping("/{userId}/")

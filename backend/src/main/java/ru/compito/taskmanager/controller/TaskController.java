@@ -5,10 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import ru.compito.taskmanager.config.ServiceConstants;
 import ru.compito.taskmanager.entity.CustomField;
 import ru.compito.taskmanager.entity.Task;
+import ru.compito.taskmanager.service.ContentRelatedRoleService;
 import ru.compito.taskmanager.service.CustomFieldService;
 import ru.compito.taskmanager.service.TaskService;
 
@@ -22,6 +25,9 @@ public class TaskController {
     private TaskService taskService;
     @Autowired
     private CustomFieldService customFieldService;
+    @Autowired
+    private ContentRelatedRoleService contentRelatedRoleService;
+    @Autowired
 
     @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<Object> getAll() {
@@ -38,14 +44,33 @@ public class TaskController {
     @PutMapping(value = "/{taskId}/",
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<Task> update(@PathVariable Integer taskId, @RequestBody Task task) {
-        Task updateTask = taskService.update(task);
-        return new ResponseEntity<>(updateTask,HttpStatus.OK);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Integer boardId = task.getBoard().getId();
+        if(contentRelatedRoleService.isContentOwner(boardId,authentication) ||
+                contentRelatedRoleService.isContentAdministrator(boardId,authentication)||
+                contentRelatedRoleService.isContentModerator(boardId,authentication)||
+                contentRelatedRoleService.isContentDeveloper(boardId,authentication)) {
+            Task updateTask = taskService.update(task);
+            return new ResponseEntity<>(updateTask,HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
     }
 
     @DeleteMapping("/{taskId}/")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Integer taskId) {
-        taskService.delete(taskId);
+    public @ResponseBody ResponseEntity<?> delete(@PathVariable Integer taskId) {
+        Task task = taskService.getOne(taskId);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Integer boardId = task.getBoard().getId();
+        if(contentRelatedRoleService.isContentOwner(boardId,authentication) ||
+                contentRelatedRoleService.isContentAdministrator(boardId,authentication)||
+                contentRelatedRoleService.isContentModerator(boardId,authentication)) {
+            taskService.delete(taskId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
     }
 
     @GetMapping(value = "/{taskId}/customfields/", produces = MediaType.APPLICATION_JSON_VALUE)

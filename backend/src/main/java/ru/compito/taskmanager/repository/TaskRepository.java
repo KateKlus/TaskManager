@@ -17,6 +17,7 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
     List<Task> findAllByTaskTemplate(TaskTemplate taskTemplate);
     List<Task> findAllByCurrentStatus(TaskStatus taskStatus);
     Task findByTaskTemplateAndId(TaskTemplate taskTemplate, Integer taskId);
+    Task findByTaskTemplate(TaskTemplate taskTemplate);
     void deleteAllByBoard(Board board);
 
 }

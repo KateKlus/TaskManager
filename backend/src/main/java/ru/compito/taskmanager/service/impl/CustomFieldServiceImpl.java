@@ -62,6 +62,12 @@ public class CustomFieldServiceImpl implements CustomFieldService{
     }
 
     @Override
+    public CustomField getByAttribute(Integer attributeId) {
+        Attribute attribute = attributeRepository.getOne(attributeId);
+        return customFieldRepository.findByAttribute(attribute);
+    }
+
+    @Override
     public List<CustomField> getAllCustomFieldsByTask(Integer taskId) {
         Task task = taskRepository.getOne(taskId);
         return customFieldRepository.findAllByTask(task);

@@ -4,10 +4,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import ru.compito.taskmanager.config.ServiceConstants;
 import ru.compito.taskmanager.entity.Attribute;
+import ru.compito.taskmanager.entity.CustomField;
+import ru.compito.taskmanager.entity.Task;
+import ru.compito.taskmanager.entity.TaskTemplate;
 import ru.compito.taskmanager.service.AttributeService;
+import ru.compito.taskmanager.service.ContentRelatedRoleService;
+import ru.compito.taskmanager.service.TaskService;
+import ru.compito.taskmanager.service.TaskTemplateService;
 
 import java.util.List;
 
@@ -17,6 +25,10 @@ public class TemplateAttributesController {
 
     @Autowired
     private AttributeService attributeService;
+    @Autowired
+    private ContentRelatedRoleService contentRelatedRoleService;
+    @Autowired
+    private TaskService taskService;
 
     @GetMapping(value = "/{taskTemplateId}/attributes/", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<Object> getAttributes(@PathVariable Integer taskTemplateId) {
@@ -32,13 +44,32 @@ public class TemplateAttributesController {
     @PostMapping(value = "/{taskTemplateId}/attributes/", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<Attribute> createAttribute(@PathVariable Integer taskTemplateId, @RequestBody Attribute attribute) {
-        Attribute newAttribute = attributeService.save(taskTemplateId, attribute);
-        return new ResponseEntity<>(newAttribute, HttpStatus.CREATED);
+        Task task  = taskService.getByTaskTemplateId(taskTemplateId);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Integer boardId = task.getBoard().getId();
+        if(contentRelatedRoleService.isContentOwner(boardId,authentication) ||
+                contentRelatedRoleService.isContentAdministrator(boardId,authentication)||
+                contentRelatedRoleService.isContentModerator(boardId,authentication)) {
+            Attribute newAttribute = attributeService.save(taskTemplateId, attribute);
+            return new ResponseEntity<>(newAttribute, HttpStatus.CREATED);
+        }else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
     }
 
     @DeleteMapping("/{taskTemplateId}/attributes/")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteAttributes(@PathVariable Integer taskTemplateId) {
-        attributeService.deleteAllForTaskTemplate(taskTemplateId);
+    public @ResponseBody ResponseEntity<?> deleteAttributes(@PathVariable Integer taskTemplateId) {
+        Task task  = taskService.getByTaskTemplateId(taskTemplateId);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Integer boardId = task.getBoard().getId();
+        if(contentRelatedRoleService.isContentOwner(boardId,authentication) ||
+                contentRelatedRoleService.isContentAdministrator(boardId,authentication)||
+                contentRelatedRoleService.isContentModerator(boardId,authentication)) {
+            attributeService.deleteAllForTaskTemplate(taskTemplateId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
     }
 }
