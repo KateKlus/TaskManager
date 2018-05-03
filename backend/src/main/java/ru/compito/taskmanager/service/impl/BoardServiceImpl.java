@@ -96,10 +96,10 @@ public class BoardServiceImpl implements BoardService{
         return userList;
     }
     @Override
-    public void addBoardStatus(Integer boardId, TaskStatus taskStatus) {
+    public BoardStatus addBoardStatus(Integer boardId, TaskStatus taskStatus) {
         Board board = boardRepository.getOne(boardId);
         BoardStatus boardStatus = new BoardStatus(board, taskStatus);
-        boardStatusRepository.save(boardStatus);
+        return boardStatusRepository.save(boardStatus);
     }
 
     @Override

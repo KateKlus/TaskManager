@@ -3,6 +3,7 @@ package ru.compito.taskmanager.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.compito.taskmanager.config.ServiceConstants;
 import ru.compito.taskmanager.entity.Role;
@@ -18,24 +19,28 @@ public class RoleController {
     private RoleService roleService;
 
     @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Role> getAll() {
-        return roleService.findAll();
+    public @ResponseBody ResponseEntity<Object> getAll() {
+        List<Role> roles = roleService.findAll();
+        return new ResponseEntity<>(roles, HttpStatus.OK);
     }
     @GetMapping(value = "/{id}/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Role getOne(@PathVariable Integer id) {
-        return roleService.getOne(id);
+    public @ResponseBody ResponseEntity<Role> getOne(@PathVariable Integer id) {
+        Role role = roleService.getOne(id);
+        return new ResponseEntity<>(role, HttpStatus.OK);
     }
     @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
-    public Role createRole(@RequestBody Role role) {
-        return roleService.save(role);
+    public @ResponseBody ResponseEntity<Role> createRole(@RequestBody Role role) {
+        Role newRole = roleService.save(role);
+        return new ResponseEntity<>(newRole, HttpStatus.CREATED);
     }
     @PutMapping(value = "/{id}/",
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public void update(@PathVariable Integer id, @RequestBody Role role) {
-        roleService.update(role);
+    public @ResponseBody ResponseEntity<Role> update(@PathVariable Integer id, @RequestBody Role role) {
+        Role updatedRole = roleService.update(role);
+        return new ResponseEntity<>(updatedRole, HttpStatus.OK);
     }
+
     @DeleteMapping("/{id}/")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Integer id) {

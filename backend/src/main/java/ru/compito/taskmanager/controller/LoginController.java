@@ -1,6 +1,8 @@
 package ru.compito.taskmanager.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.web.bind.annotation.*;
@@ -21,21 +23,20 @@ public class LoginController {
     private TokenStore tokenStore;
 
     @PostMapping(value = "register/")
-    public String register(@RequestBody UserRegistration userRegistration){
+    public @ResponseBody ResponseEntity<Object> register(@RequestBody UserRegistration userRegistration){
         if(!userRegistration.getPassword().equals(userRegistration.getPasswordConfirmation()))
-            return "Error the two passwords do not match";
+            return new ResponseEntity<>("Error the two passwords do not match", HttpStatus.NOT_ACCEPTABLE);
         else if(userService.findByUsername(userRegistration.getUsername()) != null)
-            return "Error this username already exists";
+            return new ResponseEntity<>("Error this username already exists", HttpStatus.NOT_ACCEPTABLE);
 
         //Проверка на наличии специальных символов в имени.
         Pattern pattern = Pattern.compile("^[a-zA-Z][a-zA-Z0-9-_\\.]{1,20}$");
         if(!pattern.matcher(userRegistration.getUsername()).find())
-            return "No special characters are allowed in the username";
-
+            return new ResponseEntity<>("No special characters are allowed in the username", HttpStatus.NOT_ACCEPTABLE);
         userService.saveUser(new User(userRegistration.getUsername(),userRegistration.getFullname(),
                 userRegistration.getPassword(),userRegistration.getEmail()));
 
-        return "User created";
+        return new ResponseEntity<>("User created", HttpStatus.OK);
     }
 
     @GetMapping(value = "logouts/")
@@ -44,10 +45,10 @@ public class LoginController {
     }
 
     @GetMapping(value ="getUserId/")
-    public Integer getUserId(){
+    public @ResponseBody ResponseEntity<Integer> getUserId(){
         User user = userService.findByUsername(SecurityContextHolder
                 .getContext().getAuthentication().getName());
-        return user.getId();
+        return new ResponseEntity<>(user.getId(), HttpStatus.OK);
     }
 
 }

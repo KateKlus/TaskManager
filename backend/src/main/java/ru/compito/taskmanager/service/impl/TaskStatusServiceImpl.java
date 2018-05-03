@@ -39,8 +39,8 @@ public class TaskStatusServiceImpl implements TaskStatusService {
     }
 
     @Override
-    public void update(TaskStatus updatedTaskStatus) {
-        taskStatusRepository.save(updatedTaskStatus);
+    public TaskStatus update(TaskStatus updatedTaskStatus) {
+       return taskStatusRepository.save(updatedTaskStatus);
     }
 
     @Override

@@ -77,10 +77,9 @@ public class UserServiceImpl implements UserService,UserDetailsService {
     }
 
     @Override
-    public void saveUser(User user) {
+    public User saveUser(User user) {
         user.setPassword(passwordEncoder().encode(user.getPassword()));
-        userRepository.save(user);
-
+        return userRepository.save(user);
     }
 
     @Override
@@ -89,11 +88,11 @@ public class UserServiceImpl implements UserService,UserDetailsService {
     }
 
     @Override
-    public void updateUserById(Integer userId, User user) {
+    public User updateUserById(Integer userId, User user) {
         User oldUser = userRepository.getOne(userId);
         oldUser.setFullname(user.getFullname());
         oldUser.setEmail(user.getEmail());
-        userRepository.save(oldUser);
+        return userRepository.save(oldUser);
     }
 
     @Override
