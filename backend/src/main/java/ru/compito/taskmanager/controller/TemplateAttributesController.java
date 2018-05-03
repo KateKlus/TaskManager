@@ -3,6 +3,7 @@ package ru.compito.taskmanager.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.compito.taskmanager.config.ServiceConstants;
 import ru.compito.taskmanager.entity.Attribute;
@@ -18,21 +19,22 @@ public class TemplateAttributesController {
     private AttributeService attributeService;
 
     @GetMapping(value = "/{taskTemplateId}/attributes/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Attribute> getAttributes(@PathVariable Integer taskTemplateId) {
-        return attributeService.findByTaskTemplateId(taskTemplateId);
+    public @ResponseBody ResponseEntity<Object> getAttributes(@PathVariable Integer taskTemplateId) {
+        List<Attribute> attributes = attributeService.findByTaskTemplateId(taskTemplateId);
+        return new ResponseEntity<>(attributes, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{taskTemplateId}/attributes/{attributeId}/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Attribute getAttribute(@PathVariable Integer taskTemplateId, @PathVariable Integer attributeId) {
-        return attributeService.getByTaskTemplateAndAttributeId(taskTemplateId,attributeId);
+    public @ResponseBody ResponseEntity<Attribute> getAttribute(@PathVariable Integer taskTemplateId, @PathVariable Integer attributeId) {
+        Attribute attribute = attributeService.getByTaskTemplateAndAttributeId(taskTemplateId,attributeId);
+        return new ResponseEntity<>(attribute, HttpStatus.OK);
     }
     @PostMapping(value = "/{taskTemplateId}/attributes/", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
-    public Attribute createAttribute(@PathVariable Integer taskTemplateId, @RequestBody Attribute attribute) {
-        return attributeService.save(taskTemplateId, attribute);
+    public @ResponseBody ResponseEntity<Attribute> createAttribute(@PathVariable Integer taskTemplateId, @RequestBody Attribute attribute) {
+        Attribute newAttribute = attributeService.save(taskTemplateId, attribute);
+        return new ResponseEntity<>(newAttribute, HttpStatus.CREATED);
     }
-
 
     @DeleteMapping("/{taskTemplateId}/attributes/")
     @ResponseStatus(HttpStatus.NO_CONTENT)

@@ -10,9 +10,9 @@ public interface UserService {
     List<User> getAllUsers();
     User getUserById(Integer Id);
     User findByUsername(String username);
-    void saveUser(User user);
+    User saveUser(User user);
     void deleteUserById(Integer Id);
-    void updateUserById(Integer userId, User user);
+    User updateUserById(Integer userId, User user);
     List<User> findByTaskId(Integer taskId);
     List<Board> getBoardsByUserId(Integer userId);
     Board getBoardByUserId(Integer userId, Integer boardId);

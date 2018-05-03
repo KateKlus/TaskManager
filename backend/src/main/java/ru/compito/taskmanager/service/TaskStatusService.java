@@ -8,6 +8,6 @@ public interface TaskStatusService {
     TaskStatus getOne(Integer Id);
     List<TaskStatus> findAll();
     TaskStatus save(TaskStatus taskStatus);
-    void update(TaskStatus updatedTaskStatus);
+    TaskStatus update(TaskStatus updatedTaskStatus);
     void delete(Integer taskStatusId);
 }

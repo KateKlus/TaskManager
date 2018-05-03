@@ -3,6 +3,7 @@ package ru.compito.taskmanager.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import ru.compito.taskmanager.config.ServiceConstants;
@@ -26,12 +27,13 @@ public class MemberController {
     private BoardService boardService;
 
     @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Member> getAll() {
-        return memberService.findAll();
+    public @ResponseBody ResponseEntity<Object> getAll() {
+        List<Member> members = memberService.findAll();
+        return new ResponseEntity<>(members, HttpStatus.OK);
     }
 
     @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Member addRole(@RequestBody Member member) {
+    public @ResponseBody ResponseEntity<Member> addRole(@RequestBody Member member) {
         User currentUser = userService.findByUsername(SecurityContextHolder
                 .getContext().getAuthentication().getName());
         User boardOwner = boardService.getBoardOwner(member.getBoard().getId());
@@ -39,12 +41,13 @@ public class MemberController {
         if(currentUser.equals(boardOwner)){
             newMember = memberService.save(member);
         }
-        return newMember;
+        return new ResponseEntity<>(newMember, HttpStatus.OK);
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Member update(@RequestBody Member member) {
-        return memberService.update(member);
+    public @ResponseBody ResponseEntity<Member> update(@RequestBody Member member) {
+        Member updatedMember = memberService.update(member);
+        return new ResponseEntity<>(updatedMember, HttpStatus.OK);
     }
 
 }

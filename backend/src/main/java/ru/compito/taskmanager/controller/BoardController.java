@@ -3,6 +3,7 @@ package ru.compito.taskmanager.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.compito.taskmanager.config.ServiceConstants;
 import ru.compito.taskmanager.entity.*;
@@ -18,55 +19,64 @@ public class BoardController {
     private BoardService boardService;
 
     @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Board> getAll() {
-        return boardService.findAll();
+    public @ResponseBody ResponseEntity<Object> getAll() {
+        List<Board> boards = boardService.findAll();
+        return new ResponseEntity<>(boards, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{id}/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Board getBoardById(@PathVariable Integer id) {
-        return boardService.getOne(id);
+    @GetMapping(value = "/{boardId}/", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody ResponseEntity<Board> getBoardById(@PathVariable Integer boardId) {
+        Board board = boardService.getOne(boardId);
+        return new ResponseEntity<>(board, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{id}/owner/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public User getBoardOwner(@PathVariable Integer id){
-        return boardService.getBoardOwner(id);
+    @GetMapping(value = "/{boardId}/owner/", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody ResponseEntity<User> getBoardOwner(@PathVariable Integer boardId){
+        User user = boardService.getBoardOwner(boardId);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{id}/users/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<User> getUsersFromBoard(@PathVariable Integer id){
-        return boardService.getUsersById(id);
+    @GetMapping(value = "/{boardId}/users/", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody ResponseEntity<Object> getUsersFromBoard(@PathVariable Integer boardId){
+        List<User> users = boardService.getUsersById(boardId);
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{id}/tasks/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Task> getTasksFromBoard(@PathVariable Integer id){
-        return boardService.getTasks(id);
+    @GetMapping(value = "/{boardId}/tasks/", produces = MediaType.APPLICATION_JSON_VALUE)
+    public  @ResponseBody ResponseEntity<Object> getTasksFromBoard(@PathVariable Integer boardId){
+        List<Task> tasks = boardService.getTasks(boardId);
+        return new ResponseEntity<>(tasks, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{id}/tasks/{taskId}/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Task> getTaskByIdFromBoard(@PathVariable Integer id, @PathVariable Integer taskId){
-        return boardService.getTaskById(id,taskId);
+    @GetMapping(value = "/{boardId}/tasks/{taskId}/", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody ResponseEntity<Object> getTaskByIdFromBoard(@PathVariable Integer boardId, @PathVariable Integer taskId){
+        List<Task> tasks = boardService.getTaskById(boardId,taskId);
+        return new ResponseEntity<>(tasks, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{id}/statuses/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<BoardStatus> getBoardStatusesFromBoard(@PathVariable Integer id){
-        return boardService.getBoardStatuses(id);
+    @GetMapping(value = "/{boardId}/statuses/", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody ResponseEntity<Object> getBoardStatusesFromBoard(@PathVariable Integer boardId){
+        List<BoardStatus> boardStatuses = boardService.getBoardStatuses(boardId);
+        return new ResponseEntity<>(boardStatuses, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/{Id}/statuses/", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void createBoard(@RequestBody TaskStatus taskStatus, @PathVariable Integer Id) {
-         boardService.addBoardStatus(Id, taskStatus);
+    @PostMapping(value = "/{boardId}/statuses/", consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody ResponseEntity<BoardStatus> addBoardStatus(@RequestBody TaskStatus taskStatus, @PathVariable Integer boardId) {
+        BoardStatus boardStatus = boardService.addBoardStatus(boardId, taskStatus);
+        return new ResponseEntity<>(boardStatus, HttpStatus.OK);
     }
 
-    @PutMapping(value = "/{id}/",
+    @PutMapping(value = "/{boardId}/",
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Board update(@PathVariable Integer id, @RequestBody Board board) {
-        return boardService.update(board);
+    public @ResponseBody ResponseEntity<Board> update(@PathVariable Integer boardId, @RequestBody Board board) {
+        Board updatedBoard = boardService.update(board);
+        return new ResponseEntity<>(updatedBoard, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}/")
+    @DeleteMapping("/{boardId}/")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Integer id) {
-        boardService.delete(id);
+    public void delete(@PathVariable Integer boardId) {
+        boardService.delete(boardId);
     }
 
 }

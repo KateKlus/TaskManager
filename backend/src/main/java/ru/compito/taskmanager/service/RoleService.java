@@ -7,6 +7,6 @@ public interface RoleService {
     Role getOne(Integer Id);
     List<Role> findAll();
     Role save(Role role);
-    void update(Role updatedRole);
+    Role update(Role updatedRole);
     void delete(Integer roleId);
 }

@@ -1,8 +1,10 @@
 package ru.compito.taskmanager.controller;
 
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.compito.taskmanager.config.ServiceConstants;
 import ru.compito.taskmanager.entity.CustomField;
@@ -22,19 +24,22 @@ public class TaskController {
     private CustomFieldService customFieldService;
 
     @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Task> getAll() {
-        return taskService.findAll();
+    public @ResponseBody ResponseEntity<Object> getAll() {
+        List<Task> tasks =  taskService.findAll();
+        return new ResponseEntity<>(tasks, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{taskId}/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Task getOne(@PathVariable Integer taskId) {
-        return taskService.getOne(taskId);
+    public @ResponseBody ResponseEntity<Task> getOne(@PathVariable Integer taskId) {
+        Task task = taskService.getOne(taskId);
+        return new ResponseEntity<>(task,HttpStatus.OK);
     }
 
     @PutMapping(value = "/{taskId}/",
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Task update(@PathVariable Integer taskId, @RequestBody Task task) {
-        return taskService.update(task);
+    public @ResponseBody ResponseEntity<Task> update(@PathVariable Integer taskId, @RequestBody Task task) {
+        Task updateTask = taskService.update(task);
+        return new ResponseEntity<>(updateTask,HttpStatus.OK);
     }
 
     @DeleteMapping("/{taskId}/")
@@ -44,7 +49,8 @@ public class TaskController {
     }
 
     @GetMapping(value = "/{taskId}/customfields/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<CustomField> getAllCustomFields(@PathVariable Integer taskId) {
-        return customFieldService.getAllCustomFieldsByTask(taskId);
+    public @ResponseBody ResponseEntity<Object> getAllCustomFields(@PathVariable Integer taskId) {
+        List<CustomField> customFields = customFieldService.getAllCustomFieldsByTask(taskId);
+        return new ResponseEntity<>(customFields, HttpStatus.OK);
     }
 }

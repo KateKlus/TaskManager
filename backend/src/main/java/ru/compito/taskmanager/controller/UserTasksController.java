@@ -4,6 +4,7 @@ package ru.compito.taskmanager.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.compito.taskmanager.config.ServiceConstants;
 import ru.compito.taskmanager.entity.Task;
@@ -19,19 +20,21 @@ public class UserTasksController {
     private TaskService taskService;
 
     @GetMapping(value = "/{userId}/tasks/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Task> getTasks(@PathVariable Integer userId) {
-        return taskService.findByUserId(userId);
+    public @ResponseBody ResponseEntity<Object> getTasks(@PathVariable Integer userId) {
+        List<Task> tasks = taskService.findByUserId(userId);
+        return new ResponseEntity<>(tasks, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{userId}/tasks/{taskId}/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Task getTask(@PathVariable Integer userId, @PathVariable Integer taskId) {
-        return taskService.getTaskByUserId(userId,taskId);
+    public @ResponseBody ResponseEntity<Task> getTask(@PathVariable Integer userId, @PathVariable Integer taskId) {
+        Task task = taskService.getTaskByUserId(userId,taskId);
+        return new ResponseEntity<>(task, HttpStatus.OK);
     }
     @PostMapping(value = "/{userId}/tasks/", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
-    public Task createTask(@PathVariable Integer userId, @RequestBody Task task) {
-        return taskService.save(userId, task);
+    public @ResponseBody ResponseEntity<Task> createTask(@PathVariable Integer userId, @RequestBody Task task) {
+        Task newTask = taskService.save(userId, task);
+        return new ResponseEntity<>(newTask, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}/tasks/")

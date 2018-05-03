@@ -1,7 +1,9 @@
 package ru.compito.taskmanager.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.web.bind.annotation.*;
@@ -31,53 +33,57 @@ public class UserController{
 
 
     @GetMapping(value = "/",produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    public @ResponseBody ResponseEntity<Object> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{userId}/",produces = MediaType.APPLICATION_JSON_VALUE)
-    public User getUserById(@PathVariable Integer userId) {
-        return userService.getUserById(userId);
+    public @ResponseBody ResponseEntity<User> getUserById(@PathVariable Integer userId) {
+        User user = userService.getUserById(userId);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
 
     @GetMapping(value = "/{userId}/boards/",produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Board> getBoardsByUserId(@PathVariable Integer userId) {
-        return userService.getBoardsByUserId(userId);
+    public @ResponseBody ResponseEntity<Object> getBoardsByUserId(@PathVariable Integer userId) {
+        List<Board> boards = userService.getBoardsByUserId(userId);
+        return new ResponseEntity<>(boards, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{userId}/members/",produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Member> getMembersByUserId(@PathVariable Integer userId) {
-        return memberService.getAllByUserId(userId);
+    public @ResponseBody ResponseEntity<Object> getMembersByUserId(@PathVariable Integer userId) {
+        List<Member> members = memberService.getAllByUserId(userId);
+        return new ResponseEntity<>(members, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{userId}/boards/{boardId}/",produces = MediaType.APPLICATION_JSON_VALUE)
-    public Board getBoardByUserId(@PathVariable Integer userId,@PathVariable Integer boardId ) {
-        return userService.getBoardByUserId(userId,boardId);
+    public @ResponseBody ResponseEntity<Board> getBoardByUserId(@PathVariable Integer userId,@PathVariable Integer boardId ) {
+        Board board = userService.getBoardByUserId(userId,boardId);
+        return new ResponseEntity<>(board, HttpStatus.OK);
     }
 
     @PostMapping(value = "/{userId}/boards/", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Board createBoard(@RequestBody Board board, @PathVariable Integer userId) {
-        return boardService.save(userId,board);
-    }
-
-    @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void create(@RequestBody User user) {
-        userService.saveUser(user);
+    public @ResponseBody ResponseEntity<Board> createBoard(@RequestBody Board board, @PathVariable Integer userId) {
+        Board newBoard = boardService.save(userId,board);
+        return new ResponseEntity<>(newBoard, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{userId}/",
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public void update(@PathVariable Integer userId, @RequestBody User user) {
-        userService.updateUserById(userId,user);
+    public @ResponseBody ResponseEntity<User> update(@PathVariable Integer userId, @RequestBody User user) {
+        User updatedUser = userService.updateUserById(userId,user);
+        return new ResponseEntity<>(updatedUser, HttpStatus.CREATED);
     }
 
     @DeleteMapping(value = "/{userId}/boards/{boardId}/")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteMember(@PathVariable Integer userId,@PathVariable Integer boardId) {
         memberService.deleteMember(userId,boardId);
     }
 
     @DeleteMapping("/{userId}/")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Integer userId) {
         userService.deleteUserById(userId);
     }
