@@ -26,7 +26,7 @@ public class TaskTemplateServiceImpl implements TaskTemplateService{
 
     @Override
     public TaskTemplate getOne(Integer Id) {
-        return taskTemplateRepository.getOne(Id);
+        return taskTemplateRepository.findOne(Id);
     }
 
     @Override

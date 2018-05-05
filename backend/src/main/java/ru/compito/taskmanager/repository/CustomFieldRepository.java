@@ -11,7 +11,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public interface CustomFieldRepository extends JpaRepository<CustomField, Integer> {
     List<CustomField> findAllByAttribute(Attribute attribute);
-    CustomField findByAttribute(Attribute attribute);
+    CustomField findFirstByAttribute(Attribute attribute);
     CustomField findByAttributeAndId(Attribute attribute, Integer customFieldId);
     List<CustomField> findAllByTask(Task task);
     void deleteAllByTask(Task task);

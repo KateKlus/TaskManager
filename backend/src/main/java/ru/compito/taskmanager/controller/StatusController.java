@@ -27,7 +27,10 @@ public class StatusController {
     @GetMapping(value = "/{taskStatusId}/", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<TaskStatus> getOne(@PathVariable Integer taskStatusId) {
         TaskStatus taskStatus = taskStatusService.getOne(taskStatusId);
-        return new ResponseEntity<>(taskStatus, HttpStatus.OK);
+        if(taskStatus==null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        else
+            return new ResponseEntity<>(taskStatus, HttpStatus.OK);
     }
 
     @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE,

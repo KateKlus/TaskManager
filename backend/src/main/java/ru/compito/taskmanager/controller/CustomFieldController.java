@@ -32,23 +32,18 @@ public class CustomFieldController {
     @GetMapping(value = "/{customFieldId}/", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<CustomField> getOne(@PathVariable Integer customFieldId) {
         CustomField customField = customFieldService.getOne(customFieldId);
-        return new ResponseEntity<>(customField, HttpStatus.OK);
+        if(customField==null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        else
+            return new ResponseEntity<>(customField, HttpStatus.OK);
     }
 
     @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public @ResponseBody ResponseEntity<CustomField> createCustomField(@RequestBody CustomField customField) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Integer boardId = customField.getTask().getBoard().getId();
-        if(contentRelatedRoleService.isContentOwner(boardId,authentication) ||
-                contentRelatedRoleService.isContentAdministrator(boardId,authentication)||
-                contentRelatedRoleService.isContentModerator(boardId,authentication)) {
-            CustomField newCustomField = customFieldService.save(customField);
-            return new ResponseEntity<>(newCustomField, HttpStatus.CREATED);
-        }else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
+        CustomField newCustomField = customFieldService.save(customField);
+        return new ResponseEntity<>(newCustomField, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{customFieldId}/",

@@ -28,7 +28,7 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public Board getOne(Integer Id) {
-        return boardRepository.getOne(Id);
+        return boardRepository.findOne(Id);
     }
 
     @Override
