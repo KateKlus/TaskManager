@@ -1,13 +1,9 @@
 package ru.compito.taskmanager.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ru.compito.taskmanager.entity.Board;
-import ru.compito.taskmanager.entity.Role;
 import ru.compito.taskmanager.entity.User;
-import ru.compito.taskmanager.service.RoleService;
 
 import java.util.ArrayList;
 import java.util.Collection;

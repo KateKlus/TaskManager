@@ -45,7 +45,10 @@ public class UserController{
     @GetMapping(value = "/{userId}/",produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<User> getUserById(@PathVariable Integer userId) {
         User user = userService.getUserById(userId);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        if(user==null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        else
+            return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
 
@@ -64,7 +67,10 @@ public class UserController{
     @GetMapping(value = "/{userId}/boards/{boardId}/",produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<Board> getBoardByUserId(@PathVariable Integer userId,@PathVariable Integer boardId ) {
         Board board = userService.getBoardByUserId(userId,boardId);
-        return new ResponseEntity<>(board, HttpStatus.OK);
+        if(board==null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        else
+            return new ResponseEntity<>(board, HttpStatus.OK);
     }
 
     @PostMapping(value = "/{userId}/boards/", consumes = MediaType.APPLICATION_JSON_VALUE)

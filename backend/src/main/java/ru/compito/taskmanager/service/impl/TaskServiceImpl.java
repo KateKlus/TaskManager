@@ -69,7 +69,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task getTaskByUserId(Integer userId, Integer taskId) {
-        User user = userRepository.getOne(userId);
+        User user = userRepository.findOne(userId);
         return taskRepository.findByUsersAndId(user, taskId);
     }
 

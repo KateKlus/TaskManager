@@ -32,7 +32,10 @@ public class BoardController {
     @GetMapping(value = "/{boardId}/", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<Board> getBoardById(@PathVariable Integer boardId) {
         Board board = boardService.getOne(boardId);
-        return new ResponseEntity<>(board, HttpStatus.OK);
+        if(board==null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        else
+            return new ResponseEntity<>(board, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{boardId}/owner/", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -67,23 +70,40 @@ public class BoardController {
 
     @PostMapping(value = "/{boardId}/statuses/", consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<BoardStatus> addBoardStatus(@RequestBody TaskStatus taskStatus, @PathVariable Integer boardId) {
-        BoardStatus boardStatus = boardService.addBoardStatus(boardId, taskStatus);
-        return new ResponseEntity<>(boardStatus, HttpStatus.OK);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(contentRelatedRoleService.isContentOwner(boardId,authentication) ||
+                contentRelatedRoleService.isContentAdministrator(boardId,authentication)||
+                contentRelatedRoleService.isContentModerator(boardId,authentication)) {
+            BoardStatus boardStatus = boardService.addBoardStatus(boardId, taskStatus);
+            return new ResponseEntity<>(boardStatus, HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
     }
 
     @PutMapping(value = "/{boardId}/",
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<Board> update(@PathVariable Integer boardId, @RequestBody Board board) {
-        Board updatedBoard = boardService.update(board);
-        return new ResponseEntity<>(updatedBoard, HttpStatus.OK);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(contentRelatedRoleService.isContentOwner(boardId,authentication) ||
+                contentRelatedRoleService.isContentAdministrator(boardId,authentication)) {
+            Board updatedBoard = boardService.update(board);
+            return new ResponseEntity<>(updatedBoard, HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
     }
 
     @DeleteMapping("/{boardId}/")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Integer boardId) {
+    public @ResponseBody ResponseEntity<?> delete(@PathVariable Integer boardId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(contentRelatedRoleService.isContentOwner(boardId,authentication))
+        if(contentRelatedRoleService.isContentOwner(boardId,authentication)) {
             boardService.delete(boardId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
     }
 
 }

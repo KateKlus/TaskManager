@@ -34,7 +34,7 @@ public class ContentRelatedRoleServiceImpl implements ContentRelatedRoleService 
         if(member == null)
             return false;
         else
-            return member.getRole().getRoleName().toUpperCase().equals("OWNER");
+            return member.getRole().toString().toUpperCase().equals("OWNER");
     }
 
     @Override
@@ -45,7 +45,7 @@ public class ContentRelatedRoleServiceImpl implements ContentRelatedRoleService 
         if(member == null)
             return false;
         else
-            return member.getRole().getRoleName().toUpperCase().equals("ADMINISTRATOR");
+            return member.getRole().toString().toUpperCase().equals("ADMIN");
     }
 
     @Override
@@ -56,7 +56,7 @@ public class ContentRelatedRoleServiceImpl implements ContentRelatedRoleService 
         if(member == null)
             return false;
         else
-            return member.getRole().getRoleName().toUpperCase().equals("MODERATOR");
+            return member.getRole().toString().toUpperCase().equals("MODERATOR");
     }
 
     @Override
@@ -67,7 +67,7 @@ public class ContentRelatedRoleServiceImpl implements ContentRelatedRoleService 
         if(member == null)
             return false;
         else
-            return member.getRole().getRoleName().toUpperCase().equals("DEVELOPER");
+            return member.getRole().toString().toUpperCase().equals("DEVELOPER");
     }
 
     @Override

@@ -36,7 +36,10 @@ public class AttributeController {
     @GetMapping(value = "/{attributeId}/", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<Attribute> getOne(@PathVariable Integer attributeId) {
         Attribute attribute = attributeService.getOne(attributeId);
-        return new ResponseEntity<>(attribute, HttpStatus.OK);
+        if(attribute==null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        else
+            return new ResponseEntity<>(attribute, HttpStatus.OK);
     }
 
     @PutMapping(value = "/{attributeId}/",
