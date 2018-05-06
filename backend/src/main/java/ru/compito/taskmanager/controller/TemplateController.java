@@ -56,31 +56,17 @@ public class TemplateController {
     public @ResponseBody ResponseEntity<TaskTemplate> update(@PathVariable Integer taskTemplateId, @RequestBody TaskTemplate updatedTaskTemplate) {
         Task task  = taskService.getByTaskTemplateId(taskTemplateId);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Integer boardId = task.getBoard().getId();
-        if(contentRelatedRoleService.isContentOwner(boardId,authentication) ||
-                contentRelatedRoleService.isContentAdministrator(boardId,authentication)||
-                contentRelatedRoleService.isContentModerator(boardId,authentication)) {
-            TaskTemplate taskTemplate = taskTemplateService.update(taskTemplateId,updatedTaskTemplate);
-            return new ResponseEntity<>(taskTemplate, HttpStatus.OK);
-        }else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
+        TaskTemplate taskTemplate = taskTemplateService.update(taskTemplateId,updatedTaskTemplate);
+        return new ResponseEntity<>(taskTemplate, HttpStatus.OK);
+
     }
 
     @DeleteMapping("/{taskTemplateId}/")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public @ResponseBody ResponseEntity<?> delete(@PathVariable Integer taskTemplateId) {
         Task task  = taskService.getByTaskTemplateId(taskTemplateId);
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Integer boardId = task.getBoard().getId();
-        if(contentRelatedRoleService.isContentOwner(boardId,authentication) ||
-                contentRelatedRoleService.isContentAdministrator(boardId,authentication)||
-                contentRelatedRoleService.isContentModerator(boardId,authentication)) {
-            taskTemplateService.delete(taskTemplateId);
-            return new ResponseEntity<>(HttpStatus.OK);
-        }else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
+        taskTemplateService.delete(taskTemplateId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 

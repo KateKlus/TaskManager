@@ -47,15 +47,9 @@ public class AttributeController {
     public @ResponseBody ResponseEntity<Attribute> update(@PathVariable Integer attributeId, @RequestBody Attribute updatedAttribute) {
         CustomField customField = customFieldService.getByAttribute(attributeId);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Integer boardId = customField.getTask().getBoard().getId();
-        if(contentRelatedRoleService.isContentOwner(boardId,authentication) ||
-                contentRelatedRoleService.isContentAdministrator(boardId,authentication)||
-                contentRelatedRoleService.isContentModerator(boardId,authentication)) {
-            Attribute attribute = attributeService.update(attributeId, updatedAttribute);
-            return new ResponseEntity<>(attribute, HttpStatus.OK);
-        }else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
+        Attribute attribute = attributeService.update(attributeId, updatedAttribute);
+        return new ResponseEntity<>(attribute, HttpStatus.OK);
+
     }
 
     @DeleteMapping("/{attributeId}/")
@@ -63,14 +57,7 @@ public class AttributeController {
     public @ResponseBody ResponseEntity<?> delete(@PathVariable Integer attributeId) {
         CustomField customField = customFieldService.getByAttribute(attributeId);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Integer boardId = customField.getTask().getBoard().getId();
-        if(contentRelatedRoleService.isContentOwner(boardId,authentication) ||
-                contentRelatedRoleService.isContentAdministrator(boardId,authentication)||
-                contentRelatedRoleService.isContentModerator(boardId,authentication)) {
-            attributeService.delete(attributeId);
-            return new ResponseEntity<>(HttpStatus.OK);
-        }else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
+        attributeService.delete(attributeId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
