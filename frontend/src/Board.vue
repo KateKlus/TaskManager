@@ -62,10 +62,10 @@ export default{
                             }
                         })
                     })
-                })
-                .catch(function(error){
+                }).catch(function(error){
                     delete_cookie("access_token");
-                    alert(error);
+                    delete_cookie("current_board");
+                    window.location = "#/auth";
                 });
         }
         else{
@@ -106,7 +106,9 @@ export default{
                                 }
                             }
                         }).catch(function(error){
-                            alert(error);
+                            if(error.request.status != 401){
+                                alert(error);
+                            }
                         })
                 })
             }
@@ -141,24 +143,32 @@ export default{
                 axios.get(host+'/api/boards/'+self.selectedBoardID+'/?access_token='+getCookie("access_token")).then(function(response){
                     self.currentBoard = response.data;
                 }).catch(function(error){
-                    alert(error);
+                    if(error.request.status != 401){
+                        alert(error);
+                    }
                 }).then(function(){
                     axios.get(host+'/api/boards/'+self.currentBoard.id+'/statuses/?access_token='+getCookie("access_token")).then(function(response){
                         self.statusList = response.data;
                     }).catch(function(error){
-                        alert(error);
+                        if(error.request.status != 401){
+                            alert(error);
+                        }
                     })
                 }).then(function(){
                     axios.get(host+'/api/boards/'+self.currentBoard.id+'/tasks/?access_token='+getCookie("access_token")).then(function(response){
                         self.taskList = response.data;
                     }).catch(function(error){
-                        alert(error);
+                        if(error.request.status != 401){
+                            alert(error);
+                        }
                     })
                 }).then(function(){
                     axios.get(host+'/api/tasktemplates/?access_token='+getCookie("access_token")).then(function(response){
                         self.templateList = response.data;
                     }).catch(function(error){
-                        alert(error);
+                        if(error.request.status != 401){
+                            alert(error);
+                        }
                     })
                 })
             }
