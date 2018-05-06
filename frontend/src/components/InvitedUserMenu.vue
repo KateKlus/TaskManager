@@ -77,7 +77,7 @@ export default{
                         url: host+'/api/members/?access_token='+getCookie("access_token"),
                         data: self.selectedMember
                     }).then(function (response) {
-                        alert("Роль пользователя "+self.selectedMember.user.username+" успешно изменена на "+self.selectedRole.roleName);
+                        alert("Роль пользователя "+self.selectedMember.user.username+" успешно изменена на "+self.selectedRole);
                         self.$emit('wrapperClick');
                     }).catch(function (error) {
                         alert("Error! "+ error)

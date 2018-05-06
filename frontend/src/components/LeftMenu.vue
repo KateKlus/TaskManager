@@ -4,13 +4,13 @@
            <img src="../assets/menu.png" alt="MNU" class="board__button-img">
         </a>
         <div class="menu__block" v-if="showMenu" >
-            <div class="menu__title">Меню</div>
+            <div class="menu__title" @click="alertSomething()">Меню</div>
             <a href="" class="board__button board__button-close"><img src="../assets/menu.png" alt="MNU" class="board__button-img" @click.prevent="showMenu = !showMenu"></a>
             <ul class="menu__list">
                 <li class="menu__item"><a href="" class="menu__link" @click.prevent="showNewBoardMenu = !showNewBoardMenu">Создать доску</a></li>
-                <li class="menu__item"><a href="" class="menu__link" @click.prevent="showNewStatusMenu = !showNewStatusMenu">Добавить статус</a></li>
-                <li class="menu__item"><a href="" class="menu__link" @click.prevent="showNewTaskMenu = !showNewTaskMenu">Добавить задачу</a></li>
-                <li class="menu__item"><a href="" class="menu__link" @click.prevent="showTemplateMenu = !showTemplateMenu">Управление шаблонами</a></li>
+                <li class="menu__item"><a href="" class="menu__link" v-if="showEditTasks" @click.prevent="showNewStatusMenu = !showNewStatusMenu">Добавить статус</a></li>
+                <li class="menu__item"><a href="" class="menu__link" v-if="showEditTasks" @click.prevent="showNewTaskMenu = !showNewTaskMenu">Добавить задачу</a></li>
+                <li class="menu__item"><a href="" class="menu__link" v-if="showTemplates" @click.prevent="showTemplateMenu = !showTemplateMenu">Управление шаблонами</a></li>
                 <li class="menu__item"><a href="" class="menu__link" @click.prevent="showBoardListMenu = !showBoardListMenu">Мои доски</a></li>
             </ul>
         </div>
@@ -33,10 +33,23 @@ export default{
             showNewStatusMenu:false,
             showNewTaskMenu:false,
             showBoardListMenu: false,
-            showTemplateMenu: false
+            showTemplateMenu: false,
+            showTemplates: true,
+            showEditTasks: true,
         }
     },
-    props:['currentUser','statusList','templateList']
+    props:['currentUser','statusList','templateList','currentBoard'],
+    watch:{
+        currentBoard : function(){
+            var self = this;
+            this.$root.$emit('permissionStatus','templates', function(callback){
+                self.showTemplates = callback;
+            });
+            this.$root.$emit('permissionStatus','editTasks', function(callback){
+                self.showEditTasks = callback;
+            });
+        },
+    },
 }
 </script>
 

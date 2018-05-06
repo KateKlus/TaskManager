@@ -30,8 +30,8 @@
                     </li>
                 </ul>
             </div>
-        <button class="popup__submit" @click=saveChanges>Сохранить</button>
-        <button class="popup__submit" @click=deleteTask>Удалить</button>
+        <button class="popup__submit" v-if="showTaskEdit" @click=saveChanges>Сохранить</button>
+        <button class="popup__submit" v-if="showTaskDelete" @click=deleteTask>Удалить</button>
         </div>
     </div>
 
@@ -43,12 +43,21 @@ export default{
     data(){
         return{
             selected:this.taskItem.currentStatus.id,
-            customFieldsList:[]
+            customFieldsList:[],
+            showTaskDelete: true,
+            showTaskEdit: true
         }
     },
     props:['taskItem','statusList'],
     mounted(){
+        var self = this;
         this.getCustomFieldsList(this.taskItem.id);
+        this.$root.$emit('permissionStatus','deleteTask', function(callback){
+            self.showTaskDelete = callback;
+        });
+                this.$root.$emit('permissionStatus','editTask', function(callback){
+            self.showTaskEdit = callback;
+        });
     },
     methods:{
         closeMenu(){

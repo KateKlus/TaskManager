@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
         <header v-if="selectedBoardID" id="board__header" class="board__header">
-            <leftMenu :currentUser="currentUser" :statusList="statusList" :templateList="templateList"></leftMenu>
+            <leftMenu :currentUser="currentUser" :statusList="statusList" :templateList="templateList" :currentBoard="currentBoard"></leftMenu>
             <a href="" class="board__title" @click.prevent="showBoardMenu = !showBoardMenu">{{currentBoard.boardName}}</a>
             <div class="board__user">
                 <a href="" class="user__logout" @click.prevent="logOut">выйти</a>
@@ -34,13 +34,16 @@ export default{
             clickedTask:"",
             clickedStatus:"",
             currentUser:"",
+            currentRole:"",
+            roleList:"",
             currentBoard:"",
             boardList:"",
             statusList:"",
             taskList:"",
             templateList:"",
             selectedBoardID:"",
-            showNewBoardMenu: false
+            showNewBoardMenu: false,
+
         }
     },
     beforeCreate(){
@@ -64,7 +67,6 @@ export default{
                     delete_cookie("access_token");
                     alert(error);
                 });
-
         }
         else{
             window.location = "#/auth";
@@ -87,9 +89,32 @@ export default{
         this.$root.$on('updateBoard',function(){
             self.updateBoard();
         })
-        if(getCookie("current_board")){
-                this.selectedBoardID = getCookie("current_board");
+        this.$root.$on('permissionStatus',(element,done) =>{
+            if(self.roleList){
+                if(self.currentRole){
+                    self.checkPermissions(self.currentRole, element, done);
+                }
+            }else{
+                axios.get(host+'/api/getUserId/?access_token='+getCookie("access_token")).then(function(response){
+                    axios.get(host+'/api/users/'+response.data+'/members/?access_token='+getCookie("access_token"))
+                        .then(function(response){
+                            self.roleList = response.data;
+                            for(var i=0; i<response.data.length; i++){
+                                if(self.currentBoard.id == response.data[i].board.id){
+                                    self.currentRole = response.data[i].role;
+                                    self.checkPermissions(self.currentRole, element, done);
+                                }
+                            }
+                        }).catch(function(error){
+                            alert(error);
+                        })
+                })
             }
+
+        });
+        if(getCookie("current_board")){
+            this.selectedBoardID = getCookie("current_board");
+        }
     },
     watch:{
         selectedBoardID : function(){
@@ -136,6 +161,65 @@ export default{
                         alert(error);
                     })
                 })
+            }
+        },
+        checkPermissions(currentRole, element, done){
+            if(currentRole == 'OWNER'){
+                return done(true);
+            }
+            if(currentRole == 'ADMIN'){
+                if (element == 'deleteBoard'){
+                    return done(false);
+                }
+                return done(true);
+            }
+            if(currentRole == 'MODERATOR'){
+                if (element == 'deleteBoard'){
+                    return done(false);
+                }
+                if(element == 'inviteAndEdit'){
+                    return done(false);
+                }
+                return done(true);
+            }
+            if(currentRole == 'DEVELOPER'){
+                if (element == 'deleteBoard'){
+                    return done(false);
+                }
+                if(element == 'inviteAndEdit'){
+                    return done(false);
+                }
+                if(element == 'templates'){
+                    return done(false);
+                }
+                if(element == 'deleteTask'){
+                    return done(false);
+                }
+                return done(true);
+            }
+            if(currentRole == 'VIEWER'){
+                if (element == 'deleteBoard'){
+                    return done(false);
+                }
+                if(element == 'inviteAndEdit'){
+                    return done(false);
+                }
+                if(element == 'templates'){
+                    return done(false);
+                }
+                if(element == 'deleteTask'){
+                    return done(false);
+                }
+                if(element == 'editTasks'){
+                    return done(false);
+                }
+                if(element == 'editBoard'){
+                    return done(false);
+                }
+                if(element == 'editTask'){
+                    return done(false);
+                }
+                return done(true);
             }
         }
     }
