@@ -36,7 +36,10 @@ public class TemplateController {
     @GetMapping(value = "/{taskTemplateId}/", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<TaskTemplate> getOne(@PathVariable Integer taskTemplateId) {
         TaskTemplate taskTemplate = taskTemplateService.getOne(taskTemplateId);
-        return new ResponseEntity<>(taskTemplate, HttpStatus.OK);
+        if(taskTemplate==null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        else
+            return new ResponseEntity<>(taskTemplate, HttpStatus.OK);
     }
 
     @PostMapping(value = "/",

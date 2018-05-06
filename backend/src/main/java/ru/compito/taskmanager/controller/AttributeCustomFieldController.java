@@ -27,7 +27,10 @@ public class AttributeCustomFieldController {
     @GetMapping(value = "/{attributeId}/customfields/{customFieldId}/", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<CustomField> getAttribute(@PathVariable Integer attributeId, @PathVariable Integer customFieldId) {
         CustomField customField = customFieldService.getByAttributeAndCustomFieldId(attributeId,customFieldId);
-        return new ResponseEntity<>(customField, HttpStatus.OK);
+        if(customField==null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        else
+            return new ResponseEntity<>(customField, HttpStatus.OK);
     }
 
 }

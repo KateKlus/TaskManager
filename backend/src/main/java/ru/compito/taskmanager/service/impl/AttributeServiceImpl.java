@@ -28,7 +28,7 @@ public class AttributeServiceImpl implements AttributeService{
 
     @Override
     public Attribute getOne(Integer Id) {
-        return attributeRepository.getOne(Id);
+        return attributeRepository.findOne(Id);
     }
 
     @Override

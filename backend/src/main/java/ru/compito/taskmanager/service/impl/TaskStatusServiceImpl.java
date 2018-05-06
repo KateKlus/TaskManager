@@ -25,7 +25,7 @@ public class TaskStatusServiceImpl implements TaskStatusService {
 
     @Override
     public TaskStatus getOne(Integer Id) {
-        return taskStatusRepository.getOne(Id);
+        return taskStatusRepository.findOne(Id);
     }
 
     @Override

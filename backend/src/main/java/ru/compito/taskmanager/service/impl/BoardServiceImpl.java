@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.compito.taskmanager.entity.*;
+import ru.compito.taskmanager.entity.enums.RoleType;
 import ru.compito.taskmanager.repository.*;
 import ru.compito.taskmanager.service.BoardService;
 
@@ -23,12 +24,11 @@ public class BoardServiceImpl implements BoardService{
     private BoardStatusRepository boardStatusRepository;
     @Autowired
     private MemberRepository memberRepository;
-    @Autowired
-    private RoleRepository roleRepository;
+
 
     @Override
     public Board getOne(Integer Id) {
-        return boardRepository.getOne(Id);
+        return boardRepository.findOne(Id);
     }
 
     @Override
@@ -40,11 +40,12 @@ public class BoardServiceImpl implements BoardService{
     public Board save(Integer userId, Board board) {
         User user = userRepository.getOne(userId);
         board.setBoardOwner(user);
-
+        /**TODO
         if(!roleRepository.existsByRoleName("Owner"))
             roleRepository.save(new Role("Owner"));
         Role role = roleRepository.findByRoleName("Owner");
-        Member member = new Member(user,board, role);
+         */
+        Member member = new Member(user,board, RoleType.OWNER);
         Board newBoard = boardRepository.save(board);
         memberRepository.save(member);
         return newBoard;

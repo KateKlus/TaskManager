@@ -26,7 +26,7 @@ public class CustomFieldServiceImpl implements CustomFieldService{
 
     @Override
     public CustomField getOne(Integer Id) {
-        return customFieldRepository.getOne(Id);
+        return customFieldRepository.findOne(Id);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class CustomFieldServiceImpl implements CustomFieldService{
     @Override
     public CustomField getByAttribute(Integer attributeId) {
         Attribute attribute = attributeRepository.getOne(attributeId);
-        return customFieldRepository.findByAttribute(attribute);
+        return customFieldRepository.findFirstByAttribute(attribute);
     }
 
     @Override

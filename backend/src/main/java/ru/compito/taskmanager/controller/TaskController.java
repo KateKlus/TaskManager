@@ -38,7 +38,10 @@ public class TaskController {
     @GetMapping(value = "/{taskId}/", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<Task> getOne(@PathVariable Integer taskId) {
         Task task = taskService.getOne(taskId);
-        return new ResponseEntity<>(task,HttpStatus.OK);
+        if(task==null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        else
+            return new ResponseEntity<>(task, HttpStatus.OK);
     }
 
     @PutMapping(value = "/{taskId}/",

@@ -39,7 +39,10 @@ public class TemplateAttributesController {
     @GetMapping(value = "/{taskTemplateId}/attributes/{attributeId}/", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<Attribute> getAttribute(@PathVariable Integer taskTemplateId, @PathVariable Integer attributeId) {
         Attribute attribute = attributeService.getByTaskTemplateAndAttributeId(taskTemplateId,attributeId);
-        return new ResponseEntity<>(attribute, HttpStatus.OK);
+        if(attribute==null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        else
+            return new ResponseEntity<>(attribute, HttpStatus.OK);
     }
     @PostMapping(value = "/{taskTemplateId}/attributes/", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)

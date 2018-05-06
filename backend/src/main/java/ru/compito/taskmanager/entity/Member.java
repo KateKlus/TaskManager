@@ -2,6 +2,7 @@ package ru.compito.taskmanager.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import ru.compito.taskmanager.entity.enums.RoleType;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -22,22 +23,30 @@ public class Member {
     @MapsId( "boardId" )
     @ManyToOne(fetch = FetchType.LAZY)
     private Board board;
-
+/*
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "roleId")
-    private Role role;
+    private Role role;*/
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role",
+            nullable = false)
+    private RoleType role;
+
+    @Column(name="description")
+    private String description;
 
     public Member() {
     }
 
-    public Member(User user, Board board, Role role) {
+    public Member(User user, Board board, RoleType role) {
         this.user = user;
         this.board = board;
         this.role = role;
         this.memberIdentity = new MemberIdentity(user.getId(), board.getId());
     }
 
-    public Member(MemberIdentity memberIdentity, Role role) {
+    public Member(MemberIdentity memberIdentity, RoleType role) {
         this.memberIdentity = memberIdentity;
         this.role = role;
     }
@@ -66,12 +75,20 @@ public class Member {
         this.board = board;
     }
 
-    public Role getRole() {
+    public RoleType getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(RoleType role) {
         this.role = role;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override
