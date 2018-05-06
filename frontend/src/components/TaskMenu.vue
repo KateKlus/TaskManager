@@ -19,6 +19,7 @@
                         <option v-for="statusItem in statusList"
                         v-bind:value="statusItem.taskStatus.id">{{statusItem.taskStatus.statusName}}</option>
                     </select>
+                    <div class="popup__text">Исполнитель: {{executor}} </div>
                 </div>
             </div>
             <div class="taskMenu__custom">
@@ -45,7 +46,8 @@ export default{
             selected:this.taskItem.currentStatus.id,
             customFieldsList:[],
             showTaskDelete: true,
-            showTaskEdit: true
+            showTaskEdit: true,
+            executor: 'None',
         }
     },
     props:['taskItem','statusList'],
@@ -55,9 +57,12 @@ export default{
         this.$root.$emit('permissionStatus','deleteTask', function(callback){
             self.showTaskDelete = callback;
         });
-                this.$root.$emit('permissionStatus','editTask', function(callback){
+        this.$root.$emit('permissionStatus','editTask', function(callback){
             self.showTaskEdit = callback;
         });
+        if(self.taskItem.users.length != 0){
+            self.executor = self.taskItem.users[0].username;
+        }
     },
     methods:{
         closeMenu(){
@@ -65,6 +70,7 @@ export default{
         },
         changeStatus(){
             this.taskItem.currentStatus.id = this.selected;
+            console.log(this.taskItem);
         },
         saveChanges(){
             var self = this;
