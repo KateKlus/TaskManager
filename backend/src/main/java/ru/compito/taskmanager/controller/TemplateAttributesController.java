@@ -49,15 +49,8 @@ public class TemplateAttributesController {
     public @ResponseBody ResponseEntity<Attribute> createAttribute(@PathVariable Integer taskTemplateId, @RequestBody Attribute attribute) {
         Task task  = taskService.getByTaskTemplateId(taskTemplateId);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Integer boardId = task.getBoard().getId();
-        if(contentRelatedRoleService.isContentOwner(boardId,authentication) ||
-                contentRelatedRoleService.isContentAdministrator(boardId,authentication)||
-                contentRelatedRoleService.isContentModerator(boardId,authentication)) {
             Attribute newAttribute = attributeService.save(taskTemplateId, attribute);
             return new ResponseEntity<>(newAttribute, HttpStatus.CREATED);
-        }else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
     }
 
     @DeleteMapping("/{taskTemplateId}/attributes/")
@@ -65,14 +58,7 @@ public class TemplateAttributesController {
     public @ResponseBody ResponseEntity<?> deleteAttributes(@PathVariable Integer taskTemplateId) {
         Task task  = taskService.getByTaskTemplateId(taskTemplateId);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Integer boardId = task.getBoard().getId();
-        if(contentRelatedRoleService.isContentOwner(boardId,authentication) ||
-                contentRelatedRoleService.isContentAdministrator(boardId,authentication)||
-                contentRelatedRoleService.isContentModerator(boardId,authentication)) {
-            attributeService.deleteAllForTaskTemplate(taskTemplateId);
-            return new ResponseEntity<>(HttpStatus.OK);
-        }else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
+        attributeService.deleteAllForTaskTemplate(taskTemplateId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

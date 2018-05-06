@@ -11,10 +11,10 @@
                 <div class="popup__text">Изменить описание доски:</div>
                 <input type="text" v-model="currentBoard.description">
             </label>
-                <button class="popup__submit" @click.prevent="editBoard">Изменить доску</button>
-                <button class="popup__submit" @click.prevent="deleteBoard">Удалить доску</button>
-                <button class="popup__submit" @click.prevent="showUserInviteMenu = !showUserInviteMenu">Пригласить пользователя</button>
-                <button class="popup__submit" @click.prevent="showInvitedUserMenu = !showInvitedUserMenu">Приглашенные пользователи</button>
+                <button class="popup__submit" @click.prevent="editBoard" v-if="showEditBoard">Изменить доску</button>
+                <button class="popup__submit" @click.prevent="deleteBoard" v-if="showDeleteBoard">Удалить доску</button>
+                <button class="popup__submit" @click.prevent="showUserInviteMenu = !showUserInviteMenu" v-if="showInviteAndEdit">Пригласить пользователя</button>
+                <button class="popup__submit" @click.prevent="showInvitedUserMenu = !showInvitedUserMenu" v-if="showInviteAndEdit">Приглашенные пользователи</button>
         </div>
         <userInviteMenu v-if="showUserInviteMenu" @wrapperClick="showUserInviteMenu = !showUserInviteMenu" :currentBoard="currentBoard"></userInviteMenu>
         <invitedUserMenu v-if="showInvitedUserMenu" @wrapperClick="showInvitedUserMenu = !showInvitedUserMenu" :currentBoard="currentBoard"></invitedUserMenu>
@@ -28,8 +28,23 @@ export default{
     data() {
         return {
             showUserInviteMenu: false,
-            showInvitedUserMenu: false
+            showInvitedUserMenu: false,
+            showDeleteBoard: true,
+            showInviteAndEdit: true,
+            showEditBoard: true,
         }
+    },
+    created(){
+        var self = this;
+        this.$root.$emit('permissionStatus','deleteBoard', function(callback){
+            self.showDeleteBoard = callback;
+        });
+        this.$root.$emit('permissionStatus','inviteAndEdit', function(callback){
+            self.showInviteAndEdit = callback;
+        });
+        this.$root.$emit('permissionStatus','editBoard', function(callback){
+            self.showEditBoard = callback;
+        });
     },
     props:['currentBoard'],
     methods:{

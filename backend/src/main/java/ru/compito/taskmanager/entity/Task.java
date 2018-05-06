@@ -38,7 +38,6 @@ public class Task {
     @JoinColumn(name = "tasktemplate")
     private TaskTemplate taskTemplate;
 
-    @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "users_tasks",
             joinColumns = {@JoinColumn(name = "task_id")},
