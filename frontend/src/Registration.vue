@@ -23,6 +23,7 @@
                 <div class="form__name">E-mail:</div>
                 <input type="email" class="form__input" v-model="user.email" required>
             </label>
+            <button @click.prevent="toLogin">Назад</button>
             <button class="form__submit" type="submit" @click.prevent="register">Зарегистрироваться</button>
 
         </form>
@@ -61,11 +62,22 @@ export default{
                     if(response.data == "User created"){
                         window.location = "#/board";
                     }
-                });
+
+                }).catch(function(error){
+                    if(error.response.status == 500){
+                        alert("Такой email уже занят!");
+                    }
+                    if(error.response.status == 406){
+                        alert("Проверьте правильность введенных данных!");
+                    }
+                })
             }else{
                 alert("Введённые пароли не совпадают!");
             }
 
+        },
+        toLogin(){
+            window.location = "#/auth";
         }
     }
 }

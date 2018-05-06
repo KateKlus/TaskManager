@@ -37,15 +37,12 @@ export default{
     created(){
         var self = this;
         this.$root.$emit('permissionStatus','deleteBoard', function(callback){
-            console.log(callback);
             self.showDeleteBoard = callback;
         });
         this.$root.$emit('permissionStatus','inviteAndEdit', function(callback){
-            console.log(callback);
             self.showInviteAndEdit = callback;
         });
         this.$root.$emit('permissionStatus','editBoard', function(callback){
-            console.log(callback);
             self.showEditBoard = callback;
         });
     },
