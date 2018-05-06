@@ -4,7 +4,7 @@
         <div class="popup__body">
             <div class="popup__title">Список досок</div>
             <ul class="boardListMenu__list">
-                <li class="boardListMenu__item" v-for="member in memberList"><a href="" class="boardListMenu__link" @click.prevent="selectBoard(member.board)"> {{member.board.boardName}} [{{member.role.roleName}}]</a></li>
+                <li class="boardListMenu__item" v-for="member in memberList"><a href="" class="boardListMenu__link" @click.prevent="selectBoard(member.board)"> {{member.board.boardName}} [{{member.role}}]</a></li>
             </ul>
 
         </div>

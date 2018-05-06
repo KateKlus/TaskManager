@@ -7,14 +7,14 @@
                 <div class="popup__text">Выберите пользователя:</div>
                 <select name="userList" v-model="selectedMember" size="10">
                    <option value="" selected disabled>Выберите пользователя</option>
-                    <option v-for="member in memberList" v-bind:value="member">{{member.user.username}} [{{member.role.roleName}}]</option>
+                    <option v-for="member in memberList" v-bind:value="member">{{member.user.username}} [{{member.role}}]</option>
                 </select>
             </label>
             <label for="" class="popup__label">
                 <div class="popup__text">Выберите роль:</div>
                 <select name="roleList" v-model="selectedRole">
                    <option value="" selected disabled>Выберите роль</option>
-                    <option v-for="role in roleList" v-bind:value="role">{{role.roleName}}</option>
+                    <option v-for="role in roleList" v-bind:value="role">{{role}}</option>
                 </select>
             </label>
             <label for="" class="popup__label">
@@ -77,7 +77,7 @@ export default{
                         url: host+'/api/members/?access_token='+getCookie("access_token"),
                         data: self.selectedMember
                     }).then(function (response) {
-                        alert("Роль пользователя "+self.selectedMember.user.username+" успешно изменена на "+self.selectedRole.roleName);
+                        alert("Роль пользователя "+self.selectedMember.user.username+" успешно изменена на "+self.selectedRole);
                         self.$emit('wrapperClick');
                     }).catch(function (error) {
                         alert("Error! "+ error)
