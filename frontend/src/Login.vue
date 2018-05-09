@@ -1,16 +1,15 @@
 <template>
     <div class="wrapper__form">
         <form action="" class="form">
+           <div class="company">Compito</div>
             <div class="form__avatar">
-                <img src="./assets/avatar.jpg" alt="" class="form__avatar-img">
+                <img src="./assets/avatar.png" alt="" class="form__avatar-img">
             </div>
             <label class="form__label">
-                <div class="form__name">Логин</div>
-                <input type="text" class="form__input" v-model="user.login" required>
+                <input type="text" class="form__input" v-model="user.login" placeholder="Ваш логин" required>
             </label>
               <label class="form__label">
-                <div class="form__name">Пароль</div>
-                <input type="password" class="form__input" v-model="user.password" required>
+                <input type="password" class="form__input" v-model="user.password" placeholder="Ваш пароль" required>
             </label>
             <div class="form__links">
                 <a href="" class="link__forgot">Забыли пароль?</a>
@@ -80,7 +79,6 @@ export default{
         right: 0;
         bottom: 0;
         text-align: center;
-        background: #eaeaea;
         &:before{
             content: "";
             display: inline-block;
@@ -89,25 +87,12 @@ export default{
             vertical-align: middle;
         }
     }
-    .company{
-        position: absolute;
-        width: 300px;
-        font-size: 60px;
-        top: 2%;
-        left: 50%;
-        margin-left: -150px;
-
-    }
     .form{
         vertical-align: middle;
         margin-top: -50px;
         display: inline-block;
-        border: 2px solid black;
-        border-radius: 10px;
-        padding: 10px 30px;
         max-width: 350px;
         text-align: center;
-        background-color: #cccccc;
     }
     .form__avatar{
         display: inline-block;
@@ -162,5 +147,111 @@ export default{
     .fade-enter-to,.fade-leave{
         opacity: 1;
         transition: 1s;
+    }
+    $fonts: "Open Sans", Helvetica, sans-serif;
+
+    @mixin border-radius($radius) {
+        -webkit-border-radius: $radius;
+        -moz-border-radius: $radius;
+        -ms-border-radius: $radius;
+        border-radius: $radius;
+    }
+
+    @mixin box-shadow($top, $left, $blur, $color) {
+        -webkit-box-shadow: $top $left $blur $color;
+        -moz-box-shadow: $top $left $blur $color;
+        box-shadow: $top $left $blur $color;
+    }
+
+    ::selection {
+        background-color: #b5e2e7;
+    }
+
+    ::-moz-selection {
+        background-color: #8ac7d8;
+    }
+    .company{
+        display: inline-block;
+        font-size: 40px;
+        margin-top: -50px;
+        background: white;
+        width: 320px;
+        background-color: #fff;
+        @include border-radius(20px);
+        @include box-shadow(0, 1px, 5px, rgba(0,0,0,0.25));
+        color: #757575;
+
+    }
+
+    .wrapper__form {
+        background: #58c791;
+    }
+    .form {
+        margin: 50px auto;
+        width: 340px;
+        background-color: #fff;
+        @include border-radius(4px);
+        @include box-shadow(0, 1px, 5px, rgba(0,0,0,0.25));
+    }
+
+    .form__title {
+        margin-top: 20px;
+        text-align: center;
+        font-size: 175%;
+        color: #757575;
+        font-weight: 300;
+    }
+
+    .form__title, input {
+        font-family: $fonts;
+    }
+
+    .form__input {
+        width: 75%;
+        height: 50px;
+        display: block;
+        margin: 0 auto 15px;
+        padding: 0 15px;
+        border: none;
+        border-bottom: 2px solid #ebebeb;
+        transition: border-bottom .5s;
+        &:focus {
+            outline: none;
+            border-bottom-color: #58c791 !important;
+        }
+        &:hover {
+            border-bottom-color: #dcdcdc;
+        }
+        &:invalid {
+            box-shadow: none;
+        }
+    }
+
+    .pass:-webkit-autofill {
+        -webkit-box-shadow: 0 0 0 1000px white inset;
+    }
+
+    .form__submit {
+        position: relative;
+        width: 85%;
+        height: 50px;
+        display: block;
+        margin: 30px auto 30px;
+        @include border-radius(5px);
+        color: white;
+        background-color: #58c791;
+        border: none;
+        @include box-shadow(0, 5px, 0, #3aad73);
+        &:hover {
+            top: 2px;
+            @include box-shadow(0, 3px, 0, #3aad73);
+        }
+        &:active {
+            top: 5px;
+            box-shadow: none;
+        }
+        &:focus {
+            outline: none;
+        }
     }
 </style>
