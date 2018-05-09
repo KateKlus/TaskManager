@@ -39,8 +39,9 @@ export default{
     .task__item{
         margin: 10px 0px;
         width: 250px;
-        background: rgba(#333, 0.2);
-        border: 1px solid black;
+        background-color: #fff;
+        border-radius: 4px;
+        box-shadow: 0, 1px, 5px, rgba(0,0,0,0.25);
         white-space: pre-line;
     }
     .task__menu-link{

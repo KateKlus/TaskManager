@@ -33,8 +33,9 @@ export default{
             }).then(function (response) {
                 self.$root.$emit('updateBoard');
                 self.$emit('wrapperClick');
+                self.$root.$emit('showDialog',"Данные успешно изменены!",'showMessage');
             }).catch(function (error) {
-                alert("Error! "+ error)
+                self.$root.$emit('showDialog',error,'showError');
             });
         },
     }

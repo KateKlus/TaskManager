@@ -89,7 +89,7 @@ export default{
                 }
             })
         }).catch(function(error){
-            alert(error);
+            self.$root.$emit('showDialog',error,'showError');
         })
     },
     methods:{
@@ -100,7 +100,6 @@ export default{
             var self = this;
             this.taskItem.board.id = getCookie("current_board");
             this.taskItem.taskTemplate = this.selectedTemplate;
-            console.log(this.taskItem);
             axios({
                 method: 'post',
                 url: host+'/api/users/'+self.currentUser.id+'/tasks/?access_token='+getCookie("access_token"),
@@ -108,7 +107,7 @@ export default{
             }).then(function (response) {
                 self.sendCustomFields(response.data);
             }).catch(function (error) {
-                alert("Error! "+ error)
+                self.$root.$emit('showDialog',error,'showError');
             });
         },
         selectStatus(){
@@ -124,7 +123,7 @@ export default{
                 self.$root.$emit('updateBoard');
                 self.addNewCustomField();
             }).catch(function(error){
-                alert(error);
+                self.$root.$emit('showDialog',error,'showError');
             })
         },
         addNewCustomField(){
@@ -161,7 +160,7 @@ export default{
             self.$emit('wrapperClick');
             }
             else{
-                alert(postError);
+                self.$root.$emit('showDialog',error,'showError');
             }
         },
         selectUser(){

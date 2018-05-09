@@ -68,7 +68,7 @@
                         self.attributeList.push(attribute);
                     })
                 }).catch(function(error){
-                    alert(error);
+                    self.$root.$emit('showDialog',error,'showError');
                 })
             },
             addNewAttribute(){
@@ -83,7 +83,7 @@
             editTemplate(){
                 var self = this;
                 if(this.selectedTemplate.default){
-                    alert("Невозможно изменить шаблон по умолчанию!")
+                    self.$root.$emit('showDialog',"Невозможно удалить шаблон по умолчанию!",'showError');
                 }
                 else{
                     axios({
@@ -93,7 +93,7 @@
                     }).then(function (response) {
                         self.editAttributes(response.data);
                     }).catch(function (error) {
-                        alert("Error! "+ error)
+                        self.$root.$emit('showDialog',error,'showError');
                     });
                 }
             },
@@ -103,7 +103,7 @@
                     url: host+'/api/attributes/'+attribute.id+'/?access_token='+getCookie("access_token"),
                 }).then(function (response) {
                 }).catch(function (error) {
-                    alert("Error! "+ error);
+                    self.$root.$emit('showDialog',error,'showError');
                 });
                 this.attributeList.splice(this.attributeList.indexOf(attribute),1);
             },
@@ -134,17 +134,17 @@
                 if (!postError){
                     self.$root.$emit('updateBoard');
                     self.$emit('wrapperClick');
-                    alert("Шаблон успешно изменён!")
+                    self.$root.$emit('showDialog',"Шаблон успешно изменён!",'showMessage');
                 }
                 else{
-                    alert(postError);
+                    self.$root.$emit('showDialog',error,'showError');
                 }
             }
         },
         watch:{
             selectedTemplate: function(value){
                 if(value.default){
-                    alert("Невозможно изменить шаблон по умолчанию!")
+                    self.$root.$emit('showDialog',"Невозможно изменить шаблон по умолчанию!",'showError');
                 }
             }
         }

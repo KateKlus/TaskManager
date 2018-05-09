@@ -44,7 +44,7 @@ export default{
                 self.roleList = response.data;
             })
             .catch(function(error){
-                alert(error);
+                self.$root.$emit('showDialog',error,'showError');
             });
         axios.get(host+'/api/members/?access_token='+getCookie("access_token"))
             .then(function(response){
@@ -58,7 +58,7 @@ export default{
                 })
             })
             .catch(function(error){
-                alert(error);
+                self.$root.$emit('showDialog',error,'showError');
             });
 
     },
@@ -77,18 +77,18 @@ export default{
                         url: host+'/api/members/?access_token='+getCookie("access_token"),
                         data: self.selectedMember
                     }).then(function (response) {
-                        alert("Роль пользователя "+self.selectedMember.user.username+" успешно изменена на "+self.selectedRole);
+                        self.$root.$emit('showDialog',"Роль пользователя "+self.selectedMember.user.username+" успешно изменена на "+self.selectedRole,'showMessage');
                         self.$emit('wrapperClick');
                     }).catch(function (error) {
-                        alert("Error! "+ error)
+                        self.$root.$emit('showDialog',error,'showError');
                     });
                 }
                 else{
-                    alert("Выберите роль для пользователя!");
+                    self.$root.$emit('showDialog',"Выберите роль для пользователя!",'showError');
                 }
             }
             else{
-                alert("Выберите пользователя!");
+                self.$root.$emit('showDialog',"Выберите пользователя!",'showError');
             }
         },
         deleteRole(){
@@ -97,11 +97,11 @@ export default{
                 method: 'DELETE',
                 url: host+'/api/users/'+self.selectedMember.user.id+'/boards/'+self.currentBoard.id+'/?access_token='+getCookie("access_token")
             }).then(function (response) {
-                alert("Пользователь успешно удалён из доски!")
+                self.$root.$emit('showDialog',"Пользователь успешно удалён из доски!",'showMessage');
                 self.$emit('wrapperClick');
                 self.$root.$emit('updateBoard');
             }).catch(function (error) {
-                alert("Error! "+ error);
+                self.$root.$emit('showDialog',error,'showError');
             });
         }
     },

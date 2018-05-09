@@ -36,7 +36,7 @@ export default{
             }).then(function (response) {
                 self.addNewBoardStatus(response.data);
             }).catch(function (error) {
-                alert("Error! "+ error)
+                self.$root.$emit('showDialog',error,'showError');
             });
 
         },
@@ -50,7 +50,7 @@ export default{
                 self.$root.$emit('updateBoard');
                 self.$emit('wrapperClick');
             }).catch(function (error) {
-                alert("Error! "+ error)
+                self.$root.$emit('showDialog',error,'showError');
             });
         }
     }

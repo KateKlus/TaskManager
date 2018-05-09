@@ -19,8 +19,10 @@
             </label>
             <button class="form__submit" type="submit" @click.prevent="register">Зарегистрироваться</button>
             <button @click.prevent="toLogin" class="form__submit">Назад</button>
-
         </form>
+        <transition name="fade">
+            <div v-bind:class="messageClass" v-if="showMessage">{{messageContent}}</div>
+        </transition>
     </div>
 </template>
 
@@ -35,11 +37,24 @@ export default{
                 password:'',
                 passwordConfirm:'',
                 email:''
-            }
+            },
+            showMessage: false,
+            messageContent:'',
+            messageClass:''
         }
     },
     methods:{
+        showDialogMessage(content, type){
+            var self = this;
+            this.messageContent= content;
+            this.messageClass = type;
+            this.showMessage = !this.showMessage;
+            setTimeout(function(){
+                self.showMessage = !self.showMessage;
+            },2000);
+        },
         register(){
+            var self = this;
             if(this.user.password == this.user.passwordConfirm){
                 axios({
                     method:'post',
@@ -52,21 +67,24 @@ export default{
                         email: this.user.email
                     }
                 }).then(function(response){
-                    alert(response.data);
-                    if(response.data == "User created"){
-                        window.location = "#/board";
-                    }
 
+                    if(response.data == "User created"){
+                        self.showDialogMessage('Пользователь успешно создан!','showMessage');
+                        setTimeout(function(){
+                            window.location = "#/board";
+                        },2500);
+
+                    }
                 }).catch(function(error){
                     if(error.response.status == 500){
-                        alert("Такой email уже занят!");
+                        self.showDialogMessage('Такой email уже занят, пожалуйста, введите другой!','showError')
                     }
                     if(error.response.status == 406){
-                        alert("Проверьте правильность введенных данных!");
+                        self.showDialogMessage('Проверьте правильность введённых данных!','showError')
                     }
                 })
             }else{
-                alert("Введённые пароли не совпадают!");
+                self.showDialogMessage('Введённые пароли не совпадают!','showError')
             }
 
         },
@@ -98,6 +116,42 @@ export default{
         vertical-align: middle;
         display: inline-block;
         text-align: center;
+    }
+    .showError{
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        width: 600px;
+        height: 100px;
+        padding: 40px;
+        text-align: center;
+        margin-left: -300px;
+        background: rgba(#f54172, .8);
+        box-shadow: 0, 1px, 5px, rgba(0,0,0,0.25);
+            border: 1px solid black;
+        border-radius: 20px;
+    }
+    .showMessage{
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        width: 600px;
+        height: 100px;
+        padding: 40px;
+        text-align: center;
+        margin-left: -300px;
+        background: rgba(#58a9c7, .8);
+        box-shadow: 0, 1px, 5px, rgba(0,0,0,0.25);
+            border: 1px solid black;
+        border-radius: 20px;
+    }
+    .fade-enter,.fade-leave-to{
+        opacity: 0;
+        transition: 1s;
+    }
+    .fade-enter-to,.fade-leave{
+        opacity: 1;
+        transition: 1s;
     }
 
     $fonts: "Open Sans", Helvetica, sans-serif;
@@ -160,7 +214,7 @@ export default{
             border-bottom-color: #58c791 !important;
         }
         &:hover {
-            border-bottom-color: #dcdcdc;
+            border-bottom-color: #cbcbcb;
         }
         &:invalid {
             box-shadow: none;

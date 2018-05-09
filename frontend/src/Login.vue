@@ -137,7 +137,8 @@ export default{
         height: 100px;
         padding: 40px;
         margin-left: -300px;
-        background: rgba(#222, .2);
+        background: rgba(#ffffff, .7);
+        box-shadow: 0, 1px, 5px, rgba(0,0,0,0.25);
         border-radius: 20px;
     }
     .fade-enter,.fade-leave-to{
@@ -220,7 +221,7 @@ export default{
             border-bottom-color: #58c791 !important;
         }
         &:hover {
-            border-bottom-color: #dcdcdc;
+            border-bottom-color: #cbcbcb;
         }
         &:invalid {
             box-shadow: none;

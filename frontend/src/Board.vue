@@ -1,5 +1,8 @@
 <template>
     <div class="wrapper">
+        <transition name='fade'>
+          <div v-bind:class="messageClass" v-if="showMessage">{{messageContent}}</div>
+        </transition>
         <header v-if="selectedBoardID" id="board__header" class="board__header">
             <leftMenu :currentUser="currentUser" :statusList="statusList" :templateList="templateList" :currentBoard="currentBoard"></leftMenu>
             <a href="" class="board__title" @click.prevent="showBoardMenu = !showBoardMenu">{{currentBoard.boardName}}</a>
@@ -43,6 +46,9 @@ export default{
             templateList:"",
             selectedBoardID:"",
             showNewBoardMenu: false,
+            messageContent: '',
+            messageClass: '',
+            showMessage:false,
 
         }
     },
@@ -89,6 +95,9 @@ export default{
         this.$root.$on('updateBoard',function(){
             self.updateBoard();
         })
+        this.$root.$on('showDialog', function(content, type){
+            self.showDialogMessage(content,type);
+        })
         this.$root.$on('permissionStatus',(element,done) =>{
             if(self.roleList){
                 if(self.currentRole){
@@ -107,7 +116,7 @@ export default{
                             }
                         }).catch(function(error){
                             if(error.request.status != 401){
-                                alert(error);
+                                showDialogMessage(error,'showError');
                             }
                         })
                 })
@@ -144,14 +153,14 @@ export default{
                     self.currentBoard = response.data;
                 }).catch(function(error){
                     if(error.request.status != 401){
-                        alert(error);
+                        showDialogMessage(error, 'showError');
                     }
                 }).then(function(){
                     axios.get(host+'/api/boards/'+self.currentBoard.id+'/statuses/?access_token='+getCookie("access_token")).then(function(response){
                         self.statusList = response.data;
                     }).catch(function(error){
                         if(error.request.status != 401){
-                            alert(error);
+                            showDialogMessage(error, 'showError');
                         }
                     })
                 }).then(function(){
@@ -159,7 +168,7 @@ export default{
                         self.taskList = response.data;
                     }).catch(function(error){
                         if(error.request.status != 401){
-                            alert(error);
+                            showDialogMessage(error, 'showError');
                         }
                     })
                 }).then(function(){
@@ -167,7 +176,7 @@ export default{
                         self.templateList = response.data;
                     }).catch(function(error){
                         if(error.request.status != 401){
-                            alert(error);
+                            showDialogMessage(error, 'showError');
                         }
                     })
                 })
@@ -231,12 +240,24 @@ export default{
                 }
                 return done(true);
             }
+        },
+        showDialogMessage(content, type){
+            var self = this;
+            this.messageContent= content;
+            this.messageClass = type;
+            this.showMessage = !this.showMessage;
+            setTimeout(function(){
+                self.showMessage = !self.showMessage;
+            },2000);
         }
     }
 }
 </script>
 
 <style lang="scss">
+    body{
+        background-color: #58c791;
+    }
     .popup__wrapper{
         position: absolute;
         top: 0;
@@ -335,5 +356,150 @@ export default{
         }
 
     }
+    .showError{
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        width: 600px;
+        height: 100px;
+        padding: 40px;
+        margin-left: -300px;
+        background: rgba(#f54172, .8);
+        box-shadow: 0, 1px, 5px, rgba(0,0,0,0.25);
+            border: 1px solid black;
+        border-radius: 20px;
+        z-index: 9999;
+        text-align: center;
+    }
+    .showMessage{
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        width: 600px;
+        height: 100px;
+        padding: 40px;
+        margin-left: -300px;
+        background: rgba(#58a9c7, .8);
+        box-shadow: 0, 1px, 5px, rgba(0,0,0,0.25);
+            border: 1px solid black;
+        border-radius: 20px;
+        z-index: 9999;
+        text-align: center;
+    }
+    .fade-enter,.fade-leave-to{
+        opacity: 0;
+        transition: 1s;
+    }
+    .fade-enter-to,.fade-leave{
+        opacity: 1;
+        transition: .5s;
+    }
+    $fonts: "Open Sans", Helvetica, sans-serif;
+
+    @mixin border-radius($radius) {
+        -webkit-border-radius: $radius;
+        -moz-border-radius: $radius;
+        -ms-border-radius: $radius;
+        border-radius: $radius;
+    }
+
+    @mixin box-shadow($top, $left, $blur, $color) {
+        -webkit-box-shadow: $top $left $blur $color;
+        -moz-box-shadow: $top $left $blur $color;
+        box-shadow: $top $left $blur $color;
+    }
+
+    ::selection {
+        background-color: #b5e2e7;
+    }
+
+    ::-moz-selection {
+        background-color: #8ac7d8;
+    }
+    .company{
+        display: inline-block;
+        font-size: 40px;
+        margin-top: -50px;
+        background: white;
+        width: 320px;
+        background-color: #fff;
+        @include border-radius(20px);
+        @include box-shadow(0, 1px, 5px, rgba(0,0,0,0.25));
+        color: #757575;
+
+    }
+
+    .wrapper__form {
+        background: #58c791;
+    }
+    .form {
+        margin: 50px auto;
+        width: 340px;
+        background-color: #fff;
+        @include border-radius(4px);
+        @include box-shadow(0, 1px, 5px, rgba(0,0,0,0.25));
+    }
+
+    .form__title {
+        margin-top: 20px;
+        text-align: center;
+        font-size: 175%;
+        color: #757575;
+        font-weight: 300;
+    }
+
+    .form__title, input {
+        font-family: $fonts;
+    }
+
+    .form__input {
+        width: 75%;
+        height: 50px;
+        display: block;
+        margin: 0 auto 15px;
+        padding: 0 15px;
+        border: none;
+        border-bottom: 2px solid #ebebeb;
+        transition: border-bottom .5s;
+        &:focus {
+            outline: none;
+            border-bottom-color: #58c791 !important;
+        }
+        &:hover {
+            border-bottom-color: #cbcbcb;
+        }
+        &:invalid {
+            box-shadow: none;
+        }
+    }
+
+    .pass:-webkit-autofill {
+        -webkit-box-shadow: 0 0 0 1000px white inset;
+    }
+
+    .form__submit {
+        position: relative;
+        width: 85%;
+        height: 50px;
+        display: block;
+        margin: 30px auto 30px;
+        @include border-radius(5px);
+        color: white;
+        background-color: #58c791;
+        border: none;
+        @include box-shadow(0, 5px, 0, #3aad73);
+        &:hover {
+            top: 2px;
+            @include box-shadow(0, 3px, 0, #3aad73);
+        }
+        &:active {
+            top: 5px;
+            box-shadow: none;
+        }
+        &:focus {
+            outline: none;
+        }
+    }
+
 
 </style>

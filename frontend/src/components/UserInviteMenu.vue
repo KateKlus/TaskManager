@@ -49,7 +49,7 @@ export default{
                 self.roleList = response.data;
             })
             .catch(function(error){
-                alert(error);
+                self.$root.$emit('showDialog',error,'showError');
             });
         axios.get(host+'/api/members/?access_token='+getCookie("access_token"))
             .then(function(response){
@@ -61,14 +61,14 @@ export default{
                 })
             })
             .catch(function(error){
-                alert(error);
+                self.$root.$emit('showDialog',error,'showError');
             }).then(function(){
                 axios.get(host+'/api/users/?access_token='+getCookie("access_token")).then(function(response){
                 self.userList = response.data;
                 self.clearUserList();
             })
             .catch(function(error){
-                alert(error);
+                self.$root.$emit('showDialog',error,'showError');
             })
         })
     },
@@ -89,18 +89,18 @@ export default{
                         url: host+'/api/members/?access_token='+getCookie("access_token"),
                         data:self.inviteUser
                     }).then(function (response) {
-                        alert("Пользователь "+self.selectedUser.username+" успешно приглашен c ролью "+self.selectedRole);
+                        self.$root.$emit('showDialog',"Пользователь "+self.selectedUser.username+" успешно приглашен c ролью "+self.selectedRole,'showMessage');
                         self.$emit('wrapperClick');
                     }).catch(function (error) {
-                        alert("Error! "+ error)
+                        self.$root.$emit('showDialog',error,'showError');
                     });
                 }
                 else{
-                    alert("Выберите роль для пользователя!");
+                    self.$root.$emit('showDialog',"Выберите роль для пользователя!",'showError');
                 }
             }
             else{
-                alert("Выберите пользователя!");
+                self.$root.$emit('showDialog',"Выберите пользователя!",'showError');
             }
 
         },

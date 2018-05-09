@@ -60,8 +60,9 @@ export default{
             }).then(function (response) {
                 self.$root.$emit('updateBoard');
                 self.$emit('wrapperClick');
+                self.$root.$emit('showDialog','Доска успешно обновлена!','showMessage');
             }).catch(function (error) {
-                alert("Error! "+ error)
+                self.$root.$emit('showDialog',error,'showError');
             });
         },
         deleteBoard(){
@@ -75,10 +76,10 @@ export default{
                 window.location.reload();
             }).catch(function (error) {
                 if(error.response.status == '500'){
-                    alert("Невозможно удалить доску, которая содержит данные!");
+                    self.$root.$emit('showDialog','Невозможно удалить доску, которая содержит данные!','showError');
                 }
                 else{
-                    alert("Error! "+ error);
+                    self.$root.$emit('showDialog',error,'showError');
                 }
             });
         },

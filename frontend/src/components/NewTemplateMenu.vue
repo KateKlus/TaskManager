@@ -86,11 +86,11 @@
                     }).then(function (response) {
                         self.createNewAttributes(response.data);
                     }).catch(function (error) {
-                        alert("Error! "+ error)
+                        self.$root.$emit('showDialog',error,'showError');
                     });
                 }
                 else{
-                    alert("Введите имя шаблона!")
+                    self.$root.$emit('showDialog',"Введите имя шаблона!",'showError');
                 }
 
             },
@@ -108,7 +108,7 @@
                                 postError = error;
                             });
                         }else{
-                            postError = "Укажите тип атрибута!";
+                            postError = "Укажите тип данных атрибута!";
                         }
                     }else{
                         postError = "Введите имя атрибута!";
@@ -117,10 +117,10 @@
                 if (!postError){
                     self.$root.$emit('updateBoard');
                     self.$emit('wrapperClick');
-                    alert("Шаблон успешно создан!")
+                    self.$root.$emit('showDialog',"Шаблон успешно создан!",'showMessage');
                 }
                 else{
-                    alert(postError);
+                    self.$root.$emit('showDialog',postError,'showError');
                 }
             }
         }

@@ -70,7 +70,6 @@ export default{
         },
         changeStatus(){
             this.taskItem.currentStatus.id = this.selected;
-            console.log(this.taskItem);
         },
         saveChanges(){
             var self = this;
@@ -81,7 +80,7 @@ export default{
             }).then(function (response) {
                 self.editCustomFields();
             }).catch(function (error) {
-                alert("Error! "+ error)
+                self.$root.$emit('showDialog',error,'showError');
             });
         },
         deleteTask(){
@@ -93,7 +92,7 @@ export default{
                 self.$root.$emit('updateBoard');
                 self.$emit('wrapperClick');
             }).catch(function (error) {
-                alert("Error! "+ error)
+                self.$root.$emit('showDialog',error,'showError');
             });
         },
         getCustomFieldsList(taskItemId){
@@ -105,7 +104,7 @@ export default{
                     }
                 });
             }).catch(function(error){
-                alert(error);
+                self.$root.$emit('showDialog',error,'showError');
             })
         },
         editCustomFields(){
@@ -123,9 +122,10 @@ export default{
             if (!postError){
             self.$root.$emit('updateBoard');
             self.$emit('wrapperClick');
+            self.$root.$emit('showDialog',"Задача успешно изменена!",'showMessage');
             }
             else{
-                alert(postError);
+                self.$root.$emit('showDialog',postError,'showError');
             }
         }
     }

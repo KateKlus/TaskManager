@@ -24,18 +24,23 @@ export default{
         color:black;
     }
     .status__list{
-        white-space: nowrap;
-        overflow-x: auto;
-        min-height: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        flex-wrap: nowrap;
+        align-items: stretch;
     }
     .status__item{
         display: inline-block;
-        border: 3px solid black;
         padding: 10px;
-        margin: 5px;
         vertical-align: top;
         background: rgba(#333,0.2);
         text-align: center;
         min-width: 250px;
+        border-left: 2px dashed black;
+        height: 100%;
+        &:first-child{
+            border-left: none;
+        }
     }
 </style>
