@@ -22,6 +22,11 @@
                         <option v-for="templateItem in templateList"
                         v-bind:value="templateItem">{{templateItem.taskTemplateName}}</option>
                     </select>
+                    <div class="popup__text">Исполнитель</div>
+                    <select name="userList"  @change="selectUser" v-model="selectedUser">
+                        <option v-for="user in invitedUserList"
+                        v-bind:value="user">{{user.username}}</option>
+                    </select>
                 </div>
             </div>
             <div class="taskMenu__custom">
@@ -46,8 +51,10 @@ export default{
         return{
             selectedStatus:"",
             selectedTemplate:"",
+            selectedUser:"",
             attributeList:"",
             customFieldsList:[],
+            invitedUserList:[],
             taskItem:{
                 taskName:"",
                 description:"",
@@ -60,7 +67,8 @@ export default{
                 author:{
                     id:this.currentUser.id
                 },
-                taskTemplate: ""
+                taskTemplate: "",
+                users:[],
             }
         }
     },
@@ -73,6 +81,16 @@ export default{
                 self.getListOfAttributes(template.id);
             }
         });
+        axios.get(host+'/api/members/?access_token='+getCookie("access_token")).then(function(response){
+            self.invitedUserList = [];
+            response.data.forEach(function(member){
+                if(member.board.id == getCookie("current_board")){
+                    self.invitedUserList.push(member.user);
+                }
+            })
+        }).catch(function(error){
+            alert(error);
+        })
     },
     methods:{
         closeMenu(){
@@ -82,6 +100,7 @@ export default{
             var self = this;
             this.taskItem.board.id = getCookie("current_board");
             this.taskItem.taskTemplate = this.selectedTemplate;
+            console.log(this.taskItem);
             axios({
                 method: 'post',
                 url: host+'/api/users/'+self.currentUser.id+'/tasks/?access_token='+getCookie("access_token"),
@@ -144,6 +163,10 @@ export default{
             else{
                 alert(postError);
             }
+        },
+        selectUser(){
+            this.taskItem.users = [];
+            this.taskItem.users.push(this.selectedUser);
         }
     }
 }

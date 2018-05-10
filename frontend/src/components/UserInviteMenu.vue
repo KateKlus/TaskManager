@@ -14,7 +14,7 @@
                 <div class="popup__text">Выберите роль:</div>
                 <select name="roleList" v-model="selectedRole" required="">
                    <option value="" selected disabled>Выберите роль</option>
-                    <option v-for="role in roleList" v-bind:value="role">{{role.roleName}}</option>
+                    <option v-for="role in roleList" v-bind:value="role">{{role}}</option>
                 </select>
             </label>
             <label for="" class="popup__label">
@@ -89,7 +89,7 @@ export default{
                         url: host+'/api/members/?access_token='+getCookie("access_token"),
                         data:self.inviteUser
                     }).then(function (response) {
-                        alert("Пользователь "+self.selectedUser.username+" успешно приглашен c ролью "+self.selectedRole.roleName);
+                        alert("Пользователь "+self.selectedUser.username+" успешно приглашен c ролью "+self.selectedRole);
                         self.$emit('wrapperClick');
                     }).catch(function (error) {
                         alert("Error! "+ error)
