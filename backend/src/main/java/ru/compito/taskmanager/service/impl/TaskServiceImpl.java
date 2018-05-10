@@ -100,6 +100,15 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public void addUser(Task task, User user) {
+        User newUser = userRepository.getOne(user.getId());
+        List<User> users = task.getUsers();
+        users.add(newUser);
+        task.setUsers(users);
+        taskRepository.save(task);
+    }
+
+    @Override
     public Task update(Task updatedTask) {
       return taskRepository.save(updatedTask);
     }

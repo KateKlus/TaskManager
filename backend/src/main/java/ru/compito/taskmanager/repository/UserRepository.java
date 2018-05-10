@@ -17,6 +17,4 @@ public interface UserRepository extends JpaRepository<User,Integer>{
 
     User findByUsername(String username);
     List<User> findAllByTasks(Task task);
-    @Query("SELECT t.users FROM Task t WHERE t.id=:taskId")
-    List<User> findByTaskId(@Param("taskId") Integer taskId);
 }

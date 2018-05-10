@@ -12,9 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.compito.taskmanager.entity.Board;
 import ru.compito.taskmanager.entity.Member;
+import ru.compito.taskmanager.entity.Task;
 import ru.compito.taskmanager.entity.User;
 import ru.compito.taskmanager.repository.BoardRepository;
 import ru.compito.taskmanager.repository.MemberRepository;
+import ru.compito.taskmanager.repository.TaskRepository;
 import ru.compito.taskmanager.repository.UserRepository;
 import ru.compito.taskmanager.service.UserService;
 
@@ -28,6 +30,8 @@ public class UserServiceImpl implements UserService,UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private TaskRepository taskRepository;
     @Autowired
     private BoardRepository boardRepository;
     @Autowired
@@ -47,7 +51,8 @@ public class UserServiceImpl implements UserService,UserDetailsService {
 
     @Override
     public List<User> findByTaskId(Integer taskId) {
-        return userRepository.findByTaskId(taskId);
+        Task task = taskRepository.getOne(taskId);
+        return userRepository.findAllByTasks(task);
     }
 
     @Override
