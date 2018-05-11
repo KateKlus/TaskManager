@@ -78,7 +78,7 @@
             },
             createNewTemplate(){
                 var self = this;
-                if(this.newTemplate.taskTemplateName!=""){
+                if(self.checkFields()){
                     axios({
                         method: 'post',
                         url: host+'/api/tasktemplates/?access_token='+getCookie("access_token"),
@@ -86,20 +86,14 @@
                     }).then(function (response) {
                         self.createNewAttributes(response.data);
                     }).catch(function (error) {
-                        self.$root.$emit('showDialog',error,'showError');
+                        self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
                     });
                 }
-                else{
-                    self.$root.$emit('showDialog',"Введите имя шаблона!",'showError');
-                }
-
             },
             createNewAttributes(template){
                 var self = this;
                 var postError = false;
                 this.attributeList.forEach(function(attribute){
-                    if(attribute.attributeName!=""){
-                        if(attribute.attributeType!=""){
                             axios({
                                 method: 'post',
                                 url: host+'/api/tasktemplates/'+template.id+'/attributes/?access_token='+getCookie("access_token"),
@@ -107,12 +101,6 @@
                             }).catch(function (error) {
                                 postError = error;
                             });
-                        }else{
-                            postError = "Укажите тип данных атрибута!";
-                        }
-                    }else{
-                        postError = "Введите имя атрибута!";
-                    }
                 })
                 if (!postError){
                     self.$root.$emit('updateBoard');
@@ -120,8 +108,33 @@
                     self.$root.$emit('showDialog',"Шаблон успешно создан!",'showMessage');
                 }
                 else{
-                    self.$root.$emit('showDialog',postError,'showError');
+                    self.$root.$emit('showDialog',postError.response.data.error+"; "+postError.response.data.message,'showError');
                 }
+            },
+            checkFields(){
+                var self = this;
+                var error = false;
+                if(this.newTemplate.taskTemplateName == ""){
+                    self.$root.$emit('showDialog','Введите название шаблона!','showError');
+                    error = true;
+                    return false;
+                }
+                 this.attributeList.forEach(function(attribute){
+                    if(attribute.attributeName == ""){
+                        self.$root.$emit('showDialog','Введите название атрибута!','showError');
+                        error = true;
+                        return false;
+                    }
+                        if(attribute.attributeType == ""){
+                            self.$root.$emit('showDialog','Выберите тип атрибута!','showError');
+                            error = true;
+                            return false;
+                        }
+                });
+                if(!error){
+                    return true;
+                }
+
             }
         }
     }

@@ -68,7 +68,7 @@
                         self.attributeList.push(attribute);
                     })
                 }).catch(function(error){
-                    self.$root.$emit('showDialog',error,'showError');
+                    self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
                 })
             },
             addNewAttribute(){
@@ -93,7 +93,7 @@
                     }).then(function (response) {
                         self.editAttributes(response.data);
                     }).catch(function (error) {
-                        self.$root.$emit('showDialog',error,'showError');
+                        self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
                     });
                 }
             },
@@ -103,7 +103,7 @@
                     url: host+'/api/attributes/'+attribute.id+'/?access_token='+getCookie("access_token"),
                 }).then(function (response) {
                 }).catch(function (error) {
-                    self.$root.$emit('showDialog',error,'showError');
+                    self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
                 });
                 this.attributeList.splice(this.attributeList.indexOf(attribute),1);
             },
@@ -137,7 +137,7 @@
                     self.$root.$emit('showDialog',"Шаблон успешно изменён!",'showMessage');
                 }
                 else{
-                    self.$root.$emit('showDialog',error,'showError');
+                    self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
                 }
             }
         },

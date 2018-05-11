@@ -31,7 +31,7 @@ export default{
                 self.$root.$emit('updateBoard');
                 self.$emit('wrapperClick');
             }).catch(function (error) {
-                self.$root.$emit('showDialog',error,'showError');
+                self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
             });
         },
         deleteStatus(){
@@ -42,7 +42,7 @@ export default{
                         method: 'delete',
                         url: host+'/api/tasks/'+task.id+'/?access_token='+getCookie("access_token")
                     }).catch(function (error) {
-                        self.$root.$emit('showDialog',error,'showError');
+                        self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
                     });
                 }
             })
@@ -53,7 +53,7 @@ export default{
                 self.$root.$emit('updateBoard');
                 self.$emit('wrapperClick');
             }).catch(function (error) {
-                self.$root.$emit('showDialog',error,'showError');
+                self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
             });
         },
     }

@@ -41,7 +41,7 @@ export default{
                     self.$emit('wrapperClick');
                     self.$root.$emit('updateBoard');
                 }).catch(function (error) {
-                    self.$root.$emit('showDialog',error,'showError');
+                    self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
                 });
             }
         }

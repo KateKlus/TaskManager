@@ -122,7 +122,6 @@ export default{
         top: 40%;
         left: 50%;
         width: 600px;
-        height: 100px;
         padding: 40px;
         text-align: center;
         margin-left: -300px;
@@ -136,7 +135,6 @@ export default{
         top: 40%;
         left: 50%;
         width: 600px;
-        height: 100px;
         padding: 40px;
         text-align: center;
         margin-left: -300px;

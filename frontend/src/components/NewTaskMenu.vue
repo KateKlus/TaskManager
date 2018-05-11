@@ -23,7 +23,7 @@
                         v-bind:value="templateItem">{{templateItem.taskTemplateName}}</option>
                     </select>
                     <div class="popup__text">Исполнитель</div>
-                    <select name="userList"  @change="selectUser" v-model="selectedUser">
+                    <select name="userList" v-model="selectedUser">
                         <option v-for="user in invitedUserList"
                         v-bind:value="user">{{user.username}}</option>
                     </select>
@@ -68,7 +68,6 @@ export default{
                     id:this.currentUser.id
                 },
                 taskTemplate: "",
-                users:[],
             }
         }
     },
@@ -89,7 +88,7 @@ export default{
                 }
             })
         }).catch(function(error){
-            self.$root.$emit('showDialog',error,'showError');
+            self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
         })
     },
     methods:{
@@ -106,8 +105,9 @@ export default{
                 data:self.taskItem
             }).then(function (response) {
                 self.sendCustomFields(response.data);
+                self.sendSelectedUser(response.data);
             }).catch(function (error) {
-                self.$root.$emit('showDialog',error,'showError');
+                self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
             });
         },
         selectStatus(){
@@ -123,7 +123,7 @@ export default{
                 self.$root.$emit('updateBoard');
                 self.addNewCustomField();
             }).catch(function(error){
-                self.$root.$emit('showDialog',error,'showError');
+                self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
             })
         },
         addNewCustomField(){
@@ -160,12 +160,18 @@ export default{
             self.$emit('wrapperClick');
             }
             else{
-                self.$root.$emit('showDialog',error,'showError');
+                self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
             }
         },
-        selectUser(){
-            this.taskItem.users = [];
-            this.taskItem.users.push(this.selectedUser);
+        sendSelectedUser(taskItem){
+            var self = this;
+            axios({
+                method: 'post',
+                url: host+'/api/tasks/'+taskItem.id+'/users/?access_token='+getCookie("access_token"),
+                data: self.selectedUser
+            }).catch(function (error) {
+                self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
+            });
         }
     }
 }

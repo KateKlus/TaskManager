@@ -47,7 +47,7 @@ export default{
             customFieldsList:[],
             showTaskDelete: true,
             showTaskEdit: true,
-            executor: 'None',
+            executor: '',
         }
     },
     props:['taskItem','statusList'],
@@ -60,9 +60,15 @@ export default{
         this.$root.$emit('permissionStatus','editTask', function(callback){
             self.showTaskEdit = callback;
         });
-        if(self.taskItem.users.length != 0){
-            self.executor = self.taskItem.users[0].username;
-        }
+        axios.get(host+'/api/tasks/'+self.taskItem.id+'/users/?access_token='+getCookie("access_token")).then(function(response){
+                if(response.data.length == 2){
+                    self.executor = response.data[1].username;
+                }else{
+                    self.executor = 'None';
+                }
+            }).catch(function(error){
+                self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
+            })
     },
     methods:{
         closeMenu(){
@@ -80,7 +86,7 @@ export default{
             }).then(function (response) {
                 self.editCustomFields();
             }).catch(function (error) {
-                self.$root.$emit('showDialog',error,'showError');
+                self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
             });
         },
         deleteTask(){
@@ -92,7 +98,7 @@ export default{
                 self.$root.$emit('updateBoard');
                 self.$emit('wrapperClick');
             }).catch(function (error) {
-                self.$root.$emit('showDialog',error,'showError');
+                self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
             });
         },
         getCustomFieldsList(taskItemId){
@@ -104,7 +110,7 @@ export default{
                     }
                 });
             }).catch(function(error){
-                self.$root.$emit('showDialog',error,'showError');
+                self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
             })
         },
         editCustomFields(){

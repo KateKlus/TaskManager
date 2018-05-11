@@ -44,7 +44,7 @@ export default{
                 self.$root.$emit('updateBoard');
                 window.location = "#/board";
             }).catch(function (error) {
-                self.$root.$emit('showDialog',error,'showError');
+                self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
             });
 
         }

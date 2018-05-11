@@ -49,7 +49,7 @@ export default{
                 self.roleList = response.data;
             })
             .catch(function(error){
-                self.$root.$emit('showDialog',error,'showError');
+                self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
             });
         axios.get(host+'/api/members/?access_token='+getCookie("access_token"))
             .then(function(response){
@@ -61,14 +61,14 @@ export default{
                 })
             })
             .catch(function(error){
-                self.$root.$emit('showDialog',error,'showError');
+                self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
             }).then(function(){
                 axios.get(host+'/api/users/?access_token='+getCookie("access_token")).then(function(response){
                 self.userList = response.data;
                 self.clearUserList();
             })
             .catch(function(error){
-                self.$root.$emit('showDialog',error,'showError');
+                self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
             })
         })
     },
@@ -92,7 +92,7 @@ export default{
                         self.$root.$emit('showDialog',"Пользователь "+self.selectedUser.username+" успешно приглашен c ролью "+self.selectedRole,'showMessage');
                         self.$emit('wrapperClick');
                     }).catch(function (error) {
-                        self.$root.$emit('showDialog',error,'showError');
+                        self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
                     });
                 }
                 else{

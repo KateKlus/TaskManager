@@ -44,7 +44,7 @@ export default{
                 self.roleList = response.data;
             })
             .catch(function(error){
-                self.$root.$emit('showDialog',error,'showError');
+                self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
             });
         axios.get(host+'/api/members/?access_token='+getCookie("access_token"))
             .then(function(response){
@@ -58,7 +58,7 @@ export default{
                 })
             })
             .catch(function(error){
-                self.$root.$emit('showDialog',error,'showError');
+                self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
             });
 
     },
@@ -80,7 +80,7 @@ export default{
                         self.$root.$emit('showDialog',"Роль пользователя "+self.selectedMember.user.username+" успешно изменена на "+self.selectedRole,'showMessage');
                         self.$emit('wrapperClick');
                     }).catch(function (error) {
-                        self.$root.$emit('showDialog',error,'showError');
+                        self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
                     });
                 }
                 else{
@@ -101,7 +101,7 @@ export default{
                 self.$emit('wrapperClick');
                 self.$root.$emit('updateBoard');
             }).catch(function (error) {
-                self.$root.$emit('showDialog',error,'showError');
+                self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
             });
         }
     },

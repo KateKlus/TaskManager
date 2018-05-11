@@ -62,7 +62,7 @@ export default{
                 self.$emit('wrapperClick');
                 self.$root.$emit('showDialog','Доска успешно обновлена!','showMessage');
             }).catch(function (error) {
-                self.$root.$emit('showDialog',error,'showError');
+                self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
             });
         },
         deleteBoard(){
@@ -79,7 +79,7 @@ export default{
                     self.$root.$emit('showDialog','Невозможно удалить доску, которая содержит данные!','showError');
                 }
                 else{
-                    self.$root.$emit('showDialog',error,'showError');
+                    self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
                 }
             });
         },

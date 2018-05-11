@@ -153,14 +153,14 @@ export default{
                     self.currentBoard = response.data;
                 }).catch(function(error){
                     if(error.request.status != 401){
-                        showDialogMessage(error, 'showError');
+                        showDialogMessage(error.response.data.error+"; "+error.response.data.message, 'showError');
                     }
                 }).then(function(){
                     axios.get(host+'/api/boards/'+self.currentBoard.id+'/statuses/?access_token='+getCookie("access_token")).then(function(response){
                         self.statusList = response.data;
                     }).catch(function(error){
                         if(error.request.status != 401){
-                            showDialogMessage(error, 'showError');
+                            showDialogMessage(error.response.data.error+"; "+error.response.data.message, 'showError');
                         }
                     })
                 }).then(function(){
@@ -168,7 +168,7 @@ export default{
                         self.taskList = response.data;
                     }).catch(function(error){
                         if(error.request.status != 401){
-                            showDialogMessage(error, 'showError');
+                            showDialogMessage(error.response.data.error+"; "+error.response.data.message, 'showError');
                         }
                     })
                 }).then(function(){
@@ -176,7 +176,7 @@ export default{
                         self.templateList = response.data;
                     }).catch(function(error){
                         if(error.request.status != 401){
-                            showDialogMessage(error, 'showError');
+                            showDialogMessage(error.response.data.error+"; "+error.response.data.message, 'showError');
                         }
                     })
                 })
@@ -361,7 +361,6 @@ export default{
         top: 40%;
         left: 50%;
         width: 600px;
-        height: 100px;
         padding: 40px;
         margin-left: -300px;
         background: rgba(#f54172, .8);
@@ -376,7 +375,6 @@ export default{
         top: 40%;
         left: 50%;
         width: 600px;
-        height: 100px;
         padding: 40px;
         margin-left: -300px;
         background: rgba(#58a9c7, .8);
