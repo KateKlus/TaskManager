@@ -4,8 +4,7 @@
         <div class="popup__body">
             <div class="popup__title">Создать новый шаблон</div>
             <label for="" class="popup__label">
-                <div class="popup__text">Название шаблона:</div>
-                <input type="text" v-model="newTemplate.taskTemplateName" required>
+                <input type="text" class="popup__input" v-model="newTemplate.taskTemplateName" placeholder="Название шаблона" required>
             </label>
             <label for="" class="popup__label">
                 <ul class="attribute__list">
@@ -14,12 +13,11 @@
                             <img src="../assets/delete.png" alt="DEL" class="attribute__delete-img">
                         </a>
                         <label for="" class="attribute__label">
-                            <div class="attribute__text">Название атрибута:</div>
-                            <input type="text" v-model="attributeItem.attributeName" required>
+                            <input type="text" class="popup__input" v-model="attributeItem.attributeName" placeholder="Название атрибута" required>
                         </label>
                         <label for="" class="attribute__label">
-                            <div class="attribute__text">Тип данных:</div>
-                            <select name="typeList" v-model="attributeItem.attributeType" required="">
+                            <div class="popup__text">Тип данных:</div>
+                            <select name="typeList" class="popup__select" v-model="attributeItem.attributeType" required="">
                                 <option value="text">Текстовый</option>
                                 <option value="number">Числовой</option>
                                 <option value="date">Дата</option>
@@ -27,8 +25,8 @@
                             </select>
                         </label>
                         <label for="" class="attribute__label">
-                            <div class="attribute__text">Обязателен к заполнению</div>
-                            <input type="checkbox" v-model="attributeItem.obligatory">
+                            <div class="popup__text">Обязателен к заполнению</div>
+                            <input type="checkbox" class="popup__checkbox" v-model="attributeItem.obligatory">
                         </label>
                     </li>
                 </ul>
@@ -143,16 +141,12 @@
 <style lang="scss" scoped>
     .attribute__item{
         position: relative;
-        border: 1px solid black;
+        border: 2px dashed rgba(0,0,0, .5);
         padding: 10px;
         margin: 10px;
     }
-    .attribute__text{
-        display: inline-block;
-    }
     .attribute__label{
         display: inline-block;
-        margin: 10px;
         width: 70%;
 
     }
@@ -168,6 +162,7 @@
     .attribute__delete-img{
         width: 100%;
         height: 100%;
+        opacity: .7;
     }
 
 </style>

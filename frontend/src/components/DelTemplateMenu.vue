@@ -5,7 +5,7 @@
             <div class="popup__title">Удаление шаблона</div>
             <label for="" class="popup__label">
                 <div class="popup__text">Выберите шаблон</div>
-                <select name="templateList" v-model="selectedTemplate">
+                <select name="templateList" class="popup__select" v-model="selectedTemplate">
                     <option v-for="templateItem in templateList" v-bind:value="templateItem">{{templateItem.taskTemplateName}}</option>
                 </select>
             </label>

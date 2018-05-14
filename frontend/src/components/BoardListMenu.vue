@@ -44,16 +44,17 @@ export default{
         margin: 5px;
     }
     .boardListMenu__link{
-        display: inline-block;
-        width: 100%;
-        padding: 5px;
+        display: block;
+        padding: 7px;
         text-decoration: none;
-        color: black;
-        border: 1px solid black;
-        border-radius: 10px;
-        background: #ebebeb;
+        color: #757575;
+        border-radius: 5px;
+        background: #fff;
+        margin-bottom: 7px;
+        box-shadow: 1px 1px 4px rgba(black, .5);
+        transition: box-shadow .3s;
         &:hover{
-            background: #ffffff;
+            box-shadow: none;
         }
     }
 

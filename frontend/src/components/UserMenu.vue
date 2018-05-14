@@ -5,11 +5,11 @@
             <div class="popup__title">Меню пользователя {{currentUser.username}}, id={{currentUser.id}}</div>
             <label for="" class="popup__label">
                 <div class="popup__text">Изменить имя:</div>
-                <input type="text" v-model="currentUser.fullname">
+                <input type="text" class="popup__input" v-model="currentUser.fullname">
             </label>
             <label for="" class="popup__label">
                 <div class="popup__text">Изменить e-mail:</div>
-                <input type="text" v-model="currentUser.email">
+                <input type="text" class="popup__input" v-model="currentUser.email">
             </label>
             <button class="popup__submit" @click.prevent="saveUser">Сохранить изменения</button>
         </div>

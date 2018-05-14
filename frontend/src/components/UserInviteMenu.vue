@@ -4,15 +4,13 @@
         <div class="popup__body">
            <div class="popup__title">Пригласить пользователя</div>
             <label for="" class="popup__label">
-                <div class="popup__text">Выберите пользователя:</div>
-                <select name="userList" v-model="selectedUser" size="10" required="">
+                <select name="userList" class="popup__select-invite" v-model="selectedUser" size="10" required="">
                    <option value="" selected disabled>Выберите пользователя</option>
                     <option v-for="user in userList" v-bind:value="user">{{user.username}}</option>
                 </select>
             </label>
             <label for="" class="popup__label">
-                <div class="popup__text">Выберите роль:</div>
-                <select name="roleList" v-model="selectedRole" required="">
+                <select name="roleList" class="popup__select" v-model="selectedRole" required="">
                    <option value="" selected disabled>Выберите роль</option>
                     <option v-for="role in roleList" v-bind:value="role">{{role}}</option>
                 </select>

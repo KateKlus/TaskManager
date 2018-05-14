@@ -7,20 +7,23 @@
             <leftMenu :currentUser="currentUser" :statusList="statusList" :templateList="templateList" :currentBoard="currentBoard"></leftMenu>
             <a href="" class="board__title" @click.prevent="showBoardMenu = !showBoardMenu">{{currentBoard.boardName}}</a>
             <div class="board__user">
-                <a href="" class="user__logout" @click.prevent="logOut">выйти</a>
+                <a href="" class="user__logout" @click.prevent="logOut">Выйти</a>
                 <a href="" class="user__name" @click.prevent="showUserMenu = !showUserMenu">{{currentUser.username}}</a>
                 <div class="user__avatar">
-                    <img src="./assets/avatar.jpg" alt="User" class="user__avatar-img">
+                    <img src="./assets/avatar.png" alt="User" class="user__avatar-img">
                 </div>
             </div>
         </header>
-        <statusList v-if="selectedBoardID" :statusList="statusList" :taskList="taskList"></statusList>
-        <taskMenu v-if="showTaskMenu" :taskItem="clickedTask" :statusList="statusList" @wrapperClick="showTaskMenu = !showTaskMenu"></taskMenu>
-        <statusMenu v-if="showStatusMenu" :statusItem="clickedStatus" :taskList="taskList" @wrapperClick="showStatusMenu = !showStatusMenu"></statusMenu>
-        <boardMenu v-if="showBoardMenu" :currentBoard="currentBoard" @wrapperClick="showBoardMenu = !showBoardMenu"></boardMenu>
-        <userMenu v-if="showUserMenu" :currentUser="currentUser" @wrapperClick="showUserMenu = !showUserMenu"></userMenu>
-        <boardListMenu v-if="!selectedBoardID&&!showNewBoardMenu"></boardListMenu>
-        <newBoardMenu v-if="!selectedBoardID&&showNewBoardMenu" :currentUser="currentUser"></newBoardMenu>
+        <statusList v-if="selectedBoardID" key="statusList" :statusList="statusList" :taskList="taskList"></statusList>
+        <transition-group name='fade'>
+            <taskMenu v-if="showTaskMenu" key="taskMenu" :taskItem="clickedTask" :statusList="statusList" @wrapperClick="showTaskMenu = !showTaskMenu"></taskMenu>
+            <statusMenu v-if="showStatusMenu" key="statusMenu" :statusItem="clickedStatus" :taskList="taskList" @wrapperClick="showStatusMenu = !showStatusMenu"></statusMenu>
+            <boardMenu v-if="showBoardMenu" key="boardMenu" :currentBoard="currentBoard" @wrapperClick="showBoardMenu = !showBoardMenu"></boardMenu>
+            <userMenu v-if="showUserMenu" key="userMenu" :currentUser="currentUser" @wrapperClick="showUserMenu = !showUserMenu"></userMenu>
+            <boardListMenu v-if="!selectedBoardID&&!showNewBoardMenu" key="boardListMenu"></boardListMenu>
+            <newBoardMenu v-if="!selectedBoardID&&showNewBoardMenu" key="newBoardMenu" :currentUser="currentUser"></newBoardMenu>
+        </transition-group>
+
     </div>
 
 </template>
@@ -255,6 +258,28 @@ export default{
 </script>
 
 <style lang="scss">
+    $fonts: "Open Sans", Helvetica, sans-serif;
+
+    @mixin border-radius($radius) {
+        -webkit-border-radius: $radius;
+        -moz-border-radius: $radius;
+        -ms-border-radius: $radius;
+        border-radius: $radius;
+    }
+
+    @mixin box-shadow($top, $left, $blur, $color) {
+        -webkit-box-shadow: $top $left $blur $color;
+        -moz-box-shadow: $top $left $blur $color;
+        box-shadow: $top $left $blur $color;
+    }
+
+    ::selection {
+        background-color: #b5e2e7;
+    }
+
+    ::-moz-selection {
+        background-color: #8ac7d8;
+    }
     body{
         background-color: #58c791;
     }
@@ -266,6 +291,7 @@ export default{
         right: 0;
         background: rgba(#000,.5);
         z-index: 0;
+        min-width:800px;
     }
     .popup__body{
         text-align: center;
@@ -273,61 +299,153 @@ export default{
         z-index: 100;
         padding: 10px 30px;
         top: 50px;
-        left: 20%;
-        right: 20%;
-        max-height: 560px;
+        left: 50%;
+        margin-left: -400px;
+        max-height: 650px;
         width: 800px;
         overflow-y: auto;
-        border: 2px solid black;
-        background-color: #cccccc;
+        background-color: #f1f1f1;
+        @include border-radius(4px);
+        @include box-shadow(1px, 1px, 5px, black);
+    }
+    .popup__executor{
+        font-weight: bold;
+        font-size: 24px;
+        margin-bottom: 10px;
+        text-align: center;
+        color: #757575;
     }
     .popup__title{
         font-weight: bold;
-        font-size: 18px;
+        font-size: 24px;
         margin-bottom: 10px;
+        text-align: center;
+        color: #757575;
     }
     .popup__label{
         display: block;
     }
     .popup__text{
-
+        color: #757575;
+        font-weight: 300;
+        margin: 5px 0;
     }
+    .popup__input, .popup__area,.popup__select {
+        height: 40px;
+        display: block;
+        margin: 0 auto 5px;
+        padding: 0 15px;
+        border: none;
+        border-bottom: 2px solid #ebebeb;
+        transition: border-bottom .5s;
+        &:focus {
+            outline: none;
+            border-bottom-color: #58c791 !important;
+        }
+        &:hover {
+            border-bottom-color: #cbcbcb;
+        }
+        &:invalid {
+            box-shadow: none;
+        }
+    }
+    .popup__area{
+        width: 400px;
+        min-height: 100px;
+        resize: none;
+    }
+    .popup__select-invite{
+        margin: 0 auto 15px;
+        padding: 0 15px;
+        border: none;
+        border-bottom: 2px solid #ebebeb;
+        transition: border-bottom .5s;
+        &:focus {
+            outline: none;
+            border-bottom-color: #58c791 !important;
+        }
+        &:hover {
+            border-bottom-color: #cbcbcb;
+        }
+        &:invalid {
+            box-shadow: none;
+        }
+    }
+
     .popup__text-title{
-        font-weight: bold;
+        text-align: center;
+        font-size: 22px;
+        color: #757575;
+        font-weight: 300;
     }
     .popup__button{
         display: inline-block;
-        cursor: pointer;
-        border: 1px solid black;
-        min-width: 200px;
-        margin: 10px;
-        padding: 5px 10px;
-        border-radius: 10px;
-        background: #ebebeb;
+        padding: 7px;
+        text-decoration: none;
+        color: #757575;
+        border-radius: 5px;
+        background: #fff;
+        margin-bottom: 7px;
+        box-shadow: 1px 1px 4px rgba(black, .5);
+        transition: box-shadow .3s;
         &:hover{
-            background: #fff;
+            box-shadow: none;
         }
     }
     .popup__submit{
-        display: block;
+        display: inline-block;
         margin: 10px auto;
+        position: relative;
+        min-width: 120px;
+        height: 40px;
+        margin: 10px auto 10px;
+        @include border-radius(5px);
+        color: white;
+        background-color: #58c791;
+        border: none;
+        @include box-shadow(0, 5px, 0, #3aad73);
+        &:hover {
+            top: 2px;
+            @include box-shadow(0, 3px, 0, #3aad73);
+        }
+        &:active {
+            top: 5px;
+            box-shadow: none;
+        }
+        &:focus {
+            outline: none;
+        }
     }
-    .board__title{
+    .board__title, .user__name, .user__logout,.status__name{
+        font-family: $fonts;
         text-decoration: none;
-        color:black;
+        color:#757575;
+        padding: 5px 15px;
+        border-radius: 7px;
+        font-weight: 400;
+        font-size: 22px;
+        transition: box-shadow .5s;
+        box-shadow: 0px 1px 5px rgba(0,0,0,0.25);
+        background-color: #fff;
+        &:hover{
+            box-shadow: none;
+        }
+    }
+    .user__name,.user__logout{
+        display: inline-block;
+        font-size: 18px;
+        font-weight: bold;
+        vertical-align: middle;
+        margin-right: 5px;
     }
     .board__header{
         display: flex;
         justify-content: space-between;
         padding: 8px;
         align-items: center;
-        background: rgba(#333,.2);
-        border: 1px solid black;
+        background: #f1f1f1;
+        border-bottom: 2px dashed #757575;
         min-width: 400px;
-    }
-    .user__name{
-        text-decoration: none;
-        color:black;
     }
     .user__avatar{
         max-width: 50px;
@@ -340,21 +458,8 @@ export default{
         display: inline-block;
         vertical-align: middle;
     }
-    .user__name{
-        margin-right: 10px;
-    }
-    .user__logout{
-        text-decoration: none;
-        color: black;
-        padding: 5px 10px;
-        margin-right: 10px;
-        border: 1px solid black;
-        border-radius: 10px;
-        background: #ebebeb;
-        &:hover{
-            background: #fff;
-        }
-
+    .board__button-img{
+        opacity: .6;
     }
     .showError{
         position: absolute;
@@ -386,33 +491,11 @@ export default{
     }
     .fade-enter,.fade-leave-to{
         opacity: 0;
-        transition: 1s;
+        transition: .2s;
     }
     .fade-enter-to,.fade-leave{
         opacity: 1;
         transition: .5s;
-    }
-    $fonts: "Open Sans", Helvetica, sans-serif;
-
-    @mixin border-radius($radius) {
-        -webkit-border-radius: $radius;
-        -moz-border-radius: $radius;
-        -ms-border-radius: $radius;
-        border-radius: $radius;
-    }
-
-    @mixin box-shadow($top, $left, $blur, $color) {
-        -webkit-box-shadow: $top $left $blur $color;
-        -moz-box-shadow: $top $left $blur $color;
-        box-shadow: $top $left $blur $color;
-    }
-
-    ::selection {
-        background-color: #b5e2e7;
-    }
-
-    ::-moz-selection {
-        background-color: #8ac7d8;
     }
     .company{
         display: inline-block;
@@ -425,78 +508,6 @@ export default{
         @include box-shadow(0, 1px, 5px, rgba(0,0,0,0.25));
         color: #757575;
 
-    }
-
-    .wrapper__form {
-        background: #58c791;
-    }
-    .form {
-        margin: 50px auto;
-        width: 340px;
-        background-color: #fff;
-        @include border-radius(4px);
-        @include box-shadow(0, 1px, 5px, rgba(0,0,0,0.25));
-    }
-
-    .form__title {
-        margin-top: 20px;
-        text-align: center;
-        font-size: 175%;
-        color: #757575;
-        font-weight: 300;
-    }
-
-    .form__title, input {
-        font-family: $fonts;
-    }
-
-    .form__input {
-        width: 75%;
-        height: 50px;
-        display: block;
-        margin: 0 auto 15px;
-        padding: 0 15px;
-        border: none;
-        border-bottom: 2px solid #ebebeb;
-        transition: border-bottom .5s;
-        &:focus {
-            outline: none;
-            border-bottom-color: #58c791 !important;
-        }
-        &:hover {
-            border-bottom-color: #cbcbcb;
-        }
-        &:invalid {
-            box-shadow: none;
-        }
-    }
-
-    .pass:-webkit-autofill {
-        -webkit-box-shadow: 0 0 0 1000px white inset;
-    }
-
-    .form__submit {
-        position: relative;
-        width: 85%;
-        height: 50px;
-        display: block;
-        margin: 30px auto 30px;
-        @include border-radius(5px);
-        color: white;
-        background-color: #58c791;
-        border: none;
-        @include box-shadow(0, 5px, 0, #3aad73);
-        &:hover {
-            top: 2px;
-            @include box-shadow(0, 3px, 0, #3aad73);
-        }
-        &:active {
-            top: 5px;
-            box-shadow: none;
-        }
-        &:focus {
-            outline: none;
-        }
     }
 
 

@@ -5,19 +5,25 @@
             <div class="popup__title">Меню управления доской</div>
             <label for="" class="popup__label">
                 <div class="popup__text">Изменить имя доски:</div>
-                <input type="text" v-model="currentBoard.boardName">
+                <input type="text" class="popup__input" v-model="currentBoard.boardName">
             </label>
             <label for="" class="popup__label">
                 <div class="popup__text">Изменить описание доски:</div>
-                <input type="text" v-model="currentBoard.description">
+                <input type="text" class="popup__input" v-model="currentBoard.description">
             </label>
-                <button class="popup__submit" @click.prevent="editBoard" v-if="showEditBoard">Изменить доску</button>
-                <button class="popup__submit" @click.prevent="deleteBoard" v-if="showDeleteBoard">Удалить доску</button>
-                <button class="popup__submit" @click.prevent="showUserInviteMenu = !showUserInviteMenu" v-if="showInviteAndEdit">Пригласить пользователя</button>
-                <button class="popup__submit" @click.prevent="showInvitedUserMenu = !showInvitedUserMenu" v-if="showInviteAndEdit">Приглашенные пользователи</button>
+                <label for="" class="popup__label">
+                   <button class="popup__submit" @click.prevent="editBoard" v-if="showEditBoard">Изменить доску</button>
+                   <button class="popup__submit" @click.prevent="deleteBoard" v-if="showDeleteBoard">Удалить доску</button>
+                </label>
+                <label for="" class="popup__label">
+                   <button class="popup__submit" @click.prevent="showUserInviteMenu = !showUserInviteMenu" v-if="showInviteAndEdit">Пригласить пользователя</button>
+                   <button class="popup__submit" @click.prevent="showInvitedUserMenu = !showInvitedUserMenu" v-if="showInviteAndEdit">Приглашенные пользователи</button>
+                </label>
         </div>
-        <userInviteMenu v-if="showUserInviteMenu" @wrapperClick="showUserInviteMenu = !showUserInviteMenu" :currentBoard="currentBoard"></userInviteMenu>
-        <invitedUserMenu v-if="showInvitedUserMenu" @wrapperClick="showInvitedUserMenu = !showInvitedUserMenu" :currentBoard="currentBoard"></invitedUserMenu>
+        <transition-group name='fade' :duration="100">
+            <userInviteMenu v-if="showUserInviteMenu" key="userInvite" @wrapperClick="showUserInviteMenu = !showUserInviteMenu" :currentBoard="currentBoard"></userInviteMenu>
+            <invitedUserMenu v-if="showInvitedUserMenu" key="invitedUser" @wrapperClick="showInvitedUserMenu = !showInvitedUserMenu" :currentBoard="currentBoard"></invitedUserMenu>
+        </transition-group>
     </div>
 
 </template>

@@ -5,7 +5,7 @@
             <div class="popup__title">Статус меню</div>
             <label for="" class="popup__label">
                 <div class="popup__text">Изменить имя статуса:</div>
-                <input type="text" v-model="statusItem.taskStatus.statusName">
+                <input type="text" class="popup__input" v-model="statusItem.taskStatus.statusName">
             </label>
             <button class="popup__submit" @click.prevent="editStatus">Изменить статус</button>
             <button class="popup__submit" @click.prevent="deleteStatus">Удалить статус</button>

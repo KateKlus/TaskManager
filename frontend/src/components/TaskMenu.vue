@@ -2,24 +2,26 @@
     <div class="taskMenu">
         <div class="popup__wrapper" @click="closeMenu"></div>
         <div class="popup__body">
+
             <div class="taskMenu__header">
-                <input type="text" v-model="taskItem.taskName" placeholder="Имя задачи" class="taskMenu__input taskMenu__taskName">
-                <div class="taskMenu__text">TaskMgr-{{taskItem.id}}</div>
+                <input type="text" v-model="taskItem.taskName" placeholder="Имя задачи" class="taskMenu__taskName popup__input">
+                <div class="popup__text">TaskMgr-{{taskItem.id}}</div>
             </div>
             <div class="taskMenu__body">
                 <div class="taskMenu__left">
+                  <div class="popup__text">Автор задачи</div>
+                    <input type="text" v-model="taskItem.author.username" placeholder="Автор" class="popup__input">
                    <div class="popup__text">Описание задачи</div>
-                    <textarea v-model="taskItem.description" placeholder="Описание задачи" class="taskMenu__textarea"></textarea>
+                    <textarea v-model="taskItem.description" placeholder="Описание задачи" class="popup__area"></textarea>
                 </div>
                 <div class="taskMenu__right">
-                    <div class="popup__text">Автор задачи</div>
-                    <input type="text" v-model="taskItem.author.username" placeholder="Автор" class="taskMenu__input">
+
                     <div class="popup__text">Статус</div>
-                    <select name="statusList"  @change="changeStatus" v-model="selected">
+                    <select name="statusList" class="popup__select" @change="changeStatus" v-model="selected">
                         <option v-for="statusItem in statusList"
                         v-bind:value="statusItem.taskStatus.id">{{statusItem.taskStatus.statusName}}</option>
                     </select>
-                    <div class="popup__text">Исполнитель: {{executor}} </div>
+                    <div class="popup__text">Исполнитель: <div class="popup__executor">{{executor}}</div></div>
                 </div>
             </div>
             <div class="taskMenu__custom">
@@ -27,7 +29,7 @@
                 <ul class="custom__list">
                     <li class="custom__item" v-for="customField in customFieldsList">
                         <div class="popup__text">{{customField.attribute.attributeName}}</div>
-                        <input :type="customField.attribute.attributeType" class="taskMenu__input taskMenu__taskName" v-model="customField.stringValue">
+                        <input :type="customField.attribute.attributeType" class="taskMenu__taskName popup__input" v-model="customField.stringValue">
                     </li>
                 </ul>
             </div>
@@ -143,6 +145,7 @@ export default{
         display: flex;
         justify-content: space-around;
         padding: 20px;
+        border-bottom: 2px dashed rgba(black, .5);
     }
     .taskMenu__body{
         display: flex;
@@ -152,24 +155,18 @@ export default{
     .taskMenu__taskName{
         margin: 0 auto;
     }
-    .taskMenu__input{
-        display: block;
-    }
     .taskMenu__left,.taskMenu__right{
-        padding: 10px;
-        border: 1px solid black;
+        padding: 10px 0;
+    }
+    .taskMenu__right{
+        margin: 0 auto;
     }
     .taskMenu__left{
         min-width: 450px;
-    }
-    .taskMenu__textarea{
-        width: 400px;
-        min-height: 100px;
-        resize: none;
+        border-right: 2px dashed rgba(black, .5);
     }
     .taskMenu__custom{
-        border: 1px solid black;
-        margin: 20px 30px;
+        border-top: 2px dashed rgba(black, .5);
         padding: 10px;
     }
 </style>

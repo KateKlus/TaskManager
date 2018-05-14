@@ -21,7 +21,7 @@ export default{
 <style lang="scss" scoped>
     .status__name{
         text-decoration: none;
-        color:black;
+        display: block;
     }
     .status__list{
         display: flex;
@@ -34,10 +34,10 @@ export default{
         display: inline-block;
         padding: 10px;
         vertical-align: top;
-        background: rgba(#333,0.2);
+        background: #f1f1f1;
         text-align: center;
         min-width: 250px;
-        border-left: 2px dashed black;
+        border-left: 2px dashed #757575;
         height: 100%;
         &:first-child{
             border-left: none;

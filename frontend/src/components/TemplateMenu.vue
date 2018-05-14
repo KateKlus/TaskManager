@@ -16,9 +16,11 @@
             </ul>
 
         </div>
-        <newTemplateMenu v-if="showNewTemplateMenu" @wrapperClick="showNewTemplateMenu = !showNewTemplateMenu"></newTemplateMenu>
-        <editTemplateMenu v-if="showEditTemplateMenu" @wrapperClick="showEditTemplateMenu = !showEditTemplateMenu" :templateList="templateList"></editTemplateMenu>
-        <delTemplateMenu v-if="showDelTemplateMenu" @wrapperClick="showDelTemplateMenu = !showDelTemplateMenu" :templateList="templateList"></delTemplateMenu>
+        <transition-group name='fade' :duration="100">
+            <newTemplateMenu v-if="showNewTemplateMenu" key="newTemplate" @wrapperClick="showNewTemplateMenu = !showNewTemplateMenu"></newTemplateMenu>
+            <editTemplateMenu v-if="showEditTemplateMenu" key="editTemplate" @wrapperClick="showEditTemplateMenu = !showEditTemplateMenu" :templateList="templateList"></editTemplateMenu>
+            <delTemplateMenu v-if="showDelTemplateMenu" key="delTemplate" @wrapperClick="showDelTemplateMenu = !showDelTemplateMenu" :templateList="templateList"></delTemplateMenu>
+        </transition-group>
     </div>
 </template>
 
@@ -46,16 +48,17 @@ export default{
         margin: 5px;
     }
     .TemplateMenu__link{
-        display: inline-block;
-        width: 100%;
-        padding: 5px;
+        display: block;
+        padding: 7px;
         text-decoration: none;
-        color: black;
-        border: 1px solid black;
-        border-radius: 10px;
-        background: #ebebeb;
+        color: #757575;
+        border-radius: 5px;
+        background: #fff;
+        margin-bottom: 7px;
+        box-shadow: 1px 1px 4px rgba(black, .5);
+        transition: box-shadow .3s;
         &:hover{
-            background: #ffffff;
+            box-shadow: none;
         }
     }
 
