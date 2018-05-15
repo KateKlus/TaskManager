@@ -5,19 +5,25 @@
             <div class="popup__title">Меню управления доской</div>
             <label for="" class="popup__label">
                 <div class="popup__text">Изменить имя доски:</div>
-                <input type="text" v-model="currentBoard.boardName">
+                <input type="text" class="popup__input" v-model="currentBoard.boardName">
             </label>
             <label for="" class="popup__label">
                 <div class="popup__text">Изменить описание доски:</div>
-                <input type="text" v-model="currentBoard.description">
+                <input type="text" class="popup__input" v-model="currentBoard.description">
             </label>
-                <button class="popup__submit" @click.prevent="editBoard" v-if="showEditBoard">Изменить доску</button>
-                <button class="popup__submit" @click.prevent="deleteBoard" v-if="showDeleteBoard">Удалить доску</button>
-                <button class="popup__submit" @click.prevent="showUserInviteMenu = !showUserInviteMenu" v-if="showInviteAndEdit">Пригласить пользователя</button>
-                <button class="popup__submit" @click.prevent="showInvitedUserMenu = !showInvitedUserMenu" v-if="showInviteAndEdit">Приглашенные пользователи</button>
+                <label for="" class="popup__label">
+                   <button class="popup__submit" @click.prevent="editBoard" v-if="showEditBoard">Изменить доску</button>
+                   <button class="popup__submit" @click.prevent="deleteBoard" v-if="showDeleteBoard">Удалить доску</button>
+                </label>
+                <label for="" class="popup__label">
+                   <button class="popup__submit" @click.prevent="showUserInviteMenu = !showUserInviteMenu" v-if="showInviteAndEdit">Пригласить пользователя</button>
+                   <button class="popup__submit" @click.prevent="showInvitedUserMenu = !showInvitedUserMenu" v-if="showInviteAndEdit">Приглашенные пользователи</button>
+                </label>
         </div>
-        <userInviteMenu v-if="showUserInviteMenu" @wrapperClick="showUserInviteMenu = !showUserInviteMenu" :currentBoard="currentBoard"></userInviteMenu>
-        <invitedUserMenu v-if="showInvitedUserMenu" @wrapperClick="showInvitedUserMenu = !showInvitedUserMenu" :currentBoard="currentBoard"></invitedUserMenu>
+        <transition-group name='fade' :duration="100">
+            <userInviteMenu v-if="showUserInviteMenu" key="userInvite" @wrapperClick="showUserInviteMenu = !showUserInviteMenu" :currentBoard="currentBoard"></userInviteMenu>
+            <invitedUserMenu v-if="showInvitedUserMenu" key="invitedUser" @wrapperClick="showInvitedUserMenu = !showInvitedUserMenu" :currentBoard="currentBoard"></invitedUserMenu>
+        </transition-group>
     </div>
 
 </template>
@@ -60,8 +66,9 @@ export default{
             }).then(function (response) {
                 self.$root.$emit('updateBoard');
                 self.$emit('wrapperClick');
+                self.$root.$emit('showDialog','Доска успешно обновлена!','showMessage');
             }).catch(function (error) {
-                alert("Error! "+ error)
+                self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
             });
         },
         deleteBoard(){
@@ -75,10 +82,10 @@ export default{
                 window.location.reload();
             }).catch(function (error) {
                 if(error.response.status == '500'){
-                    alert("Невозможно удалить доску, которая содержит данные!");
+                    self.$root.$emit('showDialog','Невозможно удалить доску, которая содержит данные!','showError');
                 }
                 else{
-                    alert("Error! "+ error);
+                    self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
                 }
             });
         },

@@ -21,21 +21,26 @@ export default{
 <style lang="scss" scoped>
     .status__name{
         text-decoration: none;
-        color:black;
+        display: block;
     }
     .status__list{
-        white-space: nowrap;
-        overflow-x: auto;
-        min-height: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        flex-wrap: nowrap;
+        align-items: stretch;
     }
     .status__item{
         display: inline-block;
-        border: 3px solid black;
         padding: 10px;
-        margin: 5px;
         vertical-align: top;
-        background: rgba(#333,0.2);
+        background: #f1f1f1;
         text-align: center;
         min-width: 250px;
+        border-left: 2px dashed #757575;
+        height: 100%;
+        &:first-child{
+            border-left: none;
+        }
     }
 </style>

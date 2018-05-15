@@ -5,7 +5,7 @@
             <div class="popup__title">Удаление шаблона</div>
             <label for="" class="popup__label">
                 <div class="popup__text">Выберите шаблон</div>
-                <select name="templateList" v-model="selectedTemplate">
+                <select name="templateList" class="popup__select" v-model="selectedTemplate">
                     <option v-for="templateItem in templateList" v-bind:value="templateItem">{{templateItem.taskTemplateName}}</option>
                 </select>
             </label>
@@ -30,18 +30,18 @@ export default{
         deleteTemplate(){
             var self = this;
             if(this.selectedTemplate.default){
-                alert("Невозможно удалить шаблон по умолчанию!");
+                self.$root.$emit('showDialog','Невозможно удалить шаблон по умолчанию!','showError');
             }
             else{
                 axios({
                     method: 'DELETE',
                     url: host+'/api/tasktemplates/'+self.selectedTemplate.id+'/?access_token='+getCookie("access_token")
                 }).then(function (response) {
-                    alert("Шаблон успешно удалён!")
+                    self.$root.$emit('showDialog','Шаблон успешно удалён!','showMessage');
                     self.$emit('wrapperClick');
                     self.$root.$emit('updateBoard');
                 }).catch(function (error) {
-                    alert("Error! "+ error);
+                    self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
                 });
             }
         }

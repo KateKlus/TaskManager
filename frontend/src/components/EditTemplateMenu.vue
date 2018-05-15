@@ -5,13 +5,13 @@
             <div class="popup__title">Редактировать шаблон</div>
             <label for="" class="popup__label">
                 <div class="popup__text">Выберите шаблон</div>
-                <select name="templateList" v-model="selectedTemplate" @change="loadAttributeList">
+                <select name="templateList" class="popup__select" v-model="selectedTemplate" @change="loadAttributeList">
                     <option v-for="templateItem in templateList" v-bind:value="templateItem">{{templateItem.taskTemplateName}}</option>
                 </select>
             </label>
             <label for="" class="popup__label">
                 <div class="popup__text">Название шаблона:</div>
-                <input type="text" v-model="selectedTemplate.taskTemplateName">
+                <input type="text" class="popup__input" v-model="selectedTemplate.taskTemplateName">
             </label>
             <label for="" class="popup__label">
                 <ul class="attribute__list">
@@ -20,11 +20,11 @@
                             <img src="../assets/delete.png" alt="DEL" class="attribute__delete-img">
                         </a>
                         <label for="" class="attribute__label">
-                            <div class="attribute__text">Название атрибута:</div>
-                            <input type="text" v-model="attributeItem.attributeName">
+                            <div class="popup__text">Название атрибута:</div>
+                            <input type="text" class="popup__input" v-model="attributeItem.attributeName">
                         </label>
                         <label for="" class="attribute__label">
-                            <select name="typeList" v-model="attributeItem.attributeType">
+                            <select name="typeList" class="popup__select" v-model="attributeItem.attributeType">
                                 <option value="text">Текстовый</option>
                                 <option value="number">Числовой</option>
                                 <option value="date">Дата</option>
@@ -32,8 +32,8 @@
                             </select>
                         </label>
                         <label for="" class="attribute__label">
-                            <div class="attribute__text">Обязателен к заполнению</div>
-                            <input type="checkbox" v-model="attributeItem.obligatory">
+                            <div class="popup__text">Обязателен к заполнению</div>
+                            <input type="checkbox" class="popup__checkbox" v-model="attributeItem.obligatory">
                         </label>
                     </li>
                 </ul>
@@ -68,7 +68,7 @@
                         self.attributeList.push(attribute);
                     })
                 }).catch(function(error){
-                    alert(error);
+                    self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
                 })
             },
             addNewAttribute(){
@@ -83,7 +83,7 @@
             editTemplate(){
                 var self = this;
                 if(this.selectedTemplate.default){
-                    alert("Невозможно изменить шаблон по умолчанию!")
+                    self.$root.$emit('showDialog',"Невозможно удалить шаблон по умолчанию!",'showError');
                 }
                 else{
                     axios({
@@ -93,7 +93,7 @@
                     }).then(function (response) {
                         self.editAttributes(response.data);
                     }).catch(function (error) {
-                        alert("Error! "+ error)
+                        self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
                     });
                 }
             },
@@ -103,7 +103,7 @@
                     url: host+'/api/attributes/'+attribute.id+'/?access_token='+getCookie("access_token"),
                 }).then(function (response) {
                 }).catch(function (error) {
-                    alert("Error! "+ error);
+                    self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
                 });
                 this.attributeList.splice(this.attributeList.indexOf(attribute),1);
             },
@@ -134,17 +134,17 @@
                 if (!postError){
                     self.$root.$emit('updateBoard');
                     self.$emit('wrapperClick');
-                    alert("Шаблон успешно изменён!")
+                    self.$root.$emit('showDialog',"Шаблон успешно изменён!",'showMessage');
                 }
                 else{
-                    alert(postError);
+                    self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
                 }
             }
         },
         watch:{
             selectedTemplate: function(value){
                 if(value.default){
-                    alert("Невозможно изменить шаблон по умолчанию!")
+                    self.$root.$emit('showDialog',"Невозможно изменить шаблон по умолчанию!",'showError');
                 }
             }
         }
@@ -154,16 +154,12 @@
 <style lang="scss" scoped>
     .attribute__item{
         position: relative;
-        border: 1px solid black;
+        border: 2px dashed rgba(0,0,0,.5);
         padding: 10px;
         margin: 10px;
     }
-    .attribute__text{
-        display: inline-block;
-    }
     .attribute__label{
         display: inline-block;
-        margin: 10px;
         width: 70%;
 
     }
@@ -179,6 +175,7 @@
     .attribute__delete-img{
         width: 100%;
         height: 100%;
+        opacity: .7;
     }
 
 </style>

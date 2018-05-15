@@ -2,7 +2,7 @@
     <ul class="content__list">
         <li class="content__item" v-for="contentItem in contentItems">
         <div class="content__title">{{contentItem.contentName}}</div>
-        <textarea class="content__area">{{contentItem.content}}</textarea>
+        <textarea class="content__area popup__area">{{contentItem.content}}</textarea>
         </li>
     </ul>
 </template>

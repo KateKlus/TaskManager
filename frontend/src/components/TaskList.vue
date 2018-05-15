@@ -6,7 +6,7 @@
                 <div class="task__executor">
                     <div class="task__executor-name">{{taskItem.author.username}}</div>
                     <div class="task__executor-image">
-                        <img src="../assets/avatar.jpg" alt="AVA" class="task__executor-img">
+                        <img src="../assets/avatar.png" alt="AVA" class="task__executor-img">
                     </div>
                 </div>
             </div>
@@ -39,8 +39,9 @@ export default{
     .task__item{
         margin: 10px 0px;
         width: 250px;
-        background: rgba(#333, 0.2);
-        border: 1px solid black;
+        background-color: #fff;
+        border-radius: 4px;
+        box-shadow: 0px 1px 5px rgba(0,0,0,0.25);
         white-space: pre-line;
     }
     .task__menu-link{

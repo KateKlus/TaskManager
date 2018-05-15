@@ -4,8 +4,7 @@
         <div class="popup__body">
             <div class="popup__title">Добавить новый статус</div>
             <label for="" class="popup__label">
-                <div class="popup__text">Введите имя статуса:</div>
-                <input type="text" v-model="newStatus.statusName">
+                <input type="text" class="popup__input" v-model="newStatus.statusName" placeholder="Название нового статуса">
             </label>
             <button class="popup__submit" @click.prevent="addNewStatus">Добавить статус</button>
         </div>
@@ -36,7 +35,7 @@ export default{
             }).then(function (response) {
                 self.addNewBoardStatus(response.data);
             }).catch(function (error) {
-                alert("Error! "+ error)
+                self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
             });
 
         },
@@ -50,7 +49,7 @@ export default{
                 self.$root.$emit('updateBoard');
                 self.$emit('wrapperClick');
             }).catch(function (error) {
-                alert("Error! "+ error)
+                self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
             });
         }
     }

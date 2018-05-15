@@ -5,7 +5,7 @@
             <div class="popup__title">Статус меню</div>
             <label for="" class="popup__label">
                 <div class="popup__text">Изменить имя статуса:</div>
-                <input type="text" v-model="statusItem.taskStatus.statusName">
+                <input type="text" class="popup__input" v-model="statusItem.taskStatus.statusName">
             </label>
             <button class="popup__submit" @click.prevent="editStatus">Изменить статус</button>
             <button class="popup__submit" @click.prevent="deleteStatus">Удалить статус</button>
@@ -31,7 +31,7 @@ export default{
                 self.$root.$emit('updateBoard');
                 self.$emit('wrapperClick');
             }).catch(function (error) {
-                alert("Error! "+ error)
+                self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
             });
         },
         deleteStatus(){
@@ -42,7 +42,7 @@ export default{
                         method: 'delete',
                         url: host+'/api/tasks/'+task.id+'/?access_token='+getCookie("access_token")
                     }).catch(function (error) {
-                        alert("Error! "+ error);
+                        self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
                     });
                 }
             })
@@ -53,7 +53,7 @@ export default{
                 self.$root.$emit('updateBoard');
                 self.$emit('wrapperClick');
             }).catch(function (error) {
-                alert("Error! "+ error);
+                self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
             });
         },
     }

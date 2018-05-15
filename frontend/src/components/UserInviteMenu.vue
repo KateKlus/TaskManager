@@ -4,15 +4,13 @@
         <div class="popup__body">
            <div class="popup__title">Пригласить пользователя</div>
             <label for="" class="popup__label">
-                <div class="popup__text">Выберите пользователя:</div>
-                <select name="userList" v-model="selectedUser" size="10" required="">
+                <select name="userList" class="popup__select-invite" v-model="selectedUser" size="10" required="">
                    <option value="" selected disabled>Выберите пользователя</option>
                     <option v-for="user in userList" v-bind:value="user">{{user.username}}</option>
                 </select>
             </label>
             <label for="" class="popup__label">
-                <div class="popup__text">Выберите роль:</div>
-                <select name="roleList" v-model="selectedRole" required="">
+                <select name="roleList" class="popup__select" v-model="selectedRole" required="">
                    <option value="" selected disabled>Выберите роль</option>
                     <option v-for="role in roleList" v-bind:value="role">{{role}}</option>
                 </select>
@@ -49,7 +47,7 @@ export default{
                 self.roleList = response.data;
             })
             .catch(function(error){
-                alert(error);
+                self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
             });
         axios.get(host+'/api/members/?access_token='+getCookie("access_token"))
             .then(function(response){
@@ -61,14 +59,14 @@ export default{
                 })
             })
             .catch(function(error){
-                alert(error);
+                self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
             }).then(function(){
                 axios.get(host+'/api/users/?access_token='+getCookie("access_token")).then(function(response){
                 self.userList = response.data;
                 self.clearUserList();
             })
             .catch(function(error){
-                alert(error);
+                self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
             })
         })
     },
@@ -89,18 +87,18 @@ export default{
                         url: host+'/api/members/?access_token='+getCookie("access_token"),
                         data:self.inviteUser
                     }).then(function (response) {
-                        alert("Пользователь "+self.selectedUser.username+" успешно приглашен c ролью "+self.selectedRole);
+                        self.$root.$emit('showDialog',"Пользователь "+self.selectedUser.username+" успешно приглашен c ролью "+self.selectedRole,'showMessage');
                         self.$emit('wrapperClick');
                     }).catch(function (error) {
-                        alert("Error! "+ error)
+                        self.$root.$emit('showDialog',error.response.data.error+"; "+error.response.data.message,'showError');
                     });
                 }
                 else{
-                    alert("Выберите роль для пользователя!");
+                    self.$root.$emit('showDialog',"Выберите роль для пользователя!",'showError');
                 }
             }
             else{
-                alert("Выберите пользователя!");
+                self.$root.$emit('showDialog',"Выберите пользователя!",'showError');
             }
 
         },
