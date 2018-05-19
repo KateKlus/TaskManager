@@ -59,12 +59,12 @@ export default{
     .menu__block{
         position: absolute;
         top: 0;
-        bottom: 0;
+        height: 2000px;
         left: -999px;
         text-align: center;
         padding: 8px;
         min-width: 250px;
-        background: rgba(#58c791, .9);
+        background: #58c791;
         border-radius: 4px;
         box-shadow: 1px 1px 5px rgba(black, .5);
         transition: left .5s;

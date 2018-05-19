@@ -13,7 +13,7 @@
             </label>
                 <label for="" class="popup__label">
                    <button class="popup__submit" @click.prevent="editBoard" v-if="showEditBoard">Изменить доску</button>
-                   <button class="popup__submit" @click.prevent="deleteBoard" v-if="showDeleteBoard">Удалить доску</button>
+                   <button class="popup__submit delete" @click.prevent="deleteBoard" v-if="showDeleteBoard">Удалить доску</button>
                 </label>
                 <label for="" class="popup__label">
                    <button class="popup__submit" @click.prevent="showUserInviteMenu = !showUserInviteMenu" v-if="showInviteAndEdit">Пригласить пользователя</button>
