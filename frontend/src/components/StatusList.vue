@@ -24,11 +24,11 @@ export default{
         display: block;
     }
     .status__list{
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-start;
-        flex-wrap: nowrap;
-        align-items: stretch;
+        white-space: nowrap;
+        overflow-x: auto;
+        min-height: 100%;
+        display: inline-block;
+        margin-top: 70px;
     }
     .status__item{
         display: inline-block;
