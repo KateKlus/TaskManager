@@ -1,7 +1,7 @@
 <template>
     <div class="newTemplateMenu">
         <div class="popup__wrapper" @click="closeMenu"></div>
-        <div class="popup__body">
+        <div class="popup__body popup__body-template">
             <div class="popup__title">Создать новый шаблон</div>
             <label for="" class="popup__label">
                 <input type="text" class="popup__input" v-model="newTemplate.taskTemplateName" placeholder="Название шаблона" required>
@@ -163,6 +163,10 @@
         width: 100%;
         height: 100%;
         opacity: .7;
+    }
+    .popup__body-template{
+        top: 30px;
+        max-height: 600px;
     }
 
 </style>

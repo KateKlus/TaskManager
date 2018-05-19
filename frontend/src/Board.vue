@@ -284,21 +284,21 @@ export default{
         background-color: #58c791;
     }
     .popup__wrapper{
-        position: absolute;
+        position: fixed;
         top: 0;
-        bottom: 0;
         left: 0;
         right: 0;
+        bottom: 0;
         background: rgba(#000,.5);
         z-index: 0;
         min-width:800px;
     }
     .popup__body{
         text-align: center;
-        position: absolute;
+        position: fixed;
         z-index: 100;
         padding: 10px 30px;
-        top: 50px;
+        top: 30px;
         left: 50%;
         margin-left: -400px;
         max-height: 650px;
@@ -404,6 +404,13 @@ export default{
         background-color: #58c791;
         border: none;
         @include box-shadow(0, 5px, 0, #3aad73);
+        &.delete{
+            background-color: #c75858;
+            @include box-shadow(0, 5px, 0, #b12d2d);
+            &:hover{
+                @include box-shadow(0, 3px, 0, #b12d2d);
+            }
+        }
         &:hover {
             top: 2px;
             @include box-shadow(0, 3px, 0, #3aad73);
@@ -446,6 +453,8 @@ export default{
         background: #f1f1f1;
         border-bottom: 2px dashed #757575;
         min-width: 400px;
+        position: fixed;
+        width: 100%;
     }
     .user__avatar{
         max-width: 50px;

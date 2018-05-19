@@ -1,7 +1,7 @@
 <template>
     <div class="editTemplateMenu">
         <div class="popup__wrapper" @click="closeMenu"></div>
-        <div class="popup__body">
+        <div class="popup__body popup__body-template">
             <div class="popup__title">Редактировать шаблон</div>
             <label for="" class="popup__label">
                 <div class="popup__text">Выберите шаблон</div>
@@ -176,6 +176,10 @@
         width: 100%;
         height: 100%;
         opacity: .7;
+    }
+    .popup__body-template{
+        top: 30px;
+        max-height: 600px;
     }
 
 </style>

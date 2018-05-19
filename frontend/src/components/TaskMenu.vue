@@ -34,7 +34,7 @@
                 </ul>
             </div>
         <button class="popup__submit" v-if="showTaskEdit" @click=saveChanges>Сохранить</button>
-        <button class="popup__submit" v-if="showTaskDelete" @click=deleteTask>Удалить</button>
+        <button class="popup__submit delete" v-if="showTaskDelete" @click=deleteTask>Удалить</button>
         </div>
     </div>
 
